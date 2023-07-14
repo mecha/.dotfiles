@@ -172,6 +172,12 @@ vim.keymap.set("n", "<leader>gg", vim.cmd.LazyGit, { desc = "LazyGit", noremap =
 vim.keymap.set("n", "<leader>gh", vim.cmd.LazyGitFilterCurrentFile, { desc = "File history", noremap = true })
 
 -------------------------------------------------------------------------------
+-- UI
+-------------------------------------------------------------------------------
+vim.keymap.set("n", "<leader>u", noop, { desc = "UI" })
+vim.keymap.set("n", "<leader>ut", ":Themery<cr>", { desc = "Theme" })
+
+-------------------------------------------------------------------------------
 -- NOTIFICATIONS
 -------------------------------------------------------------------------------
 vim.keymap.set("n", "<leader>n", noop, { desc = "Notifications", noremap = true, silent = true })

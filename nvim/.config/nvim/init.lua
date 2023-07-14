@@ -19,10 +19,5 @@ local plugins = require("mecha.plugins")
 vim.opt.rtp:prepend(lazy_path)
 require("lazy").setup(plugins, { root = plugins_path })
 
--- Set color scheme
-vim.cmd("colorscheme tokyonight-moon")
--- vim.cmd("colorscheme nightfox")
--- vim.cmd("colorscheme rose-pine-moon")
-
 -- Load my config
 require("mecha")
