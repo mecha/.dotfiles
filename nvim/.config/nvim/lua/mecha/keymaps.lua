@@ -50,11 +50,6 @@ vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
 -------------------------------------------------------------------------------
--- LAZY
--------------------------------------------------------------------------------
-vim.keymap.set("n", "<leader>l", vim.cmd.Lazy, { desc = "Lazy" })
-
--------------------------------------------------------------------------------
 -- BUFFERS
 -------------------------------------------------------------------------------
 vim.keymap.set("n", "<C-Tab>", vim.cmd.bn, { desc = "Next buffer", silent = true, noremap = true })
@@ -167,6 +162,7 @@ vim.keymap.set("n", "<leader>gh", vim.cmd.LazyGitFilterCurrentFile, { desc = "Fi
 -------------------------------------------------------------------------------
 vim.keymap.set("n", "<leader>u", noop, { desc = "UI" })
 vim.keymap.set("n", "<leader>ut", ":Themery<cr>", { desc = "Theme" })
+vim.keymap.set("n", "<leader>ul", vim.cmd.Lazy, { desc = "Lazy" })
 
 -------------------------------------------------------------------------------
 -- NOTIFICATIONS
