@@ -170,8 +170,6 @@ return {
         -- Popup that shows available key binds
         "folke/which-key.nvim",
         event = "VeryLazy",
-        config = true,
-        opts = {},
     },
     {
         -- Better status bar

@@ -1,4 +1,3 @@
-local noop = function() end
 local bufremove = require("mini.bufremove")
 local telescope = require("telescope.builtin")
 
@@ -32,7 +31,6 @@ vim.keymap.set("i", "<A-Right>", "<Esc>>><C-Right>i", { desc = "Indent line", si
 -------------------------------------------------------------------------------
 -- QUITTING
 -------------------------------------------------------------------------------
-vim.keymap.set("n", "<leader>q", noop, { desc = "Quit", silent = true, noremap = true })
 vim.keymap.set("n", "<leader>qw", ":wqa!<CR>", { desc = "Save & quit", silent = true })
 vim.keymap.set("n", "<leader>qq", ":qa!<CR>", { desc = "Force quit", silent = true })
 
@@ -59,7 +57,6 @@ vim.keymap.set("n", "<leader>l", vim.cmd.Lazy, { desc = "Lazy" })
 -------------------------------------------------------------------------------
 -- BUFFERS
 -------------------------------------------------------------------------------
-vim.keymap.set("n", "<leader>b", noop, { desc = "Buffers" })
 vim.keymap.set("n", "<C-Tab>", vim.cmd.bn, { desc = "Next buffer", silent = true, noremap = true })
 vim.keymap.set("n", "<C-S-Tab>", vim.cmd.bp, { desc = "Previous buffer", silent = true, noremap = true })
 vim.keymap.set("n", "<leader>bd", function()
@@ -69,7 +66,6 @@ end, { desc = "Close buffer", silent = true })
 -------------------------------------------------------------------------------
 -- WINDOWS
 -------------------------------------------------------------------------------
-vim.keymap.set("n", "<leader>w", noop, { desc = "Windows", silent = true })
 vim.keymap.set("n", "<leader>ww", "<C-w>w", { desc = "Other window", silent = true })
 vim.keymap.set("n", "<leader>wd", "<C-w>q", { desc = "Close window", silent = true })
 vim.keymap.set("n", "<leader>wo", "<C-w>o", { desc = "Close other windows", silent = true })
@@ -89,7 +85,6 @@ vim.keymap.set("n", "<leader>=", vim.cmd.vsplit, { desc = "Split down" })
 -------------------------------------------------------------------------------
 -- TELESCOPE
 -------------------------------------------------------------------------------
-vim.keymap.set("n", "<leader>s", function() end, { desc = "Search" })
 vim.keymap.set("n", "<leader>st", telescope.live_grep, { desc = "Search text" })
 vim.keymap.set("n", "<leader>sf", telescope.find_files, { desc = "Search files" })
 vim.keymap.set("n", "<leader>sb", telescope.buffers, { desc = "Search buffers" })
@@ -128,12 +123,10 @@ vim.keymap.set(
 )
 
 -- Code
-vim.keymap.set("n", "<leader>c", noop, { desc = "Code" })
 vim.keymap.set("n", "<leader>cm", vim.cmd.Mason, { desc = "Mason" })
 vim.keymap.set("n", "<leader>ct", vim.cmd.TodoTelescope, { desc = "Todos (Telescope)" })
 vim.keymap.set("n", "<leader>cT", vim.cmd.TodoTrouble, { desc = "Todos (Trouble)" })
 -- Code -> LSP
-vim.keymap.set("n", "<leader>cl", noop, { desc = "LSP" })
 vim.keymap.set("n", "<leader>cli", vim.cmd.LspInfo, { desc = "LSP Info" })
 vim.keymap.set("n", "<leader>clr", vim.cmd.LspRestart, { desc = "LSP Restart" })
 
@@ -143,7 +136,6 @@ vim.keymap.set("n", "<leader>clr", vim.cmd.LspRestart, { desc = "LSP Restart" })
 local ui = require("harpoon.ui")
 local mark = require("harpoon.mark")
 
-vim.keymap.set("n", "<leader>h", function() end, { desc = "Harpoon" })
 vim.keymap.set("n", "<leader>hh", ui.toggle_quick_menu, { desc = "Open menu" })
 vim.keymap.set("n", "<leader>he", mark.add_file, { desc = "Add file" })
 
@@ -167,7 +159,6 @@ vim.keymap.set("n", "<C-o>", harpoonNavFile(4), { desc = "Harpoon File 4" })
 -------------------------------------------------------------------------------
 -- LAZYGIT
 -------------------------------------------------------------------------------
-vim.keymap.set("n", "<leader>g", function() end, { desc = "Git" })
 vim.keymap.set("n", "<leader>gg", vim.cmd.LazyGit, { desc = "LazyGit", noremap = true })
 vim.keymap.set("n", "<leader>gh", vim.cmd.LazyGitFilterCurrentFile, { desc = "File history", noremap = true })
 
@@ -180,6 +171,5 @@ vim.keymap.set("n", "<leader>ut", ":Themery<cr>", { desc = "Theme" })
 -------------------------------------------------------------------------------
 -- NOTIFICATIONS
 -------------------------------------------------------------------------------
-vim.keymap.set("n", "<leader>n", noop, { desc = "Notifications", noremap = true, silent = true })
 vim.keymap.set("n", "<leader>nn", "<cmd>Noice<cr>", { desc = "History" })
 vim.keymap.set("n", "<leader>nd", "<cmd>Noice dismiss<cr>", { desc = "Dismiss all" })

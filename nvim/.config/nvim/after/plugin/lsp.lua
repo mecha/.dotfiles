@@ -64,7 +64,6 @@ lsp.on_attach(function(client, bufnr)
         })
     end, { desc = "Source Action" })
 
-    vim.keymap.set("n", "<leader>x", function() end, { desc = "Diagnostics" })
     vim.keymap.set("n", "<leader>xx", vim.diagnostic.show, opts("Diagnostics [Panel]"))
     vim.keymap.set("n", "<leader>xn", vim.diagnostic.open_float, opts("Diagnostics [Float]"))
 
