@@ -134,6 +134,8 @@ return {
     { "tpope/vim-repeat" },
     -- Leap motions
     { "ggandor/leap.nvim" },
+    -- Indentation lines
+    { "lukas-reineke/indent-blankline.nvim" },
     -- Improved f/F/t/T motions
     -- { "ggandor/flit.nvim", config = true },
     ------------------------------------------------------------------------------------------------
