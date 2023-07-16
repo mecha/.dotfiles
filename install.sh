@@ -1,7 +1,5 @@
 #! /bin/env bash
 
-STOW_DIR=$HOME
-
 dirs=$(find . -mindepth 1 -maxdepth 1 -type d -not -path '*/.git' -exec basename {} \;)
 
 # usage function
@@ -16,7 +14,7 @@ usage() {
 
 # See => https://github.com/aspiers/stow/issues/65#issuecomment-1465060710
 stow_quietly() {
-	stow "$@" 2> >(grep -v 'BUG in find_stowed_path? Absolute/relative mismatch' 1>&2)
+	stow "$@" -t $HOME 2> >(grep -v 'BUG in find_stowed_path? Absolute/relative mismatch' 1>&2)
 }
 
 # check if help arg given
