@@ -1,0 +1,53 @@
+#! /bin/env bash
+# Tmux project sessionizer
+
+function usage() {
+    self=$(basename "$0")
+    echo "Tmux project sessionizer."
+    echo "  Miguel Muscat - 2023"
+    echo "  Adapted from ThePrimegen's script: https://github.com/ThePrimeagen/.dotfiles/blob/master/bin/.local/scripts/tmux-sessionizer"
+    echo ""
+    echo "Usage:"
+    echo "  $self [PROJECT]"
+    echo ""
+    echo "Arguments:"
+    echo "  PROJECT   The path to the project directory for which a new session will be opened."
+    echo "            If not specified, an fzf prompt will be shown."
+}
+
+# Show help if --help arg is given
+if [[ $1 == "--help" ]]; then
+    usage
+    exit 0
+fi
+
+# Get project from arg or fzf
+if [[ $# -eq 1 ]]; then
+    selected=$1
+else
+    selected=$(find /mnt/files/dev/projects /mnt/hdd/dev/projects /mnt/hdd/dev/containers -mindepth 1 -maxdepth 2 -type d | fzf)
+fi
+
+# Validate project
+if [[ -z $selected ]]; then
+    exit 0
+fi
+
+# Prepare session name
+selected_name=$(basename "$selected" | tr . _)
+
+# If tmux is not running, start it with the new project session
+tmux_running=$(pgrep tmux)
+
+if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+    tmux new-session -s $selected_name -c $selected
+    exit 0
+fi
+
+# If tmux is running and project session does not exist, create it
+if ! tmux has-session -t=$selected_name 2> /dev/null; then
+    tmux new-session -ds $selected_name -c $selected
+fi
+
+# Switch to existing project session
+tmux switch-client -t $selected_name
