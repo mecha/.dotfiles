@@ -1,6 +1,12 @@
 local wk = require("which-key")
 
-wk.setup()
+wk.setup({
+    icons = {
+        breadcrumb = "»",
+        separator = "❱",
+        group = " ",
+    },
+})
 
 wk.register({
     g = { name = "Goto/Git" },
