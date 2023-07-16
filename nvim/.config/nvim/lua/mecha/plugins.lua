@@ -114,7 +114,7 @@ return {
     -- Auto-commenting lines & blocks
     { "terrortylor/nvim-comment" },
     -- Auto-close pairs: (), [], {}, "", '', ``
-    { "m4xshen/autoclose.nvim",  config = true },
+    { "m4xshen/autoclose.nvim", config = true },
     -- Highlight occurrences of word/symbol under cursor using LSP
     { "RRethy/vim-illuminate" },
     {

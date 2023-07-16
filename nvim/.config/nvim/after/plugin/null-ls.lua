@@ -20,12 +20,12 @@ null_ls.setup({
             -- format on save
             vim.api.nvim_clear_autocmds({ buffer = bufnr, group = group })
             vim.api.nvim_create_autocmd(event, {
-                buffer = bufnr,
-                group = group,
-                callback = function()
-                    vim.lsp.buf.format({ bufnr = bufnr, async = async })
-                end,
-                desc = "[lsp] format on save",
+            	buffer = bufnr,
+            	group = group,
+            	callback = function()
+            		vim.lsp.buf.format({ bufnr = bufnr, async = async })
+            	end,
+            	desc = "[lsp] format on save",
             })
         end
 
