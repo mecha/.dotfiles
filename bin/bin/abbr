@@ -13,8 +13,19 @@ function usage() {
 }
 
 function abbr() {
-    head=$(echo "$1" | sed "s|^$HOME|~|" | sed -E 's|/(\.+?[^/])[^/]*|/\1|g; s|/[^/]+$||')
-    tail=$(basename "$1")
+    if [[ "$1" == "/" ]]; then
+        echo "/"
+        return
+    fi
+
+    if [[ "$1" == "~" || "$1" == "$HOME" ]]; then
+        echo "~"
+        return
+    fi
+
+    dir=$(echo $1 | sed "s|^$HOME|~|")
+    head=$(echo "$dir" | sed -E 's|/(\.+?[^/])[^/]*|/\1|g; s|/[^/]+$||')
+    tail=$(basename "$dir")
     echo "$head/$tail"
 }
 
