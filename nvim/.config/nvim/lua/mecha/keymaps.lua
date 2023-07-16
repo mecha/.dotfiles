@@ -124,6 +124,9 @@ vim.keymap.set("n", "<leader>cT", vim.cmd.TodoTrouble, { desc = "Todos (Trouble)
 -- Code -> LSP
 vim.keymap.set("n", "<leader>cli", vim.cmd.LspInfo, { desc = "LSP Info" })
 vim.keymap.set("n", "<leader>clr", vim.cmd.LspRestart, { desc = "LSP Restart" })
+-- Code -> Swap (placeholders for which-key)
+vim.keymap.set("n", "<leader>cs<left>", function() end)
+vim.keymap.set("n", "<leader>cs<right>", function() end)
 
 -------------------------------------------------------------------------------
 -- HARPOON

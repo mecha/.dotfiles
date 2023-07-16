@@ -83,8 +83,6 @@ require("nvim-treesitter.configs").setup({
     },
 })
 
-vim.keymap.set("n", "<leader>cs", function() end, { desc = "Swap" })
-
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
     underline = true,
     virtual_text = {
