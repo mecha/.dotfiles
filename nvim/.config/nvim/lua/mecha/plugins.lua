@@ -194,7 +194,8 @@ return {
     { "rmehri01/onenord.nvim" },
     { "folke/tokyonight.nvim" },
     { "olivercederborg/poimandres.nvim" },
-    { "sainnhe/everforest" },
+    { "neanias/everforest-nvim" },
+    {        "ribru17/bamboo.nvim",    },
     ------------------------------------------------------------------------------------------------
     -- Git
     ------------------------------------------------------------------------------------------------

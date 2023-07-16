@@ -2,7 +2,7 @@ local noice = require("noice")
 
 require("lualine").setup({
     options = {
-        theme = "everforest",
+        theme = "auto",
     },
     sections = {
         lualine_x = {

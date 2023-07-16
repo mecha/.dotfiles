@@ -8,15 +8,8 @@ require("themery").setup({
         "onenord",
         "onenord-light",
         "poimandres",
-        {
-            name = "everforest",
-            colorscheme = "everforest",
-            before = [[
-                vim.opt.background = 'dark'
-                vim.g.everforest_background = 'hard'
-                vim.g.everforest_better_performance = 1
-            ]],
-        },
+        "everforest",
+        "bamboo",
     },
     livePreview = true,
     themeConfigFile = "~/.config/nvim/lua/mecha/theme.lua",
