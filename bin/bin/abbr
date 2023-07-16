@@ -1,0 +1,38 @@
+#! /bin/env bash
+
+function usage() {
+    self=$(basename $0)
+    echo "Usage: $self [ARGS] [PATH]"
+    echo "Abbreviate a path by replacing each segment with its first character, except for the last segment."
+    echo ""
+    echo "Arguments:"
+    echo "  -h, --help   Show this help message"
+    echo ""
+    echo "Options:"
+    echo "  PATH         The path to abbreviate. Defaults to the current working directory."
+}
+
+function abbr() {
+    head=$(echo "$1" | sed "s|^$HOME|~|" | sed -E 's|/(\.+?[^/])[^/]*|/\1|g; s|/[^/]+$||')
+    tail=$(basename "$1")
+    echo "$head/$tail"
+}
+
+if [[ $# -eq 0 ]]; then
+    abbr "$(pwd -P)"
+    exit 0
+fi
+
+if [[ $# -eq 1 ]]; then
+    if [[ $1 == "-h" || $1 == "--help" ]]; then
+        usage
+    else
+        abbr "$1"
+    fi
+    exit 0
+fi
+
+
+echo "Too many arguments."
+usage
+exit 1
