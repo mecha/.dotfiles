@@ -160,12 +160,12 @@ vim.keymap.set("n", "<leader>gh", vim.cmd.LazyGitFilterCurrentFile, { desc = "Fi
 -------------------------------------------------------------------------------
 -- UI
 -------------------------------------------------------------------------------
-vim.keymap.set("n", "<leader>u", noop, { desc = "UI" })
 vim.keymap.set("n", "<leader>ut", ":Themery<cr>", { desc = "Theme" })
+vim.keymap.set("n", "<leader>un", "<cmd>Noice dismiss<cr>", { desc = "Dismiss notifications" })
 vim.keymap.set("n", "<leader>ul", vim.cmd.Lazy, { desc = "Lazy" })
 
 -------------------------------------------------------------------------------
--- NOTIFICATIONS
+-- DIAGNOSTICS
 -------------------------------------------------------------------------------
-vim.keymap.set("n", "<leader>nn", "<cmd>Noice<cr>", { desc = "History" })
-vim.keymap.set("n", "<leader>nd", "<cmd>Noice dismiss<cr>", { desc = "Dismiss all" })
+vim.keymap.set("n", "<leader>xx", vim.diagnostic.show, { desc = "Diagnostics [Panel]", remap = false })
+vim.keymap.set("n", "<leader>xn", vim.diagnostic.open_float, { desc = "Diagnostics [Float]", remap = false })
