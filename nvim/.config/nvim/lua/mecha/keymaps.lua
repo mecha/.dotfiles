@@ -21,8 +21,8 @@ vim.keymap.set("i", "<A-Down>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move down",
 -------------------------------------------------------------------------------
 -- Indent text
 -------------------------------------------------------------------------------
-vim.keymap.set("v", "<A-Left>", ":m <<<C-Left>", { desc = "Unindent selection", silent = true, noremap = true })
-vim.keymap.set("v", "<A-Right>", ":m >><C-Right>", { desc = "Indent selection", silent = true, noremap = true })
+vim.keymap.set("v", "<A-Left>", "<gv", { desc = "Unindent selection", silent = true, noremap = true })
+vim.keymap.set("v", "<A-Right>", ">gv", { desc = "Indent selection", silent = true, noremap = true })
 vim.keymap.set("n", "<A-Left>", "<<<C-Left>", { desc = "Unindent line", silent = true, noremap = true })
 vim.keymap.set("n", "<A-Right>", ">><C-Right>", { desc = "Indent line", silent = true, noremap = true })
 vim.keymap.set("i", "<A-Left>", "<Esc><<<C-Left>i", { desc = "Unindent line", silent = true })
