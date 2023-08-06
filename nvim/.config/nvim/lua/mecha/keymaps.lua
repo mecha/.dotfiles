@@ -84,14 +84,12 @@ vim.keymap.set("n", "<leader>sh", telescope.help_tags, { desc = "Search help" })
 vim.keymap.set("n", "<leader>sg", telescope.git_files, { desc = "Search Git files" })
 vim.keymap.set("n", "<leader>sn", "<cmd>Telescope noice<cr>", { desc = "Search notifications", silent = true })
 vim.keymap.set("n", "<leader>sm", "<cmd>Telescope harpoon marks<cr>", { desc = "Harpoon marks", silent = true })
-vim.keymap.set(
-    "n",
-    "<leader>ss",
-    [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
-    { desc = "Find/Replace current word", silent = true }
-)
+vim.keymap.set("n", "<leader>sc", "/<c-r><c-w><cr>", { desc = "Find word under cursor" })
 
+local replace = "/\\<<C-r><C-w>\\>//gI<Left><Left><Left>"
 
+vim.keymap.set("n", "<leader>sr", ":s" .. replace, { desc = "Replace current word [line]" })
+vim.keymap.set("n", "<leader>sR", ":%s" .. replace, { desc = "Replace current word [buffer]" })
 -------------------------------------------------------------------------------
 -- Undo tree
 -------------------------------------------------------------------------------
