@@ -53,7 +53,7 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, opts("Definition"))
     vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, opts("References"))
     vim.keymap.set("n", "<leader>ch", vim.lsp.buf.hover, opts("Hover"))
-    vim.keymap.set("n", "<leader>cc", ":lua require('neogen').generate()<cr>", { desc = "Annotate" })
+    vim.keymap.set("n", "<leader>cd", ":lua require('neogen').generate()<cr>", { desc = "Doc/Annotate" })
     vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts("Actions"))
     vim.keymap.set("n", "<leader>cA", function()
         vim.lsp.buf.code_action({
