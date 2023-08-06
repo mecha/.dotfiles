@@ -101,7 +101,7 @@ vim.keymap.set("n", "<leader>z", vim.cmd.UndotreeToggle, { desc = "Undo tree" })
 vim.keymap.set(
     "n",
     "<leader>e",
-    ":Neotree filesystem reveal_force_cwd toggle<CR>",
+    ":Neotree filesystem left reveal_force_cwd toggle<CR>",
     { desc = "File tree", silent = true }
 )
 vim.keymap.set(
