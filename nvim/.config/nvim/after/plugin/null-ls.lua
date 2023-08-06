@@ -9,6 +9,8 @@ null_ls.setup({
         null_ls.builtins.formatting.stylua,
         null_ls.builtins.completion.spell,
         null_ls.builtins.formatting.prettierd,
+        null_ls.builtins.formatting.phpcsfixer,
+        null_ls.builtins.diagnostics.php,
     },
     on_attach = function(client, bufnr)
         if client.supports_method("textDocument/formatting") then
