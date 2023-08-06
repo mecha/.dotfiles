@@ -1,0 +1,58 @@
+#! /bin/env bash
+# Create new project.
+
+PROJECTS_DIR=/mnt/files/dev/projects
+project_dir=""
+project_name=""
+
+function usage() {
+    echo "Usage: new [path]"
+    echo "Create a new project."
+    echo ""
+    echo "Arguments:"
+    echo "  [path]  The absolute path of the project to create."
+    echo ""
+    echo "Options:"
+    echo "  --help  Show this message."
+}
+
+function ask_for_dir() {
+    project_dir=$(find "$PROJECTS_DIR" -mindepth 1 -maxdepth 1 -type d -printf "%f\n" | fzf --reverse --prompt=" Location: " --height=5)
+
+    if [[ -z $project_dir ]]; then
+        exit 0
+    fi
+}
+
+function ask_for_name() {
+    read -p "Enter a name: " project_name
+
+    if [[ -z $project_name ]]; then
+        exit 0
+    fi
+}
+
+function green() {
+    echo -e "\033[32m$1\033[0m"
+}
+
+if [[ $1 == "--help" ]]; then
+    usage
+    exit 0
+fi
+
+if [[ $# -eq 1 ]]; then
+    fullpath=$1
+else
+    ask_for_dir
+    ask_for_name
+
+    fullpath="$PROJECTS_DIR/$project_dir/$project_name"
+fi
+
+read -p "Create project at $(green $fullpath)? [y/N] " -n 1 -r confirm
+
+if [[ $confirm =~ ^[Yy]$ ]]; then
+    mkdir -p "$fullpath"
+    tps "$fullpath"
+fi
