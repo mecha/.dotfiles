@@ -32,4 +32,4 @@ vim.opt.incsearch = true
 vim.opt.termguicolors = true
 
 vim.o.timeout = true
-vim.o.timeoutlen = 0
+vim.o.timeoutlen = 250
