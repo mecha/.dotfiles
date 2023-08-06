@@ -5,7 +5,8 @@ vim.g.mapleader = " "
 
 -- Turn that shit off
 vim.keymap.set("n", "Q", "<nop>")
--- Save shortcut (for muscle memory)
+
+-- keep muscle memory happy
 vim.keymap.set("n", "<C-s>", vim.cmd.w, { desc = "Save buffer", silent = true })
 
 -------------------------------------------------------------------------------
@@ -90,6 +91,7 @@ local replace = "/\\<<C-r><C-w>\\>//gI<Left><Left><Left>"
 
 vim.keymap.set("n", "<leader>sr", ":s" .. replace, { desc = "Replace current word [line]" })
 vim.keymap.set("n", "<leader>sR", ":%s" .. replace, { desc = "Replace current word [buffer]" })
+
 -------------------------------------------------------------------------------
 -- Undo tree
 -------------------------------------------------------------------------------
