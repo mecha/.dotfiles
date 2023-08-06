@@ -1,5 +1,6 @@
 #! /bin/env bash
-# Tmux project sessionizer
+
+dirs="/mnt/files/dev/projects /mnt/hdd/dev/projects /mnt/hdd/dev/containers"
 
 function usage() {
     self=$(basename "$0")
@@ -15,28 +16,23 @@ function usage() {
     echo "            If not specified, an fzf prompt will be shown."
 }
 
-# Show help if --help arg is given
 if [[ $1 == "--help" ]]; then
     usage
     exit 0
 fi
 
-# Get project from arg or fzf
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$(find /mnt/files/dev/projects /mnt/hdd/dev/projects /mnt/hdd/dev/containers -mindepth 1 -maxdepth 2 -type d | fzf)
+    selected=$(find $dirs -mindepth 1 -maxdepth 2 -type d | fzf --reverse)
 fi
 
-# Validate project
 if [[ -z $selected ]]; then
     exit 0
 fi
 
-# Prepare session name
 selected_name=$(basename "$selected" | tr . _)
 
-# If tmux is not running, start it with the new project session
 tmux_running=$(pgrep tmux)
 
 if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
@@ -44,10 +40,8 @@ if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
     exit 0
 fi
 
-# If tmux is running and project session does not exist, create it
 if ! tmux has-session -t=$selected_name 2> /dev/null; then
     tmux new-session -ds $selected_name -c $selected
 fi
 
-# Switch to existing project session
 tmux switch-client -t $selected_name
