@@ -52,32 +52,14 @@ return {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
     },
+    -- Show treesitter AST
+    { "nvim-treesitter/playground" },
+    -- Add selection objects for classes, functions, params, args, etc.
+    { "nvim-treesitter/nvim-treesitter-textobjects" },
+    -- Auto-insert and auto-rename closing tags in HTML, JSX, TSX, XML, etc.
+    { "windwp/nvim-ts-autotag" },
+    -- Highlight colors in the buffer
     {
-        -- Show treesitter AST
-        "nvim-treesitter/playground",
-    },
-    {
-        -- Add selection objects for classes, functions, params, args, etc.
-        "nvim-treesitter/nvim-treesitter-textobjects",
-        dependencies = { "nvim-treesitter/nvim-treesitter" },
-    },
-    {
-        -- Auto-insert and auto-rename closing tags in HTML, JSX, TSX, XML, etc.
-        "windwp/nvim-ts-autotag",
-        dependencies = { "nvim-treesitter/nvim-treesitter" },
-    },
-    {
-        -- Auto annotations in doc comments
-        "danymat/neogen",
-        dependencies = "nvim-treesitter/nvim-treesitter",
-        config = true,
-        version = "*",
-        opts = {
-            snippet_engine = "luasnip",
-        },
-    },
-    {
-        -- Highlight colors in the buffer
         "NvChad/nvim-colorizer.lua",
         opts = {
             user_default_options = {
@@ -85,12 +67,13 @@ return {
             },
         },
     },
+    -- Tailwind extension for nvim-colorizer and nvim-cmp
     {
         "roobert/tailwindcss-colorizer-cmp.nvim",
         config = true,
     },
     ------------------------------------------------------------------------------------------------
-    -- Navigation
+    -- Navigation & Search
     ------------------------------------------------------------------------------------------------
     {
         -- Fuzzy-finding
@@ -100,10 +83,8 @@ return {
             "nvim-lua/plenary.nvim",
         },
     },
-    {
-        -- Make Tmux & Nvim pane navigation seamless
-        "alexghergh/nvim-tmux-navigation",
-    },
+    -- Make Tmux & Nvim pane navigation seamless
+    { "alexghergh/nvim-tmux-navigation" },
     -- Quick jump list
     { "ThePrimeagen/harpoon" },
     ------------------------------------------------------------------------------------------------
