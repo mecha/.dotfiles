@@ -129,7 +129,7 @@ local ui = require("harpoon.ui")
 local mark = require("harpoon.mark")
 
 vim.keymap.set("n", "<leader>hh", ui.toggle_quick_menu, { desc = "Open menu" })
-vim.keymap.set("n", "<leader>he", mark.add_file, { desc = "Add file" })
+vim.keymap.set("n", "<leader>ha", mark.add_file, { desc = "Add file" })
 
 local harpoonNavFile = function(i)
     return function()
@@ -143,10 +143,10 @@ for i = 1, 9, 1 do
 end
 
 -- Quick 4-file navigation
-vim.keymap.set("n", "<C-n>", harpoonNavFile(1), { desc = "Harpoon File 1" })
-vim.keymap.set("n", "<C-e>", harpoonNavFile(2), { desc = "Harpoon File 2" })
-vim.keymap.set("n", "<C-i>", harpoonNavFile(3), { desc = "Harpoon File 3" })
-vim.keymap.set("n", "<C-o>", harpoonNavFile(4), { desc = "Harpoon File 4" })
+vim.keymap.set("n", "<A-n>", harpoonNavFile(1), { desc = "Harpoon File 1" })
+vim.keymap.set("n", "<A-e>", harpoonNavFile(2), { desc = "Harpoon File 2" })
+vim.keymap.set("n", "<A-i>", harpoonNavFile(3), { desc = "Harpoon File 3" })
+vim.keymap.set("n", "<A-o>", harpoonNavFile(4), { desc = "Harpoon File 4" })
 
 -------------------------------------------------------------------------------
 -- LAZYGIT
