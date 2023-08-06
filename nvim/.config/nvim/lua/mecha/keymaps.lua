@@ -159,7 +159,6 @@ vim.keymap.set("n", "<leader>gh", vim.cmd.LazyGitFilterCurrentFile, { desc = "Fi
 -------------------------------------------------------------------------------
 -- UI
 -------------------------------------------------------------------------------
-vim.keymap.set("n", "<leader>ut", ":Themery<cr>", { desc = "Theme" })
 vim.keymap.set("n", "<leader>un", "<cmd>Noice dismiss<cr>", { desc = "Dismiss notifications" })
 vim.keymap.set("n", "<leader>ul", vim.cmd.Lazy, { desc = "Lazy" })
 
