@@ -1,4 +1,6 @@
-function pathcumcision {
+#! /bin/env zsh
+
+function path_circumcision {
   PS1="%{%K{#333333}%} "
 
   if [[ $PWD == "/" ]]; then
@@ -16,7 +18,7 @@ function pathcumcision {
   PS1+=" %f%{%F{#333333}%}$(git_prompt_info)%k%f%b "
 }
 
-precmd_functions+=(pathcumcision)
+precmd_functions+=(path_circumcision)
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%K{#111111}%f \ue727 "
 ZSH_THEME_GIT_PROMPT_DIRTY=" %F{#ddbb44}%B🞱"
