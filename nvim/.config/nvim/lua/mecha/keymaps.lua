@@ -29,12 +29,6 @@ vim.keymap.set("i", "<A-Left>", "<Esc><<<C-Left>i", { desc = "Unindent line", si
 vim.keymap.set("i", "<A-Right>", "<Esc>>><C-Right>i", { desc = "Indent line", silent = true })
 
 -------------------------------------------------------------------------------
--- QUITTING
--------------------------------------------------------------------------------
-vim.keymap.set("n", "<leader>qw", ":wqa!<CR>", { desc = "Save & quit", silent = true })
-vim.keymap.set("n", "<leader>qq", ":qa!<CR>", { desc = "Force quit", silent = true })
-
--------------------------------------------------------------------------------
 -- Void register yanking/deleting
 -------------------------------------------------------------------------------
 vim.keymap.set("x", "<leader>p", '"_dP')
