@@ -32,8 +32,8 @@ vim.keymap.set("i", "<A-Right>", "<Esc>>><C-Right>i", { desc = "Indent line", si
 -- Void register yanking/deleting
 -------------------------------------------------------------------------------
 vim.keymap.set("x", "<leader>p", '"_dP')
-vim.keymap.set("n", "<leader>d", '"_d')
-vim.keymap.set("v", "<leader>d", '"_d')
+vim.keymap.set({ "n", "v" }, "<leader>d", '"_d')
+vim.keymap.set({ "n", "v" }, "<leader>c", '"_c')
 
 -------------------------------------------------------------------------------
 -- Keep cursor in the middle of the screen
