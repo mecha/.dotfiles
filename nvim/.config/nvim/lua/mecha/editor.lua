@@ -26,7 +26,7 @@ vim.opt.updatetime = 50
 vim.opt.colorcolumn = "120"
 vim.opt.cursorline = true
 
-vim.opt.hlsearch = false
+vim.opt.hlsearch = true
 vim.opt.incsearch = true
 
 vim.opt.termguicolors = true

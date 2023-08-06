@@ -87,6 +87,8 @@ return {
     { "alexghergh/nvim-tmux-navigation" },
     -- Quick jump list
     { "ThePrimeagen/harpoon" },
+    -- Search highlighting
+    { "kevinhwang91/nvim-hlslens" },
     ------------------------------------------------------------------------------------------------
     -- Editing
     ------------------------------------------------------------------------------------------------
