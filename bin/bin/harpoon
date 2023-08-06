@@ -1,0 +1,40 @@
+#! /bin/env bash
+
+if [[ $# -gt 0 && ( "$1" == "-h" || "$1" == "--help" ) ]]; then
+    echo "Usage:"
+    echo "  $(basename $0)"
+    echo ""
+    echo "Open a Harpoon mark in Neovim from the current project."
+    exit 0
+fi
+
+# TODO: use $XDG_DATA_HOME (still need to set mine up properly)
+hfile=$HOME/.local/share/nvim/harpoon.json
+
+(git rev-parse --is-inside-work-tree >/dev/null 2>&1)
+
+if [[ $? == 0 ]]; then
+    root=$(git rev-parse --show-toplevel)
+    marks=$(cat "$hfile" | jq -r ".projects|.[\"$root\"].mark.marks[].filename")
+
+    if [[ -z "$marks" ]]; then
+        >&2 echo "No marks found"
+        exit 0
+    fi
+
+    mark=$(echo -e "$marks" | fzf --reverse --height=~10)
+
+    if [[ -z "$mark" ]]; then
+        exit 0
+    fi
+
+    fpath="$root/$mark"
+
+    if [[ -f "$fpath" ]]; then
+        nvim "$fpath"
+    else
+        >&2 echo "File not found"
+    fi
+else
+    >&2 echo "Not a git repository"
+fi
