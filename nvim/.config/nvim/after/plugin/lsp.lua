@@ -6,7 +6,7 @@ lsp.extend_cmp()
 
 lsp.ensure_installed({
     "tsserver",
-    "phpactor",
+    "phpactor@master",
     "rust_analyzer",
 })
 
