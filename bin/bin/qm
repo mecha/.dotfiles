@@ -1,0 +1,97 @@
+#! /bin/env bash
+# Quick Menu - Miguel Muscat
+
+file="$HOME/.config/qm/qm.json"
+fzf_opts="--height=~10 --reverse"
+fzf_preview="echo {} | xargs -I % jq -r 'select(.desc == \"%\") | .command' $file"
+
+# Get command from desc
+function get_cmd() {
+    jq -r --arg desc "$1" 'select(.desc == $desc) | .command' $file
+}
+
+# Search for a desc
+function search_desc() {
+    jq -r '.desc' "$file" | fzf $fzf_opts --preview "$fzf_preview" --prompt "$1"
+}
+
+# Search for a desc and get the corresponding command
+function search_cmd() {
+    desc="$(search_desc "$1")"
+    echo "$(get_cmd "$desc")"
+}
+
+# Search for a command and run it
+function run_cmd() {
+    command="$(search_cmd "Run: ")"
+
+    if [[ -n "$command" ]]; then
+        eval "$command"
+    fi
+}
+
+function add_cmd() {
+    local command="$1"
+    local desc="$2"
+
+    if [[ -z "$command" ]]; then
+        echo "No command given."
+        exit 1
+    fi
+
+    if [[ -z "$desc" ]]; then
+        desc="$command"
+    fi
+
+    exist="$(get_cmd "$desc")"
+
+    if [[ -n "$exist" ]]; then
+        echo "Command with that description already exists."
+        exit 1
+    fi
+
+    json=$(jq -n --arg command "$command" --arg desc "$desc" '{$desc,$command}')
+
+    echo "$json" >> "$file"
+}
+
+function rm_cmd() {
+    desc="$(search_desc "Remove: ")"
+
+    if [[ -z "$desc" ]]; then
+        exit 1
+    fi
+
+    jq -r "select(.desc != \"$desc\")" "$file" >> "$file.tmp"
+    mv "$file.tmp" "$file"
+    echo "Removed '$desc'."
+}
+
+function help() {
+    echo "Quick Menu - Miguel Muscat"
+    echo "Usage:"
+    echo "  qm <search>                    Run a command."
+    echo "  qm [a|add] <command> [<desc>]  Add a command with an optional description."
+    echo "  qm [r|rm] <search>             Remove a command."
+    echo "  qm [e|edit] <search>           Edit the config file."
+    echo "  qm [-h|--help]                 Show this message."
+}
+
+if [[ ! -f "$file" ]]; then
+    mkdir -p "$(dirname "$file")"
+    touch "$file"
+fi
+
+if [[ $# -eq 0 ]]; then
+    run_cmd
+elif [[ "$1" == "a" || "$1" == "add" ]]; then
+    add_cmd "$2" "$3"
+elif [[ "$1" == "r" || "$1" == "rm" ]]; then
+    rm_cmd
+elif [[ "$1" == "e" || "$1" == "edit" ]]; then
+    $EDITOR "$file"
+elif [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    usage
+else
+    echo "Invalid arguments. Good-bye."
+fi
