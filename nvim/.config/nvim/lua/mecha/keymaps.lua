@@ -83,6 +83,7 @@ local telescopeFindFiles = "<cmd>Telescope find_files hidden=true<cr>"
 vim.keymap.set("n", "<leader><Space>", telescopeFindFiles, { desc = "Search files" })
 vim.keymap.set("n", "<leader>sf", telescopeFindFiles, { desc = "Search files" })
 vim.keymap.set("n", "<leader>st", telescope.live_grep, { desc = "Search text" })
+vim.keymap.set("n", "<leader>ss", telescope.grep_string, { desc = "Search word/selection" })
 vim.keymap.set("n", "<leader>sb", telescope.buffers, { desc = "Search buffers" })
 vim.keymap.set("n", "<leader>sh", telescope.help_tags, { desc = "Search help" })
 vim.keymap.set("n", "<leader>sg", telescope.git_files, { desc = "Search Git files" })
