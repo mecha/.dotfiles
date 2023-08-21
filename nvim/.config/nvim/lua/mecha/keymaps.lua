@@ -134,6 +134,12 @@ vim.keymap.set("n", "<leader>cs<left>", function() end)
 vim.keymap.set("n", "<leader>cs<right>", function() end)
 
 -------------------------------------------------------------------------------
+-- CMP Ctrl-Space (the mapping in after/plugin/lsp.lua doesn't work fsr)
+-------------------------------------------------------------------------------
+
+vim.keymap.set("i", "<C-Space>", require('cmp').mapping.complete())
+
+-------------------------------------------------------------------------------
 -- HARPOON
 -------------------------------------------------------------------------------
 local ui = require("harpoon.ui")
