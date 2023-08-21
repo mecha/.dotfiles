@@ -66,10 +66,4 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts("Hover"))
 end)
 
-lspconfig["tailwindcss"].setup({
-    on_attach = function(client, bufnr)
-        require("tailwindcss-colors").buf_attach(bufnr)
-    end,
-})
-
 lsp.setup()
