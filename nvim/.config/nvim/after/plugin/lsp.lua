@@ -14,16 +14,13 @@ lsp.ensure_installed({
 lspconfig.lua_ls.setup(lsp.nvim_lua_ls())
 
 local cmp = require("cmp")
-local cmp_select = { behavior = cmp.SelectBehavior.Select }
-local cmp_mappings = lsp.defaults.cmp_mappings({
-    ["<C-u>"] = cmp.mapping.select_prev_item(cmp_select),
-    ["<C-e>"] = cmp.mapping.select_next_item(cmp_select),
-    ["<Tab>"] = cmp.mapping.confirm({ select = true }),
-    ["<C-Space>"] = cmp.mapping.complete(),
-})
 
 cmp.setup({
-    mappings = cmp_mappings,
+    mappings = cmp.mapping.preset.insert({
+        ["<C-e>"] = cmp.mapping.abort(),
+        ["<Tab>"] = cmp.mapping.confirm({ select = true }),
+        ["<C-Space>"] = cmp.mapping.complete(),
+    }),
     formatting = {
         format = function(entry, item)
             require("lspkind").cmp_format()(entry, item)
