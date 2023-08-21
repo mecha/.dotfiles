@@ -8,4 +8,11 @@ require("telescope").setup({
             n = { ["<C-t>"] = trouble.open_with_trouble },
         }
     },
+    pickers = {
+        live_grep = {
+            additional_args = function(opts)
+                return {"--hidden"}
+            end
+        },
+    },
 })
