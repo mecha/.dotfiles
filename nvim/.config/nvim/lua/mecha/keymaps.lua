@@ -169,5 +169,26 @@ vim.keymap.set("n", "<leader>ul", vim.cmd.Lazy, { desc = "Lazy" })
 -------------------------------------------------------------------------------
 -- DIAGNOSTICS
 -------------------------------------------------------------------------------
-vim.keymap.set("n", "<leader>xx", vim.diagnostic.show, { desc = "Diagnostics [Panel]", remap = false })
-vim.keymap.set("n", "<leader>xn", vim.diagnostic.open_float, { desc = "Diagnostics [Float]", remap = false })
+local trouble = require("trouble")
+
+local workspace_diag = function()
+    trouble.open("workspace_diagnostics")
+end
+
+local document_diag = function()
+    trouble.open("document_diagnostics")
+end
+
+local quickfix = function()
+    trouble.open("quickfix")
+end
+
+local references = function()
+    trouble.open("lsp_references")
+end
+
+vim.keymap.set("n", "<leader>gr", references, { desc = "References" })
+vim.keymap.set("n", "<leader>xx", trouble.open, { desc = "Diagnostics", remap = false })
+vim.keymap.set("n", "<leader>xw", workspace_diag, { desc = "Workspace diagnostics", remap = false })
+vim.keymap.set("n", "<leader>xd", document_diag, { desc = "Document diagnostics", remap = false })
+vim.keymap.set("n", "<leader>xq", quickfix, { desc = "Quickfix", remap = false })
