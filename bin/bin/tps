@@ -24,7 +24,7 @@ fi
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$(find $dirs -mindepth 1 -maxdepth 2 -type d | fzf --reverse)
+    selected=$(find $dirs -mindepth 1 -maxdepth 2 -type d | fzf --reverse --prompt="Open project: ")
 fi
 
 if [[ -z $selected ]]; then
