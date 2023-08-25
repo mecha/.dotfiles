@@ -2,7 +2,7 @@
 # Quick Menu - Miguel Muscat
 
 file="$HOME/.config/qm/qm.json"
-fzf_opts="--height=~10 --reverse"
+fzf_opts="--reverse"
 fzf_preview="echo {} | xargs -I % jq -r 'select(.desc == \"%\") | .command' $file"
 
 # Get command from desc
