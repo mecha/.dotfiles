@@ -58,7 +58,7 @@ lsp.on_attach(function(client, bufnr)
                 diagnostics = {},
             },
         })
-    end, { desc = "Source Action" })
+    end, { desc = "Source Actions" })
 
     vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts("Hover"))
 end)
