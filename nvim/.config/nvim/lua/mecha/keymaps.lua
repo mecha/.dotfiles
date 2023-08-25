@@ -14,7 +14,7 @@ vim.keymap.set("n", "<C-s>", vim.cmd.w, { desc = "Save buffer", silent = true })
 -------------------------------------------------------------------------------
 
 vim.keymap.set("n", "<S-L>", "mzi<CR><ESC>`z", { desc = "Split line", silent = true })
-vim.keymap.set("n", "<C-h>", ":%s///g<left><left><left>", { desc = "Find/Replace in file" })
+vim.keymap.set("n", "<C-h>", ":%s//g<left><left>", { desc = "Find/Replace in file" })
 
 -------------------------------------------------------------------------------
 -- Move text
