@@ -54,8 +54,6 @@ vim.keymap.set("n", "N", "Nzzzv")
 -------------------------------------------------------------------------------
 -- BUFFERS
 -------------------------------------------------------------------------------
-vim.keymap.set("n", "<C-Tab>", vim.cmd.bn, { desc = "Next buffer", silent = true, noremap = true })
-vim.keymap.set("n", "<C-S-Tab>", vim.cmd.bp, { desc = "Previous buffer", silent = true, noremap = true })
 vim.keymap.set("n", "<leader>bd", function()
     bufremove.delete(0, false)
 end, { desc = "Close buffer", silent = true })
