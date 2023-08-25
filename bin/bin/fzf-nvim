@@ -1,0 +1,7 @@
+#! /bin/env bash
+
+selected=$(rg --files --hidden --glob "!**/.git/**" | fzf --reverse --prompt="Open in Neovim: ")
+
+if [ -n "$selected" ]; then
+    nvim $selected
+fi
