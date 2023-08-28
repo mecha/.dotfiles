@@ -1,0 +1,36 @@
+{
+  "desc": "Resource monitor (btop)",
+  "command": "btop"
+}
+{
+  "desc": "Update system",
+  "command": "sudo pacman -Syu"
+}
+{
+  "desc": "Kill all docker containers",
+  "command": "docker kill $(docker ps -q)"
+}
+{
+    "desc": "Lazy Docker",
+    "command": "lazydocker"
+}
+{
+  "desc": "PulseAudio volume control",
+  "command": "pavucontrol &"
+}
+{
+  "desc": "Edit hosts file",
+  "command": "SUDO_EDITOR=nvim sudoedit /etc/hosts"
+}
+{
+  "desc": "Shutdown",
+  "command": "shutdown -h now"
+}
+{
+  "desc": "Reboot",
+  "command": "shutdown -r now"
+}
+{
+  "desc": "Git cheat-sheet",
+  "command": "cat /mnt/files/dev/gitflow.txt && read -n 1"
+}
