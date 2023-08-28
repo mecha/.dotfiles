@@ -1,4 +1,4 @@
-#! /bin/env bash
+#! /usr/bin/env zsh
 # Quick Menu - Miguel Muscat
 
 file="$HOME/.config/qm/qm.json"
@@ -26,7 +26,7 @@ function run_cmd() {
     command="$(search_cmd "Run: ")"
 
     if [[ -n "$command" ]]; then
-        eval "$command"
+        $SHELL -c "$command"
     fi
 }
 
