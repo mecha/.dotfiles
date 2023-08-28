@@ -39,6 +39,14 @@ function add_cmd() {
         exit 1
     fi
 
+    if [[ "$command" == "-i" ]]; then
+        echo -n "Command: "
+        read command
+
+        echo -n "Description: "
+        read desc
+    fi
+
     if [[ -z "$desc" ]]; then
         desc="$command"
     fi
@@ -70,11 +78,11 @@ function rm_cmd() {
 function help() {
     echo "Quick Menu - Miguel Muscat"
     echo "Usage:"
-    echo "  qm <search>                    Run a command."
-    echo "  qm [a|add] <command> [<desc>]  Add a command with an optional description."
-    echo "  qm [r|rm] <search>             Remove a command."
-    echo "  qm [e|edit] <search>           Edit the config file."
-    echo "  qm [-h|--help]                 Show this message."
+    echo "  qm <search>                        Run a command."
+    echo "  qm [a|add] <command> [<desc>] [-i] Add a command. Use -i for interactive mode."
+    echo "  qm [r|rm] <search>                 Remove a command."
+    echo "  qm [e|edit] <search>               Edit the config file."
+    echo "  qm [-h|--help]                     Show this message."
 }
 
 if [[ ! -f "$file" ]]; then
