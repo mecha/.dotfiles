@@ -10,7 +10,7 @@ function path_circumcision {
       PS1+="%B~"
     else
       local head=$(pwd -P | sed "s|^$HOME|~|" | sed -E 's|/(\.+?[^/])[^/]*|/\1|g; s|/[^/]+$||')
-      local hail=$(pwd -P | xargs basename)
+      local hail=$(basename "$(pwd -P)")
       PS1+="%{%F{#aaaaaa}%}$head/%f%B$hail"
     fi
   fi
