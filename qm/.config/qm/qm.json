@@ -34,3 +34,7 @@
   "desc": "Git cheat-sheet",
   "command": "cat ~/dev/personal/gitflow.txt && read -n 1"
 }
+{
+  "desc": "Change wallpaper",
+  "command": "feh --bg-fill $(find ~/Pictures -type f | fzf --reverse --preview 'timg -g80x45 {} -pq')"
+}
