@@ -6,6 +6,7 @@ wk.setup({
         separator = "❱",
         group = " ",
     },
+    triggers_nowait = {},
 })
 
 wk.register({
