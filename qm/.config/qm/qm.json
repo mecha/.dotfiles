@@ -32,5 +32,5 @@
 }
 {
   "desc": "Git cheat-sheet",
-  "command": "cat /mnt/files/dev/gitflow.txt && read -n 1"
+  "command": "cat ~/dev/personal/gitflow.txt && read -n 1"
 }
