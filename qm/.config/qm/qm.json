@@ -16,7 +16,7 @@
 }
 {
   "desc": "PulseAudio volume control",
-  "command": "pavucontrol &"
+  "command": "pavucontrol"
 }
 {
   "desc": "Edit hosts file",
