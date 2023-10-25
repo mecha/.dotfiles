@@ -1,47 +1,35 @@
 #! /bin/env bash
 
-dirs="/mnt/files/dev/projects /mnt/hdd/dev/projects /mnt/hdd/dev/containers"
-
 function usage() {
     self=$(basename "$0")
-    echo "Tmux project sessionizer."
+    echo "Tmux project sessionizer. Create a session at a specific path, or switch to the session if it already exists."
     echo "  Miguel Muscat - 2023"
     echo "  Adapted from ThePrimegen's script: https://github.com/ThePrimeagen/.dotfiles/blob/master/bin/.local/scripts/tmux-sessionizer"
     echo ""
     echo "Usage:"
-    echo "  $self [PROJECT]"
+    echo "  $self [PATH]"
     echo ""
     echo "Arguments:"
-    echo "  PROJECT   The path to the project directory for which a new session will be opened."
-    echo "            If not specified, an fzf prompt will be shown."
+    echo "  PATH   The path to the directory."
 }
 
-if [[ $1 == "--help" ]]; then
+if [[ $1 == "--help" || -z "$1" ]]; then
     usage
     exit 0
 fi
 
-if [[ $# -eq 1 ]]; then
-    selected=$1
-else
-    selected=$(find $dirs -mindepth 1 -maxdepth 2 -type d | fzf --reverse --prompt="Open project: ")
-fi
-
-if [[ -z $selected ]]; then
-    exit 0
-fi
-
-selected_name=$(basename "$selected" | tr . _)
+path=$1
+path_name=$(basename "$path" | tr . _)
 
 tmux_running=$(pgrep tmux)
 
 if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
-    tmux new-session -s $selected_name -c $selected
+    tmux new-session -s $path_name -c $path
     exit 0
 fi
 
-if ! tmux has-session -t=$selected_name 2> /dev/null; then
-    tmux new-session -ds $selected_name -c $selected
+if ! tmux has-session -t=$path_name 2> /dev/null; then
+    tmux new-session -ds $path_name -c $path
 fi
 
-tmux switch-client -t $selected_name
+tmux switch-client -t $path_name

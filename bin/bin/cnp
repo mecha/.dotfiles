@@ -1,7 +1,7 @@
-#! /bin/env bash
+#! /bin/env zsh
 # Create new project.
 
-PROJECTS_DIR=/mnt/files/dev/projects
+full_path=""
 project_dir=""
 project_name=""
 
@@ -16,25 +16,33 @@ function usage() {
     echo "  --help  Show this message."
 }
 
-function ask_for_dir() {
-    project_dir=$(find "$PROJECTS_DIR" -mindepth 1 -maxdepth 1 -type d -printf "%f\n" | fzf --reverse --prompt=" Location: " --height=5)
+function prompt_path() {
+    project_dir=$(find "$DEV_PATH" -mindepth 1 -maxdepth 1 -type d -printf "%f\n" | fzf --reverse --prompt=" Location: " --height=5)
 
     if [[ -z $project_dir ]]; then
         exit 0
     fi
-}
 
-function ask_for_name() {
-    read -p "Enter a name: " project_name
+    read -r "project_name?Enter a name: "
 
     if [[ -z $project_name ]]; then
-        exit 0
+        echo ""
+    else
+        echo "$DEV_PATH/$project_dir/$project_name"
     fi
+}
+
+function create_project() {
+    mkdir -p "$1"
+    cd "$1" && git init -q -b main
+    tps "$1"
 }
 
 function green() {
     echo -e "\033[32m$1\033[0m"
 }
+
+# ---
 
 if [[ $1 == "--help" ]]; then
     usage
@@ -42,17 +50,23 @@ if [[ $1 == "--help" ]]; then
 fi
 
 if [[ $# -eq 1 ]]; then
-    fullpath=$1
+    create_project "$1"
 else
-    ask_for_dir
-    ask_for_name
+    while true
+    do
+        fullpath=$(prompt_path)
 
-    fullpath="$PROJECTS_DIR/$project_dir/$project_name"
-fi
+        if [[ -z "$fullpath" ]]; then
+            exit 0
+        fi
 
-read -p "Create project at $(green $fullpath)? [y/N] " -n 1 -r confirm
+        read -k 1 -r "confirm?Create project at $(green $fullpath) [y/n/q]"
 
-if [[ $confirm =~ ^[Yy]$ ]]; then
-    mkdir -p "$fullpath"
-    tps "$fullpath"
+        if [[ $confirm =~ ^[Yy]$ ]]; then
+            create_project "$fullpath"
+            exit 0
+        elif [[ $confirm =~ ^[Qq]$ ]]; then
+            exit 0
+        fi
+    done
 fi

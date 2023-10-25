@@ -3,6 +3,14 @@
   "command": "btop"
 }
 {
+  "desc": "Clone Git repository",
+  "command": "tps-git-clone"
+}
+{
+  "desc": "Change wallpaper",
+  "command": "find /mnt/smb/photos/wallpaper -type f | grep -v thumbnail | fzf --reverse --cycle --preview 'timg -g80x45 {} -pq' | xargs feh --bg-fill"
+}
+{
   "desc": "Update system",
   "command": "sudo pacman -Syu"
 }
@@ -11,8 +19,8 @@
   "command": "docker kill $(docker ps -q)"
 }
 {
-    "desc": "Lazy Docker",
-    "command": "lazydocker"
+  "desc": "Lazy Docker",
+  "command": "lazydocker"
 }
 {
   "desc": "PulseAudio volume control",
@@ -35,6 +43,6 @@
   "command": "cat ~/dev/personal/gitflow.txt && read -n 1"
 }
 {
-  "desc": "Change wallpaper",
-  "command": "feh --bg-fill $(find ~/Pictures -type f | fzf --reverse --preview 'timg -g80x45 {} -pq')"
+  "desc": "Send to Windows",
+  "command": "send-to-win"
 }

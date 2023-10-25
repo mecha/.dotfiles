@@ -17,3 +17,32 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
         vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
     end,
 })
+
+-- Bash LSP
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'sh',
+  callback = function()
+    vim.lsp.start({
+      name = 'bash-language-server',
+      cmd = { 'bash-language-server', 'start' },
+    })
+  end,
+})
+
+-- Set tmux window title to file name
+vim.api.nvim_create_autocmd({ "BufReadPost", "FileReadPost", "BufNewFile", "BufEnter" }, {
+    callback = function(event)
+        local file = vim.loop.fs_realpath(event.match) or event.match
+        local name = vim.fn.fnamemodify(file, ":t")
+        if name ~= "" then
+            vim.fn.system({ "tmux", "rename-window", name })
+        end
+    end,
+})
+
+-- Reset tmux window title to default when appropriate
+vim.api.nvim_create_autocmd({ "BufDelete", "VimLeave" }, {
+    callback = function()
+        vim.fn.system({ "tmux", "setw", "automatic-rename" })
+    end,
+})

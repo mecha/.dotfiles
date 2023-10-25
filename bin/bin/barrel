@@ -1,0 +1,14 @@
+#! /bin/env bash
+
+if [ -z "$1" ]; then
+    dir=$(pwd)
+else
+    dir=$(dirname "$1")
+fi
+
+files=$(find "$dir" -maxdepth 1 -type f -not -name "index.ts" -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx")
+
+for file in $files; do
+    name=$(basename "$file")
+    echo "export * from \"./${name%.*}\""
+done

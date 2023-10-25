@@ -47,20 +47,34 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { desc = "Rename" })
     vim.keymap.set("n", "<leader>f", vim.lsp.buf.format, { desc = "Format" })
 
-    vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, opts("Definition"))
     vim.keymap.set("n", "<leader>ch", vim.lsp.buf.hover, opts("Hover"))
     vim.keymap.set("n", "<leader>cd", ":lua require('neogen').generate()<cr>", { desc = "Doc/Annotate" })
-    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts("Actions"))
-    vim.keymap.set("n", "<leader>cA", function()
+
+    vim.keymap.set("n", "<leader>ah", vim.lsp.buf.code_action, opts("Code actions (here)"))
+    vim.keymap.set("n", "<leader>af", function()
         vim.lsp.buf.code_action({
             context = {
                 only = { "source" },
                 diagnostics = {},
             },
         })
-    end, { desc = "Source Actions" })
+    end, { desc = "Code actions (file)" })
 
     vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts("Hover"))
 end)
 
 lsp.setup()
+
+vim.lsp.handlers['textDocument/hover'] = function(_, result, ctx, config)
+  config = config or {}
+  config.focus_id = ctx.method
+  if not (result and result.contents) then
+    return
+  end
+  local markdown_lines = vim.lsp.util.convert_input_to_markdown_lines(result.contents)
+  markdown_lines = vim.lsp.util.trim_empty_lines(markdown_lines)
+  if vim.tbl_isempty(markdown_lines) then
+    return
+  end
+  return vim.lsp.util.open_floating_preview(markdown_lines, 'markdown', config)
+end

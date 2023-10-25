@@ -1,0 +1,26 @@
+#! /bin/env bash
+# Git clone and tmux project sessionizer, all in one
+
+read -p "Repository URL: " url
+name=$(basename $url .git)
+
+dir1=$(find "$DEV_PATH" -mindepth 1 -maxdepth 1 -type d -printf "%f\n" | fzf --reverse --prompt="Select clone location (1/2):")
+dir2=$(find "$DEV_PATH/$dir1" -mindepth 1 -maxdepth 1 -type d -printf "%f\n" | fzf --reverse --prompt="Select clone location (2/2):")
+path="$DEV_PATH/$dir1/$dir2/$name"
+
+git clone "$url" "$path"
+
+if [[ $? -eq 0 ]]; then
+    notify-send "Successfully cloned $name" 
+else
+    # check if path exists
+    if [[ -d "$path" ]]; then
+        notify-send "Project already exists locally." 
+    else
+        notify-send "Failed to clone $name"
+        exit 1
+    fi
+fi
+
+tps "$path"
+tmux send-keys -t "${name}:1.1" "nvim README.md" Enter

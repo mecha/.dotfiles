@@ -2,7 +2,6 @@
 # Quick Menu - Miguel Muscat
 
 file="$HOME/.config/qm/qm.json"
-fzf_opts="--reverse"
 fzf_preview="echo {} | xargs -I % jq -r 'select(.desc == \"%\") | .command' $file"
 
 # Get command from desc
@@ -12,7 +11,7 @@ function get_cmd() {
 
 # Search for a desc
 function search_desc() {
-    jq -r '.desc' "$file" | fzf $fzf_opts --preview "$fzf_preview" --prompt "$1"
+    jq -r '.desc' "$file" | fzf --reverse --cycle --preview "$fzf_preview" --prompt "$1"
 }
 
 # Search for a desc and get the corresponding command

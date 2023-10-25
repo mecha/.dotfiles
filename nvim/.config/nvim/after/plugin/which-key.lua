@@ -12,6 +12,7 @@ wk.setup({
 wk.register({
     g = { name = "Goto/Git" },
     s = { name = "Search" },
+    a = { name = "Actions" },
     c = { name = "Code" },
     cl = { name = "LSP" },
     cs = { name = "Swap" },

@@ -1,5 +1,58 @@
 return {
     ------------------------------------------------------------------------------------------------
+    -- UI
+    ------------------------------------------------------------------------------------------------
+    {
+        -- UI replacer for messages, cmdline, popupmenu, etc.
+        "folke/noice.nvim",
+        event = "VeryLazy",
+        dependencies = {
+            { "MunifTanjim/nui.nvim", lazy = true },
+            "rcarriga/nvim-notify",
+        },
+    },
+    {
+        -- Improve default Vim UIs (e.g. Mason language filter)
+        "stevearc/dressing.nvim",
+        opts = {},
+    },
+    {
+        -- Sidebar file tree
+        "nvim-neo-tree/neo-tree.nvim",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+            "MunifTanjim/nui.nvim",
+        },
+    },
+    {
+        -- Popup that shows available key binds
+        "folke/which-key.nvim",
+        event = "VeryLazy",
+    },
+    {
+        -- Better status bar
+        "nvim-lualine/lualine.nvim",
+        requires = { "nvim-tree/nvim-web-devicons", opt = true },
+    },
+    {
+        -- List for diagnostics, references, quick fixes, locations, telescope results, etc.
+        "folke/trouble.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+    },
+    {
+        -- Close buffers without fucking up the window layout
+        "echasnovski/mini.bufremove",
+        version = false,
+        config = true,
+    },
+
+    ------------------------------------------------------------------------------------------------
+    -- Color schemes
+    ------------------------------------------------------------------------------------------------
+    { "ribru17/bamboo.nvim" },
+
+    ------------------------------------------------------------------------------------------------
     -- LSP & Coding
     ------------------------------------------------------------------------------------------------
     {
@@ -72,12 +125,16 @@ return {
         "roobert/tailwindcss-colorizer-cmp.nvim",
         config = true,
     },
+    -- Typescript LSP stuff
+    { "jose-elias-alvarez/nvim-lsp-ts-utils", config = true },
+
     ------------------------------------------------------------------------------------------------
     -- Navigation & Search
     ------------------------------------------------------------------------------------------------
     {
         -- Fuzzy-finding
         "nvim-telescope/telescope.nvim",
+        version = "^0.1",
         dependencies = {
             "nvim-treesitter/nvim-treesitter",
             "nvim-lua/plenary.nvim",
@@ -89,6 +146,7 @@ return {
     { "ThePrimeagen/harpoon" },
     -- Search highlighting
     { "kevinhwang91/nvim-hlslens" },
+
     ------------------------------------------------------------------------------------------------
     -- Editing
     ------------------------------------------------------------------------------------------------
@@ -117,57 +175,16 @@ return {
     { "ggandor/leap.nvim" },
     -- Indentation lines
     { "lukas-reineke/indent-blankline.nvim" },
-    ------------------------------------------------------------------------------------------------
-    -- UI
-    ------------------------------------------------------------------------------------------------
+    -- Markdown Previews
     {
-        -- UI replacer for messages, cmdline, popupmenu, etc.
-        "folke/noice.nvim",
-        event = "VeryLazy",
-        dependencies = {
-            { "MunifTanjim/nui.nvim", lazy = true },
-            "rcarriga/nvim-notify",
-        },
+        "iamcco/markdown-preview.nvim",
+        build = "cd app && npm install",
+        setup = function()
+            vim.g.mkdp_filetypes = { "markdown" }
+        end,
+        ft = { "markdown" },
     },
-    {
-        -- Improve default Vim UIs (e.g. Mason language filter)
-        "stevearc/dressing.nvim",
-        opts = {},
-    },
-    {
-        -- Sidebar file tree
-        "nvim-neo-tree/neo-tree.nvim",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
-            "MunifTanjim/nui.nvim",
-        },
-    },
-    {
-        -- Popup that shows available key binds
-        "folke/which-key.nvim",
-        event = "VeryLazy",
-    },
-    {
-        -- Better status bar
-        "nvim-lualine/lualine.nvim",
-        requires = { "nvim-tree/nvim-web-devicons", opt = true },
-    },
-    {
-        -- List for diagnostics, references, quick fixes, locations, telescope results, etc.
-        "folke/trouble.nvim",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-    },
-    {
-        -- Close buffers without fucking up the window layout
-        "echasnovski/mini.bufremove",
-        version = false,
-        config = true,
-    },
-    ------------------------------------------------------------------------------------------------
-    -- Color schemes
-    ------------------------------------------------------------------------------------------------
-    { "ribru17/bamboo.nvim" },
+
     ------------------------------------------------------------------------------------------------
     -- Git
     ------------------------------------------------------------------------------------------------

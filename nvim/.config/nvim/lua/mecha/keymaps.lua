@@ -9,6 +9,12 @@ vim.keymap.set("n", "Q", "<nop>")
 -- keep muscle memory happy
 vim.keymap.set("n", "<C-s>", vim.cmd.w, { desc = "Save buffer", silent = true })
 
+-- open current file in a new neovim instance in a new tmux window
+vim.keymap.set("n", "<leader>o", ":!tmux neww nvim %<cr>", { desc = "Open in Tmux window", silent = true })
+
+vim.keymap.set("i", "<C-z>", function() vim.cmd('undo') end, { desc = "Undo" })
+vim.keymap.set("i", "<C-r>", function() vim.cmd('redo') end, { desc = "Redo" })
+
 -------------------------------------------------------------------------------
 -- Text manipulation
 -------------------------------------------------------------------------------
@@ -44,8 +50,13 @@ vim.keymap.set({ "n", "v" }, "<leader>d", '"_d')
 vim.keymap.set({ "n", "v" }, "<leader>c", '"_c')
 
 -------------------------------------------------------------------------------
--- Keep cursor in the middle of the screen
+-- SCROLLING
 -------------------------------------------------------------------------------
+
+-- half-page scrolling for a colemak user
+vim.keymap.set("n", "<C-e>", "<C-d>")
+
+-- Keep cursor in the middle of the screen
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
@@ -157,16 +168,20 @@ for i = 1, 9, 1 do
     vim.keymap.set("n", "<leader>h" .. i, harpoonNavFile(i), { desc = "File " .. i })
 end
 
--- Quick 4-file navigation
+-- Quick 8-file navigation
 vim.keymap.set("n", "<A-n>", harpoonNavFile(1), { desc = "Harpoon File 1" })
 vim.keymap.set("n", "<A-e>", harpoonNavFile(2), { desc = "Harpoon File 2" })
 vim.keymap.set("n", "<A-i>", harpoonNavFile(3), { desc = "Harpoon File 3" })
 vim.keymap.set("n", "<A-o>", harpoonNavFile(4), { desc = "Harpoon File 4" })
+vim.keymap.set("n", "<A-h>", harpoonNavFile(5), { desc = "Harpoon File 5" })
+vim.keymap.set("n", "<A-,>", harpoonNavFile(6), { desc = "Harpoon File 6" })
+vim.keymap.set("n", "<A-.>", harpoonNavFile(7), { desc = "Harpoon File 7" })
+vim.keymap.set("n", "<A-/>", harpoonNavFile(8), { desc = "Harpoon File 8" })
 
 -------------------------------------------------------------------------------
 -- LAZYGIT
 -------------------------------------------------------------------------------
-vim.keymap.set("n", "<leader>gg", vim.cmd.LazyGit, { desc = "LazyGit", noremap = true })
+vim.keymap.set("n", "<leader>gg", ":!tmux new-window -c " .. vim.fn.getcwd() .. " -- lazygit<cr><cr>", { desc = "LazyGit", silent = true, noremap = true })
 vim.keymap.set("n", "<leader>gh", vim.cmd.LazyGitFilterCurrentFile, { desc = "File history", noremap = true })
 
 -------------------------------------------------------------------------------
@@ -196,8 +211,28 @@ local references = function()
     trouble.open("lsp_references")
 end
 
+local definition = function()
+    trouble.open("lsp_definitions")
+end
+
+local close_trouble = function()
+    trouble.close()
+end
+
+local trouble_next = function()
+    trouble.next({ skip_groups = true, jump = true })
+end
+
+local trouble_prev = function()
+    trouble.previous({ skip_groups = true, jump = true })
+end
+
+vim.keymap.set("n", "<leader>gd", definition, { desc = "Definition" })
 vim.keymap.set("n", "<leader>gr", references, { desc = "References" })
-vim.keymap.set("n", "<leader>xx", trouble.open, { desc = "Diagnostics", remap = false })
+vim.keymap.set("n", "<leader>xl", trouble.open, { desc = "Diagnostics", remap = false })
 vim.keymap.set("n", "<leader>xw", workspace_diag, { desc = "Workspace diagnostics", remap = false })
 vim.keymap.set("n", "<leader>xd", document_diag, { desc = "Document diagnostics", remap = false })
 vim.keymap.set("n", "<leader>xq", quickfix, { desc = "Quickfix", remap = false })
+vim.keymap.set("n", "<leader>xx", close_trouble, { desc = "Close Trouble", remap = false })
+vim.keymap.set("n", "<leader>xe", trouble_next, { desc = "Next item" })
+vim.keymap.set("n", "<leader>xu", trouble_prev, { desc = "Next item" })

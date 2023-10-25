@@ -1,0 +1,24 @@
+#! /bin/env bash
+
+dir=$1
+depth=$2
+
+if [[ -z "$dir" ]]; then
+    echo "Fuzzy find a directory with a fixed depth."
+    echo "  Miguel Muscat - 2023"
+    echo ""
+    echo "Usage:"
+    echo "  $(basename "$0") <DIR> [<DEPTH>] [<FZF>]"
+    echo ""
+    echo "Arguments:"
+    echo "  DIR     The path to the directory to fuzzy find in."
+    echo "  DEPTH   Optional maximum depth. Default is 2."
+    echo "  FZF     Additional arguments to pass to fzf."
+    exit 1
+fi
+
+if [[ -z "$depth" ]]; then
+    depth=2
+fi
+
+find "$dir" -mindepth 1 -maxdepth "$depth" -type d | fzf "${@:3}"
