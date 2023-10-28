@@ -1,17 +1,17 @@
-#! /usr/bin/env zsh
+#! /usr/bin/env bash
 # Quick Menu - Miguel Muscat
 
-file="$HOME/.config/qm/qm.json"
-fzf_preview="echo {} | xargs -I % jq -r 'select(.desc == \"%\") | .command' $file"
+file="$XDG_CONFIG_HOME/qm/qm.json"
+fzf_preview="echo {} | xargs -I % jq -r '.[] | select(.desc == \"%\") | .command' $file"
 
 # Get command from desc
 function get_cmd() {
-    jq -r --arg desc "$1" 'select(.desc == $desc) | .command' $file
+    jq -r --arg desc "$1" '.[] | select(.desc == $desc) | .command' $file
 }
 
 # Search for a desc
 function search_desc() {
-    jq -r '.desc' "$file" | fzf --reverse --cycle --preview "$fzf_preview" --prompt "$1"
+    jq -r '.[].desc' "$file" | fzf --reverse --cycle --preview "$fzf_preview" --prompt "$1"
 }
 
 # Search for a desc and get the corresponding command
@@ -57,9 +57,10 @@ function add_cmd() {
         exit 1
     fi
 
-    json=$(jq -n --arg command "$command" --arg desc "$desc" '{$desc,$command}')
+    json="$(cat "$file" | jq --arg command "$command" --arg desc "$desc" '. + [{$desc,$command}]')"
+    echo "$json" > "$file"
 
-    echo "$json" >> "$file"
+    echo "Added '$desc'."
 }
 
 function rm_cmd() {
@@ -69,8 +70,8 @@ function rm_cmd() {
         exit 1
     fi
 
-    jq -r "select(.desc != \"$desc\")" "$file" >> "$file.tmp"
-    mv "$file.tmp" "$file"
+    json=$(jq -r --arg desc "$desc" 'del(.[] | select(.desc == $desc))' "$file")
+    echo "$json" > "$file"
     echo "Removed '$desc'."
 }
 
