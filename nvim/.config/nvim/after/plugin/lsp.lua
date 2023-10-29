@@ -6,12 +6,18 @@ lsp.extend_cmp()
 
 lsp.ensure_installed({
     "tsserver",
-    "phpactor@master",
+    "phpactor",
     "rust_analyzer",
 })
 
--- (Optional) Configure lua language server for neovim
 lspconfig.lua_ls.setup(lsp.nvim_lua_ls())
+
+lspconfig.phpactor.setup({
+    init_options = {
+        ["language_server_phpstan.enabled"] = false,
+        ["language_server_psalm.enabled"] = false,
+    }
+})
 
 local cmp = require("cmp")
 
