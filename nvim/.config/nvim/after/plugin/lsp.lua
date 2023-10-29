@@ -33,14 +33,6 @@ cmp.setup({
             return require("tailwindcss-colorizer-cmp").formatter(entry, item)
         end,
     },
-    -- snippet = {
-    --     expand = function(args)
-    --         require("luasnip").lsp_expand(args.body)
-    --     end,
-    -- },
-    -- sources = {
-    --     { name = "luasnip" },
-    -- },
 })
 
 lsp.on_attach(function(client, bufnr)
