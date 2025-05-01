@@ -1,11 +1,20 @@
 #! /bin/env bash
 
-file="$HOME/.journal/$(date +%Y)/$(date +%m)/$(date +%d).md"
+ENC_DIR="$HOME/.journal.enc"
+MNT_DIR="$HOME/.journal"
 
+mkdir -p "$ENC_DIR"
+mkdir -p "$MNT_DIR"
+
+gocryptfs "$ENC_DIR" "$MNT_DIR" || { echo "Could not mount"; read -n 1; exit 1; }
+
+file="$MNT_DIR/$(date +%Y)/$(date +%m)/$(date +%d).md"
 if [ ! -f "$file" ]; then
     mkdir -p $(dirname "$file")
-    title="# $(date "+%d %b %Y")"
-    echo "$title" > "$file"
+    echo "# $(date "+%d %b %Y")" > "$file"
 fi
 
-nvim "$file"
+$EDITOR "$file"
+
+fusermount -u "$MNT_DIR" && echo "Unmounted" || echo "Could not unmount"
+read -n 1
