@@ -1,3 +1,0 @@
-#! /bin/env zsh
-
-tps "$(fzfd "$DEV_PATH" 3 --reverse --prompt "Search project: ")"

@@ -1,0 +1,23 @@
+#! /bin/env bash
+# Open a port using upnpc
+
+read -r -p "Port number: " port
+
+if [[ -z "$port" ]]; then
+    exit 1
+fi
+
+sudo upnpc -r "$port" TCP
+
+echo
+
+if [[ $? -ne 0 ]]; then
+    tput setaf 1
+    echo "Failed to open port $port!"
+    tput sgr0
+    exit 1
+else
+    tput setaf 2
+    echo "Port $port opened successfully!"
+    tput sgr0
+fi

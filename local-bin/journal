@@ -1,0 +1,11 @@
+#! /bin/env bash
+
+file="$HOME/.journal/$(date +%Y)/$(date +%m)/$(date +%d).md"
+
+if [ ! -f "$file" ]; then
+    mkdir -p $(dirname "$file")
+    title="# $(date "+%d %b %Y")"
+    echo "$title" > "$file"
+fi
+
+nvim "$file"

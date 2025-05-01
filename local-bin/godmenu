@@ -1,0 +1,10 @@
+#! /bin/env bash
+
+tmux display-menu -T "#[fg=$bright] GodMenu " -x R -y P \
+    "System monitor" m 'neww -n Monitor btop' \
+    "LazyDocker" d "neww lazydocker" \
+    "Screenkeys" k 'run "systemctl is-active --quiet --user screenkey && systemctl --user stop screenkey || systemctl --user start screenkey"' \
+    "Journal" j "neww -n Journal journal" \
+    "Windows Clipboard" c "neww -n 'Clipboard' nvim /mnt/smb/clipboard.txt" \
+    "" \
+    "Close menu" q ""

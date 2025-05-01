@@ -1,0 +1,8 @@
+#! /bin/env bash
+# Pick a file with fzf and open it in your editor
+
+selected=$(rg -L --files --hidden --glob "!**/.git/**" | fzf --height=10)
+
+if [ -n "$selected" ]; then
+    $EDITOR $selected
+fi

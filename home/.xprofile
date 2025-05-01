@@ -1,0 +1,29 @@
+#! /bin/env sh
+
+export LANG="en_US.UTF-8"
+export TERM="screen-256color"
+export PULSE_SCRIPT="/etc/xrdp/pulse/default.pa"
+
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_BIN_HOME="$HOME/.local/bin"
+
+export NVIM="nvim"
+export EDITOR="$NVIM"
+export SUDO_EDITOR="$NVIM"
+export VISUAL="$NVIM"
+export GIT_EDITOR="$NVIM"
+export BROWSER="firefox"
+export MANPAGER="less -isg"
+
+export DEV_PATH="$HOME/dev"
+
+export GOPATH="$HOME/go"
+export CARGO_HOME="$HOME/.cargo"
+export COMPOSER_HOME="$XDG_CONFIG_HOME/composer"
+
+export PATH="$PATH:$XDG_BIN_HOME:$GOPATH/bin:$CARGO_HOME/bin:$COMPOSER_HOME/vendor/bin"
+
+eval "$(ssh-agent)"

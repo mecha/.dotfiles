@@ -1,9 +1,0 @@
-#! /bin/env bash
-
-if [[ -z "$1" ]]; then
-    read -p "Send to Windows: " text
-else
-    text="$1"
-fi
-
-echo -e "$text\n" >> /mnt/smb/clipboard.txt

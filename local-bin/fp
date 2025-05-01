@@ -1,0 +1,6 @@
+#! /usr/bin/env bash
+
+choices="$(find "$DEV_PATH" -maxdepth 3 -type d)"
+selected="$(echo "$choices" | fzf)"
+
+cd "$selected"

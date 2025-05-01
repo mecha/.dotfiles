@@ -1,13 +1,23 @@
-# Mecha's dotfiles
+# Dotfiles and utils
 
 Stow all symlinks with:
 
 ```
-./install.sh
+make install
 ```
 
 Unstow them with:
 
 ```
-./install.sh -u
+make uninstall
 ```
+
+Also need to install:
+* go
+* php
+* node
+* npm
+* composer
+* fzf
+* ripgrep
+* jq

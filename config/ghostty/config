@@ -1,0 +1,31 @@
+shell-integration = zsh
+shell-integration-features = no-cursor
+cursor-style = block
+linux-cgroup = always
+confirm-close-surface = false
+
+font-family = "FiraCode Nerd Font"
+font-feature = -calt, -liga, -dlig
+font-size = 21
+window-decoration = false
+window-padding-color = extend
+mouse-hide-while-typing = true
+
+palette =  0=#282b33
+palette =  1=#fe5548
+palette =  2=#a1d858
+palette =  3=#ffcc56
+palette =  4=#42a1f4
+palette =  5=#df86f9
+palette =  6=#4adaf7
+palette =  7=#DFDFDF
+palette =  8=#0f161e
+palette =  9=#f7402c
+palette = 10=#8bc13a
+palette = 11=#f7bf31
+palette = 12=#2c8ce0
+palette = 13=#dddddd
+palette = 14=#30c1e5
+palette = 15=#bbc2cf
+foreground = #e0edb6
+background = #2c3333

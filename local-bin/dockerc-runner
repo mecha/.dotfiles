@@ -1,0 +1,64 @@
+#! /bin/env bash
+# Lists all docker compose projects from a specific directory in fzf and toggles
+# their status (running/stopped) when selected.
+
+projects_path="/home/miguel/dev/work/containers"
+
+select_project() {
+    list="$(find "$projects_path" -maxdepth 1 -mindepth 1 -type d -printf "%f\n")"
+    list="$(add_status_icons "$list" | sort)"
+    selected="$(echo -e "$list" | fzf --ansi --prompt "Select project: ")"
+
+    if [[ -z "$selected" ]]; then
+        exit 1
+    fi
+
+    awk '{print $2}' <<< "$selected"
+}
+
+toggle_project() {
+    name="$1"
+
+    if [[ "$(is_running "$name")" == "0" ]]; then
+        echo "Starting $name..."
+        (cd "$projects_path/$name" && docker compose up -d)
+    else
+        echo "Stopping $name..."
+        (cd "$projects_path/$name" && docker compose down)
+    fi
+}
+
+is_running() {
+    name="$1"
+
+    if [[ -z "$name" ]]; then
+        echo "0"
+        return
+    fi
+
+    ps="$(cd "$projects_path/$name" && docker compose ps -q)"
+
+    if [[ -z "$ps" ]]; then
+        echo "0"
+    else
+        echo "1"
+    fi
+}
+
+add_status_icons() {
+    lines="$1"
+
+    IFS=$'\n'
+    for line in $lines; do
+        running="$(is_running "$line")"
+        if [[ "$running" == "1" ]]; then
+            echo -e "\e[32m●\e[0m" "$line"
+        else
+            echo -e "\e[31m●\e[0m" "$line"
+        fi
+    done
+    unset IFS
+}
+
+project=$(select_project)
+toggle_project "$project"

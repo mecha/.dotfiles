@@ -1,0 +1,9 @@
+#! /usr/bin/env bash
+# Fuzzy find and edit a file in Neovim from any window in the project's session.
+
+file=$(fzf --prompt 'File: ' --style full --preview 'bat --color=always --style=plain {}')
+if [[ -z "$file" ]]; then
+    exit
+fi
+tmux select-window -t nvim || tmux neww -bt 1 nvim
+tmux send-keys -t nvim Escape ":e $file" C-m

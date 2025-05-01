@@ -1,0 +1,88 @@
+#! /bin/env bash
+# My version of tps, adapted from ThePrimegen's script:
+# https://github.com/ThePrimeagen/.dotfiles/blob/master/bin/.local/scripts/tmux-sessionizer"
+
+main() {
+    new="  New project"
+    clone="  Clone git repo"
+
+    dirs="$(find "$DEV_PATH" -mindepth 2 -maxdepth 3 -type d | sed "s|^$DEV_PATH/||")"
+    choices="$(printf "%s\n%s\n%s" "$new" "$clone" "$dirs" )"
+    previewCommand='if [[ "{}" =~ "/" ]]; then exa -T -L 1 --group-directories-first --color=always --git-ignore --git $DEV_PATH/{}; fi'
+    selected="$(echo "$choices" | fzf --style full --prompt 'Project: ' --preview "$previewCommand")"
+
+    if [[ -n "$selected" ]]; then
+        if [[ "$selected" == "$new" ]]; then
+            create_proj
+        elif [[ "$selected" == "$clone" ]]; then
+            clone_proj
+        else
+            open_proj "$DEV_PATH/$selected"
+        fi
+    fi
+}
+
+# opens or switches to a project session
+# @param $path string
+open_proj() {
+    path=$1
+    path_name=$(basename "$path" | tr . _)
+
+    tmux_running=$(pgrep tmux)
+    if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+        tmux new-session -s $path_name -c $path
+        exit 0
+    fi
+
+    if ! tmux has-session -t=$path_name 2> /dev/null; then
+        tmux new-session -ds $path_name -c $path
+    fi
+
+    tmux switch-client -t $path_name
+}
+
+# Clones a Git repo and creates a tmux session for it
+clone_proj() {
+    read -p "Repository URL: " url
+    name=$(basename $url .git)
+
+    dir="$(find "$DEV_PATH" -maxdepth 3 -type d | fzf --header "Select clone location")"
+    path="$dir/$name"
+
+    git clone "$url" "$path"
+
+    if [[ $? -ne 0 && ! -d "$path" ]]; then
+        echo "Failed to clone."
+        read -n 1
+        exit 1
+    fi
+
+    open_proj "$path"
+    tmux send-keys -t "${name}:1.1" "nvim README.md" Enter
+}
+
+# Creates a new project interactively and opens its sessions.
+create_proj() {
+    echo
+    read -r -p " Project name: " name
+    if [[ -z "$name" ]]; then
+        exit 1
+    fi
+
+    path="$(find "$DEV_PATH" -maxdepth 3 -type d | fzf --reverse --style full --prompt "Location: ")"
+    if [[ -z "$path" ]]; then
+        exit 1
+    fi
+
+    path="$path/$name"
+
+    if [[ -n "$path" ]]; then
+        if [[ ! -d "$path" ]]; then
+            mkdir -p "$path"
+            cd "$path" && git init -q -b main
+        fi
+        open_proj "$path"
+    fi
+}
+
+main
