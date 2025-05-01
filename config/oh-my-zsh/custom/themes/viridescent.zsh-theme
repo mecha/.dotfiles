@@ -32,37 +32,24 @@ export VIRID_CYAN="#4adaf7"
 export VIRID_PINK="#de6bdb"
 export VIRID_TAN="#d2b487"
 
-function path_circumcision {
-  line=$(seq -s ┈ $COLUMNS | tr -d '[:digit:]')
-  PS1=$'\n'
-  PS1+="%F{$VIRID_MINT}$line"
-  PS1+=$'\r'
-  PS1+="┌┈[%F{$VIRID_MINT}"
+line=$(seq -s ┈ $COLUMNS | tr -d '[:digit:]')
+PROMPT=$'\n'"%F{$VIRID_MINT}$line"$'\r'"┌┈[%F{$VIRID_MINT}"
 
-  if [[ $PWD == "/" ]]; then
-    PS1+="/"
-  else
-    if [[ $PWD == $HOME ]]; then
-      PS1+="~"
-    else
-      local head=$(pwd -P | sed "s|^$HOME|~|" | sed -E 's|/(\.+?[^/])[^/]*|/\1|g; s|/[^/]+$||')
-      local tail=$(basename "$(pwd -P)")
-      PS1+="$head/%F{$VIRID_FG}$tail"
-    fi
-  fi
+if [[ $PWD == "/" ]]; then
+    PROMPT+="/"
+elif [[ $PWD == $HOME ]]; then
+    PROMPT+="~"
+else
+    local head=$(pwd -P | sed "s|^$HOME|~|" | sed -E 's|/(\.+?[^/])[^/]*|/\1|g; s|/[^/]+$||')
+    local tail=$(basename "$(pwd -P)")
+    PROMPT+="$head/%F{$VIRID_FG}$tail"
+fi
 
-  PS1+="%F{$VIRID_MINT}"
-  PS1+="]"
-  PS1+="$(git_prompt_info)"
+PROMPT+="%F{$VIRID_MINT}]"
+PROMPT+="$(git_prompt_info)" # TODO: not working
+PROMPT+=$'\n'"%F{$VIRID_MINT}└┈ %f"
 
-  PS1+=$'\n'
-  PS1+="%F{$VIRID_MINT}"
-  PS1+="└┈ %f"
-}
-
-precmd_functions+=(path_circumcision)
-
-ZSH_THEME_GIT_PROMPT_PREFIX="┈┈[%F{$VIRID_YELLOW} "
-ZSH_THEME_GIT_PROMPT_DIRTY="*"
-ZSH_THEME_GIT_PROMPT_CLEAN=""
-ZSH_THEME_GIT_PROMPT_SUFFIX="%F{$VIRID_DIM}]"
+# ZSH_THEME_GIT_PROMPT_PREFIX="┈┈[%F{$VIRID_YELLOW} "
+# ZSH_THEME_GIT_PROMPT_SUFFIX="%F{$VIRID_DIM}]"
+# ZSH_THEME_GIT_PROMPT_DIRTY="*"
+# ZSH_THEME_GIT_PROMPT_CLEAN=""
