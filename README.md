@@ -5,13 +5,13 @@
 **Arch Linux**
 
 ```
-sudo pacman -S stow git zsh tmux fzf jq ripgrep go php node npm composer neovim
+sudo pacman -S stow git zsh tmux fzf jq ripgrep go php nodejs npm composer neovim
 ```
 
 **Debian/Ubuntu**
 
 ```
-sudo apt install stow git zsh tmux fzf jq ripgrep golang php node npm composer
+sudo apt install stow git zsh tmux fzf jq ripgrep golang php nodejs npm composer
 ```
 
 Latest neovim must be [installed from source](https://github.com/neovim/neovim/blob/master/BUILD.md).
