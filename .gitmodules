@@ -1,3 +1,15 @@
 [submodule "config/nvim"]
 	path = config/nvim
 	url = https://github.com/mecha/config.nvim
+[submodule "config/oh-my-zsh/custom/zsh-autosuggestions"]
+	path = config/oh-my-zsh/custom/plugins/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions
+[submodule "config/oh-my-zsh/custom/zsh-history-substring-search"]
+	path = config/oh-my-zsh/custom/plugins/zsh-history-substring-search
+	url = https://github.com/zsh-users/zsh-history-substring-search
+[submodule "config/oh-my-zsh/custom/plugins/zsh-syntax-highlighting"]
+	path = config/oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
+[submodule "config/oh-my-zsh/custom/plugins/zsh-completions"]
+	path = config/oh-my-zsh/custom/plugins/zsh-completions
+	url = https://github.com/zsh-users/zsh-completions.git

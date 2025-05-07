@@ -1,11 +1,16 @@
 export ZSH="$HOME/.config/oh-my-zsh"
-ZSH_THEME="viridescent"
-plugins=(git ssh-agent)
-source $ZSH/oh-my-zsh.sh
+export ZSH_CUSTOM="$ZSH/custom"
 
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+ZSH_THEME="viridescent"
+plugins=(git ssh-agent zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting)
+
+fpath+="${ZSH_CUSTOM}/plugins/zsh-completions/src"
+
+autoload -U compinit && compinit
+source "$ZSH/oh-my-zsh.sh"
+
+# source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+# source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 export FZF_DEFAULT_OPTS="--color=fg:$VIRID_FG,bg+:$VIRID_DARK,fg+:$VIRID_BRIGHT_MINT,pointer:$VIRID_BRIGHT_MINT,prompt:$VIRID_WHITE"
 
