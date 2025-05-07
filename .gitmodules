@@ -13,3 +13,6 @@
 [submodule "config/oh-my-zsh/custom/plugins/zsh-completions"]
 	path = config/oh-my-zsh/custom/plugins/zsh-completions
 	url = https://github.com/zsh-users/zsh-completions.git
+[submodule "config/tpm"]
+	path = config/tpm
+	url = https://github.com/tmux-plugins/tpm
