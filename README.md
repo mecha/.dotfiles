@@ -18,21 +18,22 @@ Latest neovim must be [installed from source](https://github.com/neovim/neovim/b
 
 ## Install
 
-Clone this repo:
+1. Install [packages](./packages)
+2. Clone this repo:
 
 ```
 git clone https://github.com/mecha/.dotfiles ~/.dotfiles
 cd ~/.dotfiles
 ```
 
-Init submodules:
+3. Init submodules:
 
 ```
 git submodule init
 git submodule update
 ```
 
-Stow symlinks:
+4. Stow symlinks:
 
 ```
 make install
