@@ -32,7 +32,6 @@ alias ll="eza -lga --icons --group-directories-first"
 alias n="nvim"
 alias f="fzfn"
 alias tt="exa -T -lha"
-alias matrix="unimatrix -a -f -s 95" # :P
 alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)'
 
 # nvm
