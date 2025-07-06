@@ -6,7 +6,10 @@ plugins=(git ssh-agent zsh-autosuggestions zsh-history-substring-search zsh-synt
 
 fpath+="${ZSH_CUSTOM}/plugins/zsh-completions/src"
 
-autoload -U compinit && compinit
+autoload -U compinit bashcompinit
+compinit
+bashcompinit
+
 source "$ZSH/oh-my-zsh.sh"
 
 # source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
