@@ -9,8 +9,15 @@ fpath+="${ZSH_CUSTOM}/plugins/zsh-completions/src"
 autoload -U compinit && compinit
 source "$ZSH/oh-my-zsh.sh"
 
-# source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
-# source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+export DEV_PATH="$HOME/dev"
+export PATH="/$HOME/.local/bin:$PATH"
+
+export NVIM="nvim"
+export EDITOR="$NVIM"
+export SUDO_EDITOR="$NVIM"
+export VISUAL="$NVIM"
+export GIT_EDITOR="$NVIM"
+export MANPAGER="less -isg"
 
 export FZF_DEFAULT_OPTS="--color=fg:$VIRID_FG,bg+:$VIRID_DARK,fg+:$VIRID_BRIGHT_MINT,pointer:$VIRID_BRIGHT_MINT,prompt:$VIRID_WHITE"
 
@@ -38,5 +45,3 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
-
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
