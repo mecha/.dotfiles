@@ -1,20 +1,32 @@
-ghostty
-zsh
-zsh-autosuggestions
-zsh-syntax-highlighting
-zsh-history-substring-search
-tmux
-fzf
-ripgrep
-neovim
-i3
-jq
-exa
-bat
-lazygit
-ttf-firacode-nerd
-gocryptfs
+# core tools
+- zsh
+- tmux
+- neovim
+- fzf
+- ripgrep
+- fd
+- jq
+- bat
+- eza
+- btop
+- lazygit
+- gocryptfs
+- tldr
+- ttf-jetbrains-mono-nerd
 
-golang
-node
-php
+# zsh plugins
+- zsh-autosuggestions
+- zsh-history-substrig
+- zsh-syntax-highlighting
+
+# programming
+- golang
+- node
+- php
+
+# wayland
+- wl-clipboard
+
+# gui
+- ghostty
+- zen-browser-bin [aur]

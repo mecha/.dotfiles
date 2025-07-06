@@ -6,7 +6,7 @@ main() {
     new="  New project"
     clone="  Clone git repo"
 
-    dirs="$(find "$DEV_PATH" -mindepth 2 -maxdepth 3 -type d | sed "s|^$DEV_PATH/||")"
+    dirs="$(fd . "$DEV_PATH" --hidden --min-depth 2 --max-depth 3 --type d | sed "s|^$DEV_PATH/||")"
     choices="$(printf "%s\n%s\n%s" "$new" "$clone" "$dirs" )"
     previewCommand='if [[ "{}" =~ "/" ]]; then exa -T -L 1 --group-directories-first --color=always --git-ignore --git $DEV_PATH/{}; fi'
     selected="$(echo "$choices" | fzf --style full --prompt 'Project: ' --preview "$previewCommand")"
