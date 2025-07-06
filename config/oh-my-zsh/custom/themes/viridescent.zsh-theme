@@ -46,7 +46,14 @@ function virid_prompt {
         PROMPT+="$head/%F{$VIRID_FG}$tail"
     fi
 
-    PROMPT+="%F{$VIRID_MINT}]"
+    PROMPT+="%F{$VIRID_MINT}"
+    PROMPT+="]┈"
+
+    if [[ "$JOURNAL_SHELL" == "1" ]]; then
+        PROMPT+="%F{$VIRID_PURPLE}"
+        PROMPT+="[]"
+    fi
+
     PROMPT+="$(git_prompt_info)" # TODO: not working
     PROMPT+=$'\n'"%F{$VIRID_MINT}└┈ %f"
 }
