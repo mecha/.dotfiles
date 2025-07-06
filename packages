@@ -1,6 +1,10 @@
+# aur
+paru
+
 # core tools
 - zsh
 - tmux
+- vim
 - neovim
 - fzf
 - ripgrep
@@ -13,16 +17,19 @@
 - gocryptfs
 - tldr
 - ttf-jetbrains-mono-nerd
+- timg [aur]
+- mpv
 
 # zsh plugins
+- oh-my-zsh
 - zsh-autosuggestions
 - zsh-history-substrig
 - zsh-syntax-highlighting
 
 # programming
-- golang
-- node
-- php
+- go, delve
+- node, npm, nvm
+- php, composer
 
 # wayland
 - wl-clipboard
