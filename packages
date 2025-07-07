@@ -34,6 +34,12 @@ paru
 # wayland
 - wl-clipboard
 
+# compositor
+- hyprland
+- hyprpaper
+- hyprlock
+- hyprshot [aur]
+
 # gui
 - ghostty
 - zen-browser-bin [aur]
