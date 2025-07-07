@@ -1,0 +1,189 @@
+@define-color fg #e9f5db;
+@define-color bg #2c3333;
+@define-color dark #232828;
+@define-color black #101e18;
+@define-color white #ECEFEB;
+@define-color light_gray #bbc2cf;
+@define-color dark_gray #42464d;
+@define-color gray #818781;
+@define-color sel #4e5f3d;
+@define-color dim #515b4c;
+@define-color bright_mint #95d5b2;
+@define-color mint #84a98c;
+@define-color dark_mint #48534a;
+@define-color bright_green #a1d858;
+@define-color green #81af58;
+@define-color dark_green #283120;
+@define-color bright_red #ff6676;
+@define-color red #e85362;
+@define-color dark_red #3e2829;
+@define-color yellow #e3ca65;
+@define-color dark_yellow #3c3828;
+@define-color purple #a09af8;
+@define-color dark_purple #333242;
+@define-color ice #88c1e9;
+@define-color dark_ice #2e404d;
+@define-color coral #e07870;
+@define-color orange #f99a47;
+@define-color blue #409cdc;
+@define-color cyan #4adaf7;
+@define-color pink #de6bdb;
+@define-color tan #d2b487;
+
+* {
+	font-size: 20px;
+	font-family: JetBrains Mono;
+	color: @bright_mint;
+}
+
+window > .horizontal {
+    padding: 8px 12px 0;
+}
+
+window#waybar {
+    color: @fg;
+	background: transparent;
+}
+
+tooltip {
+    padding: 0 2px;
+    background-color: @dark;
+}
+tooltip * {
+    color: @bright_mint;
+    font-size: 13px;
+}
+
+#cpu,
+#memory,
+#disk,
+#workspaces,
+#backlight,
+#clock,
+#pulseaudio,
+#battery,
+#bluetooth,
+#custom-notification,
+#tray {
+    border-radius: 5px;
+	background: @dark;
+}
+
+#clock,
+#pulseaudio,
+#memory,
+#cpu,
+#battery,
+#bluetooth,
+#backlight,
+#custom-notification,
+#tray,
+#disk {
+	padding: 0 10px;
+}
+
+#workspaces button {
+	color: @mint;
+	padding: 0 8px;
+    border-radius: 0;
+    border: none;
+}
+#workspaces button.active {
+	color: @bright_mint;
+	background: @black;
+}
+#workspaces button:hover {
+    border: none;
+    background: @black;
+    outline: none;
+    text-shadow: none;
+    box-shadow: none;
+}
+#workspaces button:first-child {
+    border-radius: 5px 0 0 5px;
+}
+#workspaces button:last-child {
+    border-radius: 0 5px 5px 0;
+}
+#workspaces button:only-child {
+    border-radius: 5px;
+}
+
+#pulseaudio.muted {
+    color: @bright_red;
+}
+
+#bluetooth {
+    color: @fg;
+}
+#bluetooth.connected {
+    color: @blue;
+}
+#bluetooth.disabled {
+    color: @gray;
+}
+#cpu {
+	color: @purple;
+}
+#memory {
+	color: @light_gray;
+}
+#disk {
+	color: @tan;
+}
+
+#battery {
+	color: @bright_green;
+}
+#battery.good {
+    color: @green;
+}
+#battery.mid {
+    color: @yellow;
+}
+#battery.low {
+    color: @orange;
+}
+#battery.critical {
+    color: @red;
+}
+#battery.charging {
+    color: @cyan;
+}
+
+#tray widget > * > * {
+    border: 1px solid @green;
+    border-radius: 10px;
+    box-shadow: 1px 1px 3px 2px @dark;
+}
+#tray menu {
+    background-color: @bg;
+}
+#tray menu menu {
+    border-radius: 10px;
+}
+#tray menu menu menuitem {
+    margin: 0px;
+}
+#tray menu menuitem {
+    margin: 0px 2px;
+}
+#tray menu menuitem * {
+    color: @fg;
+    font-size: 16px;
+    padding: 2px 0;
+}
+#tray menu menuitem:disabled * {
+    color: @fg;
+}
+#tray menu menuitem:hover {
+    background-color: @dark;
+}
+
+#custom-notification.dnd-none,
+#custom-notification.dnd-notification,
+#custom-notification.dnd-inhibited-notification,
+#custom-notification.dnd-inhibited-none
+{
+    color: @red;
+}

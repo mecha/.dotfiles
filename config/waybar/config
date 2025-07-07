@@ -1,0 +1,138 @@
+{
+  "layer": "top",
+  "position": "top",
+  "spacing": 5,
+  "reload_style_on_change": true,
+  "modules-left": [
+    "cpu",
+    "memory",
+    "disk",
+    "battery"
+  ],
+  "modules-center": [
+      "hyprland/workspaces"
+  ],
+  "modules-right": [
+    "tray",
+    "backlight",
+    "pulseaudio",
+    "custom/notification",
+    "clock#1"
+  ],
+  "cpu": {
+    "interval": 5,
+    "format": " {usage:2}%"
+  },
+  "memory": {
+    "interval": 5,
+    "format": " {:-3}%"
+  },
+  "disk": {
+    "interval": 5,
+    "format": " {percentage_used:2}%",
+    "path": "/"
+  },
+  "backlight": {
+    "format": "{icon} {percent}%",
+    "format-icons": [
+      "󰃞",
+      "󰃟",
+      "󰃝",
+      "󰃠"
+    ]
+  },
+  "clock#1": {
+    "format": "{:%a %d %h, %H:%M}",
+    "tooltip": false
+  },
+  "bluetooth": {
+    "format": "",
+    "format-disabled": "",
+    "format-off": "",
+    "interval": 30,
+    "on-click": "blueman-manager"
+  },
+  "pulseaudio": {
+    "format": "{icon} {volume:3}%",
+    "format-bluetooth": "{icon} {volume:3}%",
+    "format-muted": " --%",
+    "format-icons": {
+      "headphones": "",
+      "default": [
+        "",
+        ""
+      ]
+    },
+    "scroll-step": 1,
+    "smooth-scrolling-threshold": 1.5,
+    "reverse-scrolling": true,
+    "on-click": "pamixer -t",
+    "on-click-right": "pavucontrol"
+  },
+  "battery": {
+    "interval": 1,
+    "states": {
+      "good": 75,
+      "mid": 50,
+      "low": 25,
+      "critical": 15
+    },
+    "format": "{icon} {capacity:2}%",
+    "format-plugged": "󰚥 {capacity}%",
+    "format-full": " Full",
+    "format-icons": {
+      "default": [
+        "󰂎",
+        "󰁺",
+        "󰁻",
+        "󰁼",
+        "󰁽",
+        "󰁾",
+        "󰁿",
+        "󰂀",
+        "󰂁",
+        "󰂂",
+        "󰁹"
+      ],
+      "charging": [
+        "󰢟",
+        "󰢜",
+        "󰂆",
+        "󰂇",
+        "󰂈",
+        "󰢝",
+        "󰂉",
+        "󰢞",
+        "󰂊",
+        "󰂋",
+        "󰂅"
+      ]
+    }
+  },
+  "tray": {
+    "icon-size": 20,
+    "spacing": 5,
+    "show-passive-items": false,
+    "reverse-direction": true
+  },
+  "custom/notification": {
+    "tooltip": false,
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "<span foreground='#a1d858'><sup></sup></span>",
+      "none": "",
+      "dnd-notification": "<span foreground='#a1d858'><sup></sup></span>",
+      "dnd-none": "",
+      "inhibited-notification": "<span foreground='#a1d858'><sup></sup></span>",
+      "inhibited-none": "",
+      "dnd-inhibited-notification": "<span foreground='#a1d858'><sup></sup></span>",
+      "dnd-inhibited-none": ""
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  }
+}
