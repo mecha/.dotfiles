@@ -2,7 +2,7 @@ export ZSH="$HOME/.config/oh-my-zsh"
 export ZSH_CUSTOM="$ZSH/custom"
 
 ZSH_THEME="viridescent"
-plugins=(git ssh-agent zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting)
+plugins=(git ssh-agent zsh-autosuggestions zsh-history-substring-search fast-syntax-highlighting)
 
 fpath+="${ZSH_CUSTOM}/plugins/zsh-completions/src"
 
