@@ -1,31 +1,35 @@
 {
   "layer": "top",
   "position": "top",
-  "spacing": 5,
+  "spacing": 6,
   "reload_style_on_change": true,
   "modules-left": [
     "cpu",
     "memory",
     "disk",
-    "battery"
+    "battery",
+    "custom/updates",
+    "custom/face"
   ],
   "modules-center": [
       "hyprland/workspaces"
   ],
   "modules-right": [
+    "mpris",
     "tray",
     "backlight",
     "pulseaudio",
     "custom/notification",
-    "clock#1"
+    "clock"
   ],
   "cpu": {
     "interval": 5,
-    "format": " {usage:2}%"
+    "format": " {usage:2}%",
+    "on-click": "ghostty -e btop"
   },
   "memory": {
     "interval": 5,
-    "format": " {:-3}%"
+    "format": " {:-2}%"
   },
   "disk": {
     "interval": 5,
@@ -41,13 +45,15 @@
       "󰃠"
     ]
   },
-  "clock#1": {
+  "clock": {
     "format": "{:%a %d %h, %H:%M}",
-    "tooltip": false
+    "tooltip": false,
+    "on-click": "ghostty -e ~/dev/personal/calren/calren"
   },
   "bluetooth": {
     "format": "",
     "format-disabled": "",
+    "format-connected": "󰂱",
     "format-off": "",
     "interval": 30,
     "on-click": "blueman-manager"
@@ -55,7 +61,7 @@
   "pulseaudio": {
     "format": "{icon} {volume:3}%",
     "format-bluetooth": "{icon} {volume:3}%",
-    "format-muted": " --%",
+    "format-muted": " ---%",
     "format-icons": {
       "headphones": "",
       "default": [
@@ -66,8 +72,8 @@
     "scroll-step": 1,
     "smooth-scrolling-threshold": 1.5,
     "reverse-scrolling": true,
-    "on-click": "pamixer -t",
-    "on-click-right": "pavucontrol"
+    "on-click": "pavucontrol",
+    "on-click-right": "pactl set-sink-mute 0 toggle"
   },
   "battery": {
     "interval": 1,
@@ -109,6 +115,20 @@
       ]
     }
   },
+  "mpris": {
+    "format": "{status_icon}  {player_icon} {title}  {artist}",
+    "title-len": 30,
+    "artist-len": 16,
+    "player-icons": {
+      "default": "🎵",
+      "firefox": "󰈹"
+    },
+    "status-icons": {
+      "playing": "",
+      "paused": "",
+      "stopped": ""
+    }
+  },
   "tray": {
     "icon-size": 20,
     "spacing": 5,
@@ -117,15 +137,15 @@
   },
   "custom/notification": {
     "tooltip": false,
-    "format": "{icon}",
+    "format": "{icon} {text}",
     "format-icons": {
-      "notification": "<span foreground='#a1d858'><sup></sup></span>",
+      "notification": "",
       "none": "",
-      "dnd-notification": "<span foreground='#a1d858'><sup></sup></span>",
+      "dnd-notification": "",
       "dnd-none": "",
-      "inhibited-notification": "<span foreground='#a1d858'><sup></sup></span>",
+      "inhibited-notification": "",
       "inhibited-none": "",
-      "dnd-inhibited-notification": "<span foreground='#a1d858'><sup></sup></span>",
+      "dnd-inhibited-notification": "",
       "dnd-inhibited-none": ""
     },
     "return-type": "json",
@@ -134,5 +154,25 @@
     "on-click": "swaync-client -t -sw",
     "on-click-right": "swaync-client -d -sw",
     "escape": true
+  },
+  "custom/updates": {
+    "format": "{icon} {0}",
+    "format-updated": "Up to date",
+    "return-type": "json",
+    "format-icons": {
+        "has-updates": "",
+        "updated": ""
+    },
+    "hide-empty-text": true,
+    "exec-if": "which waybar-module-pacman-updates",
+    "exec": "waybar-module-pacman-updates --interval-seconds 5 --network-interval-seconds 600 --no-zero-output",
+    "on-click": "ghostty -e bash -c 'echo \"=> FULL SYSTEM UPDATE\" && paru && echo \"=> SYSTEM UPDATED\" && read -n 1'",
+    "on-click-right": "xdg-open https://archlinux.org/news"
+  },
+  "custom/face": {
+    "exec": "/home/miguel/dev/personal/waybar-stuff/waysock listen",
+    "on-click": "killall -SIGUSR1 mecha-face",
+    "on-click-right": "killall -SIGUSR2 mecha-face",
+    "format": "{}"
   }
 }

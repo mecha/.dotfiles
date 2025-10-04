@@ -32,12 +32,12 @@
 
 * {
 	font-size: 20px;
-	font-family: JetBrains Mono;
+	font-family: 'JetBrainsMono Nerd Font';
 	color: @bright_mint;
 }
 
 window > .horizontal {
-    padding: 8px 12px 0;
+    padding: 8px 5px 0;
 }
 
 window#waybar {
@@ -57,6 +57,7 @@ tooltip * {
 #cpu,
 #memory,
 #disk,
+#mpris,
 #workspaces,
 #backlight,
 #clock,
@@ -64,22 +65,17 @@ tooltip * {
 #battery,
 #bluetooth,
 #custom-notification,
+#custom-updates,
+#custom-face,
 #tray {
-    border-radius: 5px;
+    border-radius: 6px;
 	background: @dark;
+    margin: 0 2px;
+	padding: 0 10px;
 }
 
-#clock,
-#pulseaudio,
-#memory,
-#cpu,
-#battery,
-#bluetooth,
-#backlight,
-#custom-notification,
-#tray,
-#disk {
-	padding: 0 10px;
+#workspaces {
+	padding: 0;
 }
 
 #workspaces button {
@@ -110,7 +106,8 @@ tooltip * {
 }
 
 #pulseaudio.muted {
-    color: @bright_red;
+    color: @black;
+    background-color: @coral;
 }
 
 #bluetooth {
@@ -151,6 +148,17 @@ tooltip * {
     color: @cyan;
 }
 
+#mpris {
+    color: @dark;
+    background-color: @bright_mint;
+    font-size: 15px;
+    font-style: normal;
+}
+#mpris.paused {
+    color: @dark_mint;
+    background-color: @mint;
+}
+
 #tray widget > * > * {
     border: 1px solid @green;
     border-radius: 10px;
@@ -181,9 +189,36 @@ tooltip * {
 }
 
 #custom-notification.dnd-none,
-#custom-notification.dnd-notification,
-#custom-notification.dnd-inhibited-notification,
 #custom-notification.dnd-inhibited-none
 {
-    color: @red;
+    color: @black;
+    background-color: @coral;
+}
+#custom-notification.notification,
+#custom-notification.inhibited-notification
+{
+    color: @black;
+    background-color: @yellow;
+}
+#custom-notification.dnd-notification,
+#custom-notification.dnd-inhibited-notification
+{
+    color: @black;
+    background-color: @coral;
+}
+
+#custom-updates.updated {
+    background: transparent;
+}
+#custom-updates.has-updates {
+    color: @black;
+    background: @ice;
+    font-weight: bold;
+}
+
+#custom-face {
+    color: @bright_mint;
+    font-weight: normal;
+    padding-left: 5px;
+    padding-right: 5px;
 }
