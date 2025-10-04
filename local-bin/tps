@@ -46,7 +46,7 @@ clone_proj() {
     read -p "Repository URL: " url
     name=$(basename $url .git)
 
-    dir="$(find "$DEV_PATH" -maxdepth 3 -type d | fzf --header "Select clone location")"
+    dir="$(fd . "$DEV_PATH" --max-depth 3 --type d | fzf --header "Select clone location")"
     path="$dir/$name"
 
     git clone "$url" "$path"
