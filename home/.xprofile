@@ -2,7 +2,6 @@
 
 export LANG="en_US.UTF-8"
 export TERM="screen-256color"
-export PULSE_SCRIPT="/etc/xrdp/pulse/default.pa"
 
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
