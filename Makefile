@@ -27,3 +27,4 @@ uninstall:
 	done
 
 reinstall: uninstall install
+	hyprctl reload
