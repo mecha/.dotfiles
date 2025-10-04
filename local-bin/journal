@@ -104,10 +104,13 @@ fi
 
 if [ "$1" == "tag" ]; then
     unlock
-    tags=$(rg '@[^\W]+' --only-matching --no-filename --no-line-number | sort | uniq)
-    selected=$(echo "$tags" | fzf --prompt="Tag: ")
-    if [ ! -z "$selected" ]; then
-        rg "$selected" --word-regexp --vimgrep | sort | nvim -q - '+copen' '+cc'
+    choice="$2"
+    if [ -z "$choice" ]; then
+        tags=$(rg '@[^\W]+' --only-matching --no-filename --no-line-number | sort | uniq)
+        choice=$(echo "$tags" | fzf --prompt="Tag: ")
+    fi
+    if [ ! -z "$choice" ]; then
+        rg "$choice" --word-regexp --vimgrep | sort | nvim -q - '+copen' '+cc'
     fi
     lock
     exit 0
