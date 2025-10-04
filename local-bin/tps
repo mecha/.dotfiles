@@ -68,9 +68,15 @@ create_proj() {
     if [[ -z "$name" ]]; then
         exit 1
     fi
+    clear
 
-    path="$(find "$DEV_PATH" -maxdepth 3 -type d | fzf --reverse --style full --prompt "Location: ")"
+    path="$(fd . "$DEV_PATH" --max-depth 1 --type d | fzf --reverse --style full --prompt "Location: ")"
     if [[ -z "$path" ]]; then
+        exit 1
+    fi
+
+    template="$(fd . "$DEV_PATH/templates" --max-depth 1 --type f --format {/} | fzf --reverse --style full --prompt "Template: ")"
+    if [[ -z "$template" ]]; then
         exit 1
     fi
 
@@ -82,6 +88,7 @@ create_proj() {
             cd "$path" && git init -q -b main
         fi
         open_proj "$path"
+        cd "$path" && bash "$DEV_PATH/templates/$template"
     fi
 }
 
