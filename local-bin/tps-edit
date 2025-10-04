@@ -10,5 +10,7 @@ fi
 if [ -z "$file" ]; then
     exit
 fi
-tmux select-window -t nvim || tmux neww -bt 1 nvim
+
+tmux select-window -t nvim 2> /dev/null || tmux neww -bt 1 nvim
+sleep 0.2s
 tmux send-keys -t nvim Escape ":e $file" C-m
