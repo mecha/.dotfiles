@@ -1,0 +1,25 @@
+#! /bin/env bash
+# Pick a file with fzf and open it in your editor
+
+path=$(realpath "$PWD")
+hash=$(realpath "$PWD" | tr -d '\n' | sha256sum | head -c 64)
+markfile="$HOME/.local/share/nvim/harpoon/$hash.json" 
+marks=""
+
+if [ -f "$markfile" ]; then
+    query=".\"$path\".__harpoon_files[]"
+    marks=$(cat "$markfile" | jq -r $query 2> /dev/null | jq -r '.value')
+fi
+
+if [ -z "$marks" ]; then
+    read -n 1 -p " Project has no Harpoon marks"
+    exit 0
+fi
+
+choice=$(echo -n "$marks" | fzf --prompt='Mark: ' --style=full --preview='bat --color=always --style=plain {}')
+
+if [ -z "$choice" ]; then
+    exit 1
+fi
+
+tps-edit "$choice"
