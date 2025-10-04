@@ -1,45 +1,20 @@
-# Dotfiles and utils
+# Dotfiles
 
-## Prerequisites
-
-**Arch Linux**
-
-```
-sudo pacman -S stow git zsh tmux fzf jq ripgrep go php nodejs npm composer neovim
-```
-
-**Debian/Ubuntu**
-
-```
-sudo apt install stow git zsh tmux fzf jq ripgrep golang php nodejs npm composer
-```
-
-Latest neovim must be [installed from source](https://github.com/neovim/neovim/blob/master/BUILD.md).
+Installs my configs, tools, and scripts. For Arch Linux, btw.
 
 ## Install
 
-1. Install [packages](./packages)
-2. Clone this repo:
+First, clone the repo using `git`, or download and `unzip` it. Then:
 
 ```
-git clone https://github.com/mecha/.dotfiles ~/.dotfiles
-cd ~/.dotfiles
-```
-
-3. Init submodules:
-
-```
-git submodule init
-git submodule update
-```
-
-4. Stow symlinks:
-
-```
+cd .dotfiles
 make install
 ```
 
-# Uninstall
+Then run `setup` to install and configure packages and applications. Consult
+`setup help` for more information.
+
+## Uninstall
 
 ```
 make uninstall
