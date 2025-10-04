@@ -41,7 +41,7 @@ open_proj() {
     tmux switch-client -t $path_name
 }
 
-# Clones a Git repo and creates a tmux session for it
+# Clones a git repo and opens its tmux session.
 clone_proj() {
     read -p "Repository URL: " url
     name=$(basename $url .git)
@@ -61,7 +61,7 @@ clone_proj() {
     tmux send-keys -t "${name}:1.1" "nvim README.md" Enter
 }
 
-# Creates a new project interactively and opens its sessions.
+# Creates a new project interactively and opens its tmux session.
 create_proj() {
     echo
     read -r -p " Project name: " name
