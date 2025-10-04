@@ -1,0 +1,22 @@
+#! /bin/env bash
+
+level="$2"
+
+if [ -z "$level" ]; then
+    level="1"
+fi
+
+case "$level" in
+    "1")
+        echo -e "\033[32m===> $1\033[0m"
+    ;;
+    "2")
+        echo -e "\033[34m==> $1\033[0m"
+    ;;
+    "3")
+        echo -e "\033[33m=> $1\033[0m"
+    ;;
+    *)
+        echo "invalid heading level: $level"
+    ;;
+esac

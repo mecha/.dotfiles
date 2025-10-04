@@ -1,0 +1,6 @@
+#! /usr/bin/env bash
+
+heading "RGB"
+sudo pacman -S --needed openrgb i2c-tools
+sudo modprobe i2c-dev
+systemctl enable openrgb.service

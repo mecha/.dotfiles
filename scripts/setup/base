@@ -1,0 +1,59 @@
+#! /usr/bin/env bash
+
+heading "OPTIMIZING MIRROR LIST"
+sudo pacman -S --needed reflector
+systemctl enable reflector.service
+systemctl start reflector.service
+
+heading "BASE PACKAGES"
+sudo pacman -S --needed \
+    base-devel \
+    networkmanager \
+    dkms \
+    linux-headers \
+    openssh \
+    curl \
+    wget \
+    rsync \
+    man-db \
+    tldr \
+    fastfetch \
+    git \
+    vim \
+    zsh \
+    fd \
+    fzf \
+    jq \
+    bat \
+    eza \
+    ripgrep \
+    htop \
+    btop \
+    timg \
+    ncdu \
+    gum
+
+systemctl enable --now NetworkManager.service
+
+heading "FIREWALL"
+sudo pacman -S --needed ufw
+sudo ufw enable
+
+heading "SHELL"
+sudo pacman -S --needed zsh
+if [ "$SHELL" != "/usr/bin/zsh" ]; then
+    chsh -s /usr/bin/zsh
+fi
+
+heading "AUR HELPER"
+if $(pacman -Qi paru &> /dev/null); then
+    echo "===> (already installed)"
+else
+    git clone https://aur.archlinux.org/paru.git /tmp/paru
+    cd /tmp/paru
+    makepkg -si
+fi
+
+heading "FLATPAK"
+sudo pacman -S --needed flatpak flatpak-kcm
+flatpak install flathub com.github.tchx84.Flatseal

@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+
+heading "BLUETOOTH"
+sudo pacman -S --needed bluez bluez-utils bluez-deprecated-tools blueman
+systemctl enable bluetooth.service

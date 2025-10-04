@@ -1,0 +1,62 @@
+#! /usr/bin/env bash
+
+if [ -z $SCRIPTS_DIR ]; then
+    SCRIPTS_DIR="$HOME/.dotfiles/scripts/setup"
+fi
+
+help() {
+    arg="$1"
+    name=$(basename "$0")
+    fullpath=$(realpath "$0")
+
+    if [ ! -z "$arg" ]; then
+        script="$SCRIPTS_DIR/$arg"
+
+        if [ ! -f "$script" ]; then
+            echo "setup script '$arg' does not exist"
+            exit 1
+        fi
+
+        if pacman -Qi bat &> /dev/null; then
+            bat "$script"
+        else
+            cat "$script" | less
+        fi
+
+        exit 0
+    fi
+
+    echo "$(basename "$0") <SCRIPT>"
+    echo
+    echo "SCRIPTS:"
+
+    echo
+    find "$SCRIPTS_DIR" -type f -exec basename {} ';' | sort | sed 's/^/    /'
+    echo
+
+    echo "To see exactly what packages are installed by each set, run the below command to read the source code. You can read bash, right?"
+    echo
+    echo "    help <SCRIPT>"
+    echo
+
+    echo "Lastly, this script is not intended to be run unattended."
+    echo "I know myself. HEY ME! Sit down and don't get distracted. Watch for errors and be ready to kill that sumbish."
+}
+
+if [ "$1" == "" ]; then
+    echo "please specify what you would like to install"
+    exit 1
+fi
+
+if [ "$1" == "help" ]; then
+    help "$2"
+    exit 1
+fi
+
+if [ ! -f "$SCRIPTS_DIR/$1" ]; then
+    echo "setup script '$1' does not exist"
+    exit 1
+fi
+
+source "$SCRIPTS_DIR/$1"  
+exit 0

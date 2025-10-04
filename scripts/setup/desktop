@@ -1,0 +1,53 @@
+#! /usr/bin/env bash
+
+_heading "WINDOW MANAGER"
+sudo -S hyprland xorg-xwayland wev hyprpolkitagent
+
+_heading "SCREEN LOCKER"
+sudo pacman -S --needed hyprlock
+
+_heading "SCREEN-SHOTTER"
+sudo pacman -S --needed hyprshot
+
+_heading "XDG DESKTOP PORTAL"
+sudo pacman -S --needed xdg-desktop-portal xdg-desktop-portal-hyprland
+
+_heading "KEYRING"
+sudo pacman -S --needed gnome-keyring
+
+_heading "CLIPBOARD"
+sudo pacman -S --needed wl-clipboard
+
+_heading "BAR"
+sudo pacman -S --needed waybar network-manager-applet
+paru -S waybar-module-pacman-updates-git
+
+_heading "RUNNER"
+sudo pacman -S --needed wofi
+
+_heading "WALLPAPER"
+sudo pacman -S --needed hyprpaper feh
+
+_heading "NOTIFICATIONS"
+sudo pacman -S --needed swaync
+
+_heading "STORAGE DEVICES AUTO-MOUNTING"
+sudo pacman -S --needed udisks2 udiskie libappindicator-gtk3
+
+_heading "MULTI MEDIA"
+sudo pacman -S --needed \
+    pipewire \
+    pipewire-alse \
+    pipewire-pulse \
+    wireplumber \
+    ffmpeg \
+    gstreamer \
+    speech-dispatcher
+
+_heading "V4L2 LOOPBACK (FOR OBS VIRTUAL CAMERA)"
+sudo pacman -S --needed v4l2loopback-dkms
+
+_heading "GUI APPS"
+sudo pacman -S --needed ghostty mpv pavucontrol nautilus bitwarden bitwarden-cli obs-studio gimp okular discover qbittorrent
+paru -S --needed zen-browser-bin slack-desktop-wayland waybar-media-git localsend-bin
+sudo ufw allow 53317 comment "localsend"

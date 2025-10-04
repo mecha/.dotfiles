@@ -1,0 +1,5 @@
+#! /usr/bin/env bash
+
+heading "LLMs"
+sudo pacman -S --needed ollama ollama-rocm
+systemctl enable ollama.service

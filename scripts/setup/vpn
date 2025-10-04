@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+heading "VPN"
+sudo pacman -S --needed openvpn
