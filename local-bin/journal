@@ -6,8 +6,7 @@ if [ -z "$JOURNAL_ENC_DIR" ]; then
 fi
 
 if [ -z "$JOURNAL_MNT_DIR" ]; then
-    echo "JOURNAL_MNT_DIR is not set"
-    exit 1
+    JOURNAL_MNT_DIR="/tmp/journal"
 fi
 
 mkdir -p "$JOURNAL_ENC_DIR"
