@@ -29,6 +29,7 @@ bindkey "^[[F" end-of-line
 
 alias tam="tmux -u new-session -A -s main"
 alias ll="eza -lga --icons --group-directories-first"
+alias l="eza -1ga --icons --group-directories-first"
 alias n="nvim"
 alias f="fzfn"
 alias tt="eza -T -lha"
