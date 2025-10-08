@@ -5,6 +5,5 @@ tmux display-menu -T "#[fg=$bright] Global menu " -x R -y P \
     "Packages" p "display-popup -b rounded -S fg=$VIRID_DARK_GRAY,bg=$VIRID_DARK -w 60% -h 80% -E packages" \
     "Screenkeys" k 'run "systemctl is-active --quiet --user screenkey && systemctl --user stop screenkey || systemctl --user start screenkey"' \
     "Journal" j "neww -n Journal journal" \
-    "Windows Clipboard" c "neww -n 'Clipboard' nvim /mnt/smb/clipboard.txt" \
     "" \
     "Close menu" q ""
