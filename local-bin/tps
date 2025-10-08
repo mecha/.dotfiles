@@ -5,9 +5,11 @@
 main() {
     new="  New project"
     clone="  Clone git repo"
+    main="󰧨  Main session"
+    dotfiles="󱁤  .dotfiles"
 
     dirs="$(fd . "$DEV_PATH" --hidden --min-depth 2 --max-depth 3 --type d | sed "s|^$DEV_PATH/||")"
-    choices="$(printf "%s\n%s\n%s" "$new" "$clone" "$dirs" )"
+    choices="$(printf "%s\n%s\n%s\n%s\n%s" "$new" "$clone" "$main" "$dotfiles" "$dirs" )"
     previewCommand='if [[ "{}" =~ "/" ]]; then exa -T -L 1 --group-directories-first --color=always --git-ignore --git $DEV_PATH/{}; fi'
     selected="$(echo "$choices" | fzf --style full --prompt 'Project: ')"
 
@@ -16,6 +18,10 @@ main() {
             create_proj
         elif [[ "$selected" == "$clone" ]]; then
             clone_proj
+        elif [[ "$selected" == "$main" ]]; then
+            tmux switch-client -t main
+        elif [[ "$selected" == "$dotfiles" ]]; then
+            open_proj "$HOME/.dotfiles"
         else
             open_proj "$DEV_PATH/$selected"
         fi
