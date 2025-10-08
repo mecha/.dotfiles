@@ -10,7 +10,6 @@ main() {
 
     dirs="$(fd . "$DEV_PATH" --hidden --min-depth 2 --max-depth 3 --type d | sed "s|^$DEV_PATH/||")"
     choices="$(printf "%s\n%s\n%s\n%s\n%s" "$new" "$clone" "$main" "$dotfiles" "$dirs" )"
-    previewCommand='if [[ "{}" =~ "/" ]]; then exa -T -L 1 --group-directories-first --color=always --git-ignore --git $DEV_PATH/{}; fi'
     selected="$(echo "$choices" | fzf --style full --prompt 'Project: ')"
 
     if [[ -n "$selected" ]]; then
