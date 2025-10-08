@@ -1,0 +1,28 @@
+#! /usr/bin/env bash
+
+FZF_OPTS="--multi --reverse --preview-window down --bind ctrl-u:preview-up,ctrl-d:preview-down"
+
+files_preview="cat <(pacman -Si {1}) <(pacman -Fl {1} | awk "{print \$2}")"
+
+arg="${1,,}"
+
+case "$arg" in
+    "")
+        echo -e "Add\nRemove\nInstalled\nUpgrade" | fzf $FZF_OPTS | xargs -ro packages
+    ;;
+    "add")
+        pacman -Slq | fzf $FZF_OPTS --preview 'pacman -Si {1}' | xargs -ro sudo pacman -S
+    ;;
+    "remove")
+        pacman -Qq | fzf $FZF_OPTS --multi --preview 'pacman -Qi {1}' | xargs -ro sudo pacman -Rns
+    ;;
+    "installed")
+        pacman -Qq | fzf $FZF_OPTS --preview 'pacman -Qil {}' --layout=reverse --bind 'enter:execute(pacman -Qil {} | less)'
+    ;;
+    "upgrade")
+        sudo pacman -Syyu
+    ;;
+    *)
+        echo "wtf is \"$arg\"?"
+    ;;
+esac
