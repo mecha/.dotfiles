@@ -1,9 +1,125 @@
 #! /bin/env bash
 
-tmux display-menu -T "#[fg=$bright] Global menu " -x R -y P \
-    "System monitor" m 'neww -n Monitor btop' \
-    "Packages" p "display-popup -b rounded -S fg=$VIRID_DARK_GRAY,bg=$VIRID_DARK -w 60% -h 80% -E packages" \
-    "Screenkeys" k 'run "systemctl is-active --quiet --user screenkey && systemctl --user stop screenkey || systemctl --user start screenkey"' \
-    "Journal" j "neww -n Journal journal" \
-    "" \
-    "Close menu" q ""
+menu_pos="-x C -y C"
+
+main() {
+    case "$1" in
+        "")
+            tmux display-menu -T " MENU " $menu_pos \
+                "󰄨  System monitor"       m 'neww -n Monitor btop' \
+                "" \
+                "  Packages…           " p 'run "globalmenu packages"' \
+                "  Services…"            s 'run "globalmenu services"' \
+                "  Journal… #[align=right]$(journal_status_icon)" j 'run "globalmenu journal"' \
+                "󱧼  Configs…"             c 'run "globalmenu configs"' \
+                "󰦬  Utilities…"           u 'run "globalmenu utils"' \
+                "" \
+                "  Reboot"               R 'display-popup -w 30% -h 8 -EE "gum confirm --default=no \"Reboot now?\" && reboot"' \
+                "󰐥  Shutdown"             S 'display-popup -w 30% -h 8 -EE "gum confirm --default=no \"Shutdown now?\" && shutdown -h now"' \
+        ;;
+
+        "packages")
+            tmux display-menu -T " MENU > PACKAGES " $menu_pos \
+                "󰇚  Install             " i 'display-popup -w 80% -h 80% -T " Install a new package " -E packages add' \
+                "󰛌  Remove"               r 'display-popup -w 80% -h 80% -T " Remove a package " -E packages remove' \
+                "" \
+                "  List"                 l 'display-popup -w 80% -h 80% -T " Installed packages " -E packages installed' \
+                "  List AUR"             L 'display-popup -w 80% -h 80% -T " Installed packages " -E packages installed-aur' \
+                "󰦗  Check updates"        c 'display-popup -w 80% -h 80% -T " Available Updates " -E "checkupdates | less"' \
+                "󰚰  Update all"           u 'neww -n "Full system update" packages upgrade' \
+                "󰈞  File owner"           f 'display-popup -w 80% -h 80% -T " Which package owns a file " -E packages owner' \
+                "" \
+                "  Arch News"            n 'run "xdg-open https://archlinux.org/news"' \
+                "  Arch Wiki"            w 'run "xdg-open https://wiki.archlinux.org"' \
+                "  AUR (if it's up)"     a 'run "xdg-open https://aur.archlinux.org"' \
+                "" \
+                "󰜱  Back"                 q 'run globalmenu'
+        ;;
+
+        "journal")
+            if journal status &>/dev/null; then
+                status_text="#[fg=${VIRID_YELLOW}]  Unlocked"
+                action="  Lock"
+                action_key="l"
+                status_command="run 'journal lock'"
+            else
+                status_text="#[fg=${VIRID_GREEN}]  Locked"
+                action="  Unlock"
+                action_key="u"
+                status_command="display-popup -w 30% -h 3 -T 'Unlock journal' -EE 'journal unlock'"
+            fi
+
+            tmux display-menu -T " MENU > JOURNAL " $menu_pos -C 2 \
+                "$status_text" '' '' \
+                "" \
+                "$action"                 "$action_key" "$status_command" \
+                "" \
+                "󰃶  Today               " t 'neww -n Today "journal today"' \
+                "󰥌  Specfic day"          d 'display-popup -w 80% -h 80% -E journal search' \
+                "󰓹  Search tag"           s 'display-popup -w 80% -h 80% -E journal tag' \
+                "  Open shell"           o "neww -n Journal 'journal'" \
+                "" \
+                "󰜱  Back"                 q 'run "globalmenu"'
+        ;;
+
+        "configs")
+            tmux display-menu -T " MENU > CONFIGS " $menu_pos \
+                "  Neovim              " n "run 'tps $HOME/dev/personal/config.nvim'" \
+                "  Hyprland"             h "run 'tps $HOME/.dotfiles && tps-edit config/hypr/hyprland.conf'" \
+                "󰠷  Waybar"               w "run 'tps $HOME/.dotfiles && tps-edit config/waybar/config'" \
+                "" \
+                "󰏗  Pacman"               p 'neww -n "Pacman config" sudoedit /etc/pacman.conf' \
+                "󰈙  Hosts"                H 'neww -n "Hosts file" sudoedit /etc/hosts' \
+                "" \
+                "󰜱  Back"                 q 'run "globalmenu"'
+        ;;
+
+        "services")
+            tmux display-menu -T " MENU > SERVICES " $menu_pos \
+                "󰐊  Start               " s 'display-popup -w 80% -h 80% -T " Start service " -EE "services start"' \
+                "  Restart"              r 'display-popup -w 80% -h 80% -T " Restart service " -EE "services restart"' \
+                "󰓛  Stop"                 k 'display-popup -w 80% -h 80% -T " Start service " -EE "services stop"' \
+                "" \
+                "  List all"             l 'display-popup -w 80% -h 80% -T " Services " -E "services list"' \
+                "  Active"               a 'display-popup -w 80% -h 80% -T " Services (active) " -E "services list active"' \
+                "  Inactive"             i 'display-popup -w 80% -h 80% -T " Services (inactive) " -E "services list inactive"' \
+                "󰌵  Enabled"              e 'display-popup -w 80% -h 80% -T " Services (enabled) " -E "services list enabled"' \
+                "  Failed"               f 'display-popup -w 80% -h 80% -T " Services (failed) " -E "services list failed"' \
+                "" \
+                "󰝒  Create new"           C 'neww -n "New service" "services new"' \
+                "󱇧  Edit"                 E 'neww -n "Edit service" "services edit"' \
+                "󰮘  Delete"               D 'display-popup -w 50% -h 20 -T " Delete service " -EE "services delete"' \
+                "󰑐  Reload daemon"        R 'display-popup -w 50% -h 6 -T " Reload daemon " -EE "systemctl daemon-reload"' \
+                "" \
+                "󰜱  Back"                 q 'run "globalmenu"'
+        ;;
+
+        "utils")
+            tmux display-menu -T " MENU > UTILITIES " $menu_pos \
+                "󱝁  Setup"                s "display-popup -w 80% -h 80% -T ' Setup ' setup " \
+                "󱩖  Reset RGB           " r "display-popup -w 50% -h 12 -T ' Reset RGB ' -EE 'openrgb -p ~/.config/OpenRGB/viridescent.orp'" \
+                "󱅞  Reset faillock"       f "display-popup -w 50% -h 10 -T ' Reset faillock ' -EE 'faillock --user $USER --reset' " \
+                "󱂇  Ping google.com"      p "display-popup -w 80% -h 80% -T ' Pinging google.com ' -EE 'gping google.com' " \
+                "" \
+                "󰜱  Back"                 q 'run "globalmenu"'
+        ;;
+    esac
+}
+
+journal_status_icon() {
+    if journal status &>/dev/null; then
+        echo "#[fg=${VIRID_YELLOW}] "
+    else
+        echo "#[fg=${VIRID_GREEN}] "
+    fi
+}
+
+journal_status_text() {
+    if journal status &>/dev/null; then
+        echo "#[fg=${VIRID_YELLOW}]Unlocked"
+    else
+        echo "#[fg=${VIRID_GREEN}]Locked"
+    fi
+}
+
+main $@

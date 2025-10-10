@@ -44,8 +44,12 @@ help() {
 }
 
 if [ "$1" == "" ]; then
-    echo "please specify what you would like to install"
-    exit 1
+    choice=$(fd . $HOME/.dotfiles/scripts/setup --type=f --format={/} | fzf --reverse)
+    if [ -z "$choice" ]; then
+        exit 0
+    fi
+    $0 "$choice"
+    exit $?
 fi
 
 if [ "$1" == "help" ]; then
@@ -59,4 +63,4 @@ if [ ! -f "$SCRIPTS_DIR/$1" ]; then
 fi
 
 source "$SCRIPTS_DIR/$1"  
-exit 0
+exit $?

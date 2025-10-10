@@ -8,22 +8,28 @@ main() {
     main="󰧨  Main session"
     dotfiles="󱁤  .dotfiles"
 
+    path=$1
+    if [ -n "$path" ]; then
+        open_proj "$path"
+        return
+    fi
+
     dirs="$(fd . "$DEV_PATH" --hidden --min-depth 2 --max-depth 3 --type d | sed "s|^$DEV_PATH/||")"
     choices="$(printf "%s\n%s\n%s\n%s\n%s" "$new" "$clone" "$main" "$dotfiles" "$dirs" )"
-    selected="$(echo "$choices" | fzf --style full --prompt 'Project: ')"
+    path="$(echo "$choices" | fzf --style full --prompt 'Project: ')"
 
-    if [[ -n "$selected" ]]; then
-        if [[ "$selected" == "$new" ]]; then
-            create_proj
-        elif [[ "$selected" == "$clone" ]]; then
-            clone_proj
-        elif [[ "$selected" == "$main" ]]; then
-            tmux switch-client -t main
-        elif [[ "$selected" == "$dotfiles" ]]; then
-            open_proj "$HOME/.dotfiles"
-        else
-            open_proj "$DEV_PATH/$selected"
-        fi
+    if [ -z "$path" ]; then
+        exit 1
+    elif [[ "$path" == "$new" ]]; then
+        create_proj
+    elif [[ "$path" == "$clone" ]]; then
+        clone_proj
+    elif [[ "$path" == "$main" ]]; then
+        tmux switch-client -t main
+    elif [[ "$path" == "$dotfiles" ]]; then
+        open_proj "$HOME/.dotfiles"
+    else
+        open_proj "$DEV_PATH/$path"
     fi
 }
 
@@ -44,6 +50,12 @@ open_proj() {
     fi
 
     tmux switch-client -t $path_name
+
+    if [ -f "$path/.project" ]; then
+        pushd $path &> /dev/null
+        exec "$path/.project"
+        popd &> /dev/null
+    fi
 }
 
 # Clones a git repo and opens its tmux session.
@@ -97,4 +109,4 @@ create_proj() {
     fi
 }
 
-main
+main $@

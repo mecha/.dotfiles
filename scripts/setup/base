@@ -31,7 +31,8 @@ sudo pacman -S --needed \
     btop \
     timg \
     ncdu \
-    gum
+    gum \
+    gping
 
 systemctl enable --now NetworkManager.service
 

@@ -1,0 +1,89 @@
+#! /usr/bin/env bash
+
+FZF_OPTS="--reverse --preview-window down --bind ctrl-u:preview-up,ctrl-d:preview-down"
+FZF_PREVIEW="[ ! -z '{}' ] && SYSTEMD_COLORS=1 systemctl status {}"
+FZF_STATUS_BIND="enter:execute(SYSTEMD_COLORS=1 systemctl status {} | less)"
+LIST_OPTS="--type=service --no-legend --no-pager --plain"
+
+arg="${1,,}"
+
+case "$arg" in
+    "")
+        echo -e "List\nStart\nRestart\nStop\nNew\nEdit\nDelete" | fzf $FZF_OPTS | xargs -ro services
+    ;;
+
+    "list")
+        if [ "$2" == "enabled" ]; then
+            list=$(systemctl list-units $LIST_OPTS | grep enabled)
+        else
+            state_opt="$([ ! -z "$2" ] && echo "--state $2")"
+            list=$(systemctl list-units $LIST_OPTS $state_opt)
+        fi
+
+        echo "$list" | awk '{print $1}' | fzf $FZF_OPTS --preview "$FZF_PREVIEW" --bind "$FZF_STATUS_BIND"
+    ;;
+
+    "start")
+        systemctl list-units $LIST_OPTS --state inactive | awk '{print $1}' | fzf $FZF_OPTS --multi --preview "$FZF_PREVIEW" | xargs -ro systemctl start
+    ;;
+
+    "restart")
+        systemctl list-units $LIST_OPTS --state active | awk '{print $1}' | fzf $FZF_OPTS --multi --preview "$FZF_PREVIEW" | xargs -ro systemctl restart
+    ;;
+
+    "stop")
+        systemctl list-units $LIST_OPTS --state active | awk '{print $1}' | fzf $FZF_OPTS --multi --preview "$FZF_PREVIEW" | xargs -ro systemctl stop
+    ;;
+
+    "new")
+        name=$(gum input --prompt "Service name: " --placeholder "Without the '.service' extension")
+        [ -z "$name" ] && exit 1
+
+        filename="${name}.service"
+        filepath="/etc/systemd/system/${filename}"
+
+        sudoedit "$filepath"
+        [ ! -f "$filepath" ] && exit 1
+
+        if gum confirm "Do you want to start the service now?"; then
+            systemctl start "$filename" || exit 1
+        fi
+
+        if gum confirm "Do you want to enable the service to start on boot?"; then
+            systemctl enable "$filename" || exit 1
+        fi
+
+        systemctl daemon-reload
+    ;;
+
+    "edit")
+        echo "Choose which service to edit:" 
+        filepath=$(fd . /etc/systemd/system --type=f --type=l --max-depth=1 | fzf --reverse --height 20)
+        [ -z "$filepath" ] && exit 1
+
+        sudoedit "$filepath"
+        systemctl daemon-reload
+    ;;
+
+    "delete")
+        echo "Choose which service to delete:" 
+        filepath=$(fd . /etc/systemd/system --type=f --type=l --max-depth=1 | fzf --reverse --height 20)
+        [ -z "$filepath" ] && exit 1
+
+        filename=$(basename "$filepath")
+
+        if systemctl is-active "$filename" &> /dev/null; then
+            systemctl stop "$(basename "$filepath")" || exit 1
+        fi
+
+        if systemctl is-enabled "$filename" &> /dev/null; then
+            systemctl disable "$(basename "$filepath")" || exit 1
+        fi
+
+        sudo rm "$filepath"
+        systemctl daemon-reload
+    ;;
+    *)
+        echo "wtf is \"$arg\"?"
+    ;;
+esac

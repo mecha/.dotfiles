@@ -1,0 +1,28 @@
+#! /bin/env bash
+# Recursive file picker with fzf
+
+if [ -e $1 ]; then
+    path=$1
+    shift
+else
+    path="$PWD"
+fi
+
+while [ ! -f "$path" ] && [ ! -z "$path" ]; do
+    choice=$(find "$path" -maxdepth 1 | fzf "$@")
+
+    if [ ! -z "$choice" ]; then
+        path=$choice
+    elif [ "$path" == "/" ]; then
+        exit 1
+    else
+        path=$(dirname "$path")
+    fi
+done
+
+if [ -z "$path" ]; then
+    exit 1
+else
+    echo $path
+    exit 0
+fi
