@@ -22,7 +22,7 @@ export VISUAL="$NVIM"
 export GIT_EDITOR="$NVIM"
 export MANPAGER="less -isg"
 
-export FZF_DEFAULT_OPTS="--color=fg:$VIRID_FG,bg+:$VIRID_DARK,fg+:$VIRID_BRIGHT_MINT,pointer:$VIRID_BRIGHT_MINT,prompt:$VIRID_WHITE"
+export FZF_DEFAULT_OPTS="--color=fg:$VIRID_FG,bg+:$VIRID_DARK,fg+:$VIRID_BRIGHT_MINT,hl+:$VIRID_BRIGHT_RED,pointer:$VIRID_BRIGHT_MINT,prompt:$VIRID_WHITE,border:$VIRID_MINT"
 
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line

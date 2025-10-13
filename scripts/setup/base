@@ -29,10 +29,11 @@ sudo pacman -S --needed \
     ripgrep \
     htop \
     btop \
-    timg \
     ncdu \
     gum \
     gping
+
+paru -S --needed timg
 
 systemctl enable --now NetworkManager.service
 
