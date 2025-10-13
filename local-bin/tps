@@ -81,32 +81,45 @@ clone_proj() {
 # Creates a new project interactively and opens its tmux session.
 create_proj() {
     echo
-    read -r -p " Project name: " name
+    gum style --foreground "$VIRID_MINT" --bold '  NEW PROJECT  '
+    echo
+
+    echo -n "  {{ Foreground \"$VIRID_WHITE\" ( Bold \"  Name: \" ) }} " | gum format -t template
+    read -r name
     if [[ -z "$name" ]]; then
-        exit 1
+        exit 0
     fi
-    clear
 
-    path="$(fd . "$DEV_PATH" --max-depth 1 --type d | fzf --reverse --style full --prompt "Location: ")"
+    path="$(fd . "$DEV_PATH" --max-depth 1 --type d | fzf --reverse --height 12 --prompt "  Location: ")"
     if [[ -z "$path" ]]; then
-        exit 1
+        exit 0
+    fi
+    path="$path$name"
+
+    echo -n "  {{ Foreground \"$VIRID_WHITE\" ( Bold \"  Location: \" ) }} " | gum format -t template
+    echo $path
+
+    mkdir -p "$DEV_PATH/templates"
+    template="$(fd . "$DEV_PATH/templates" --max-depth 1 --type f --format {/} | fzf --reverse --prompt "  Template: " --height 10)"
+
+    echo -n "  {{ Foreground \"$VIRID_WHITE\" ( Bold \"  Template: \" ) }} " | gum format -t template
+    echo ${template:="<NONE>"}
+    echo
+
+    if ! gum confirm "Create project?" --padding="0 1" --no-show-help --prompt.foreground="$VIRID_ORANGE" --selected.foreground="$VIRID_DARK" --selected.background="$VIRID_MINT"; then
+        exit 0
     fi
 
-    template="$(fd . "$DEV_PATH/templates" --max-depth 1 --type f --format {/} | fzf --reverse --style full --prompt "Template: ")"
-    if [[ -z "$template" ]]; then
-        exit 1
+    if [[ ! -d "$path" ]]; then
+        mkdir -p "$path"
+        cd "$path" && git init -q -b main
     fi
 
-    path="$path/$name"
-
-    if [[ -n "$path" ]]; then
-        if [[ ! -d "$path" ]]; then
-            mkdir -p "$path"
-            cd "$path" && git init -q -b main
-        fi
-        open_proj "$path"
+    if [[ -n "$template" ]]; then
         cd "$path" && bash "$DEV_PATH/templates/$template"
     fi
+
+    open_proj "$path"
 }
 
 main $@
