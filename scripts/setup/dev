@@ -12,7 +12,7 @@ if [ ! -d "$HOME/.config/oh-my-zsh/" ]; then
     git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH/custom/plugins/zsh-autosuggestions
     git clone https://github.com/zsh-users/zsh-history-substring-search $ZSH/custom/plugins/zsh-history-substring-search
     git clone https://github.com/zdharma-continuum/fast-syntax-highlighting.git $ZSH/custom/plugins/fast-syntax-highlighting
-    (cd $dir; stow -t $ZSH config/oh-my-zsh)
+    (cd $dir; stow -t $ZSH .config/oh-my-zsh)
 fi
 
 sh -c "$(curl -sfSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
