@@ -14,12 +14,12 @@ main() {
         return
     fi
 
-    dirs="$(fd . "$DEV_PATH" --hidden --min-depth 2 --max-depth 3 --type d | sed "s|^$DEV_PATH/||")"
+    dirs="$(fd . "$DEV_PATH" --hidden --max-depth 2 --type d | sed "s|^$DEV_PATH/||")"
     choices="$(printf "%s\n%s\n%s\n%s\n%s" "$new" "$clone" "$main" "$dotfiles" "$dirs" )"
-    path="$(echo "$choices" | fzf --style full --prompt 'Project: ')"
+    path="$(echo "$choices" | fzf --reverse --prompt '> ')"
 
     if [ -z "$path" ]; then
-        exit 1
+        exit 0
     elif [[ "$path" == "$new" ]]; then
         create_proj
     elif [[ "$path" == "$clone" ]]; then
