@@ -140,11 +140,11 @@ create_proj() {
         cd "$path" && git init -q -b main
     fi
 
+    open_proj "$path"
+
     if [[ -n "$template" ]]; then
         cd "$path" && bash "$DEV_PATH/templates/$template"
     fi
-
-    open_proj "$path"
 }
 
 case "$1" in
