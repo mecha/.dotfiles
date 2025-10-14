@@ -6,9 +6,13 @@ main() {
     case "$1" in
         "")
             tmux display-menu -T " MENU " $menu_pos \
-                "󰄨  System monitor"       m 'neww -n Monitor btop' \
+                "󰄨  System monitor      " b 'neww -n Monitor btop' \
                 "" \
-                "  Packages…           " p 'run "globalmenu packages"' \
+                "  Main session"         m "new-session -A -s main -c $HOME" \
+                "󰉗  New project"          n "display-popup -w 50% -h 50% -T ' New Project ' -EE tps new" \
+                "󰊢  Clone project"        c "display-popup -w 50% -h 50% -T ' Clone Project ' -EE tps clone" \
+                "" \
+                "  Packages…"            p 'run "globalmenu packages"' \
                 "  Services…"            s 'run "globalmenu services"' \
                 "  Journal… #[align=right]$(journal_status_icon)" j 'run "globalmenu journal"' \
                 "󱧼  Configs…"             c 'run "globalmenu configs"' \
@@ -20,8 +24,8 @@ main() {
 
         "packages")
             tmux display-menu -T " MENU > PACKAGES " $menu_pos \
-                "󰇚  Install             " i 'display-popup -w 80% -h 80% -T " Install a new package " -E packages add' \
-                "󰛌  Remove"               r 'display-popup -w 80% -h 80% -T " Remove a package " -E packages remove' \
+                "󰇚  Install             " i 'display-popup -w 80% -h 80% -T " Install a new package " -EE packages add' \
+                "󰛌  Remove"               r 'display-popup -w 80% -h 80% -T " Remove a package " -EE packages remove' \
                 "" \
                 "  List"                 l 'display-popup -w 80% -h 80% -T " Installed packages " -E packages installed' \
                 "  List AUR"             L 'display-popup -w 80% -h 80% -T " Installed packages " -E packages installed-aur' \
@@ -64,7 +68,8 @@ main() {
 
         "configs")
             tmux display-menu -T " MENU > CONFIGS " $menu_pos \
-                "  Neovim              " n "run 'tps $HOME/dev/personal/config.nvim'" \
+                "󱁻  Dotfiles            " d "run 'tps $HOME/.dotfiles'" \
+                "  Neovim"               n "run 'tps $HOME/dev/personal/config.nvim'" \
                 "  Hyprland"             h "run 'tps $HOME/.dotfiles && tps-edit config/hypr/hyprland.conf'" \
                 "󰠷  Waybar"               w "run 'tps $HOME/.dotfiles && tps-edit config/waybar/config'" \
                 "" \
