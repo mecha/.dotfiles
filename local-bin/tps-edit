@@ -4,7 +4,7 @@
 file="$1"
 
 if [ -z "$file" ]; then
-    file=$(fzf --prompt 'File: ' --style full --preview 'bat --color=always --style=plain {}')
+    file=$(fzf --reverse --preview-window down --preview 'bat --color=always --style=plain {}' --bind ctrl-u:preview-up,ctrl-d:preview-down)
 fi
 
 if [ -z "$file" ]; then
