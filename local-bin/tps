@@ -3,32 +3,18 @@
 # https://github.com/ThePrimeagen/.dotfiles/blob/master/bin/.local/scripts/tmux-sessionizer"
 
 main() {
-    new="  New project"
-    clone="  Clone git repo"
-    main="󰧨  Main session"
-    dotfiles="󱁤  .dotfiles"
-
     path=$1
-    if [ -n "$path" ]; then
-        open_proj "$path"
-        return
-    fi
 
-    dirs="$(fd . "$DEV_PATH" --hidden --max-depth 2 --type d | sed "s|^$DEV_PATH/||")"
-    choices="$(printf "%s\n%s\n%s\n%s\n%s" "$new" "$clone" "$main" "$dotfiles" "$dirs" )"
-    path="$(echo "$choices" | fzf --reverse --prompt '> ')"
+    dotfiles="~/.dotfiles"
 
     if [ -z "$path" ]; then
-        exit 0
-    elif [[ "$path" == "$new" ]]; then
-        create_proj
-    elif [[ "$path" == "$clone" ]]; then
-        clone_proj
-    elif [[ "$path" == "$main" ]]; then
-        tmux switch-client -t main
-    elif [[ "$path" == "$dotfiles" ]]; then
+        dev_dirs="$(fd . "$DEV_PATH" --hidden --max-depth 2 --type d | sed "s|^$DEV_PATH/||")"
+        path="$(printf "%s\n%s" "$dotfiles" "$dev_dirs" | fzf --reverse --prompt '> ')"
+    fi
+
+    if [[ "$path" == "$dotfiles" ]]; then
         open_proj "$HOME/.dotfiles"
-    else
+    elif [[ -n "$path" ]]; then
         open_proj "$DEV_PATH/$path"
     fi
 }
@@ -39,14 +25,12 @@ open_proj() {
     path=$1
     path_name=$(basename "$path" | tr . _)
 
-    tmux_running=$(pgrep tmux)
-    if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
-        tmux new-session -s $path_name -c $path
-        exit 0
+    if [[ -z "$TMUX" ]]; then
+        tmux new-session -A -s "$path_name" -c "$path"
     fi
 
     if ! tmux has-session -t=$path_name 2> /dev/null; then
-        tmux new-session -ds $path_name -c $path
+        tmux new-session -ds "$path_name" -c "$path"
     fi
 
     tmux switch-client -t $path_name
@@ -60,11 +44,34 @@ open_proj() {
 
 # Clones a git repo and opens its tmux session.
 clone_proj() {
-    read -p "Repository URL: " url
+    echo    
+    echo -n "  {{ Foreground \"$VIRID_WHITE\" ( Bold \"  Repo URL: \" ) }} " | gum format -t template
+    read -r url
+    if [ -z "$url" ]; then
+        exit 0
+    fi
     name=$(basename $url .git)
 
-    dir="$(fd . "$DEV_PATH" --max-depth 3 --type d | fzf --header "Select clone location")"
+    dir="$(fd . "$DEV_PATH" --max-depth 1 --type d | fzf --reverse --height 12 --prompt "  Location: ")"
+    if [ -z "$dir" ]; then
+        exit 0
+    fi
+
     path="$dir/$name"
+
+    echo -n "  {{ Foreground \"$VIRID_WHITE\" ( Bold \"  Location: \" ) }} " | gum format -t template
+    echo $path
+
+    if ! gum confirm "Clone project?" --padding="0 1" --no-show-help; then
+        exit 0
+    fi
+
+    if [ -d "$path" ]; then
+        echo "  Project already exists."
+        read -n 1
+        open_proj "$path"
+        exit
+    fi
 
     git clone "$url" "$path"
 
@@ -81,9 +88,6 @@ clone_proj() {
 # Creates a new project interactively and opens its tmux session.
 create_proj() {
     echo
-    gum style --foreground "$VIRID_MINT" --bold '  NEW PROJECT  '
-    echo
-
     echo -n "  {{ Foreground \"$VIRID_WHITE\" ( Bold \"  Name: \" ) }} " | gum format -t template
     read -r name
     if [[ -z "$name" ]]; then
@@ -106,7 +110,28 @@ create_proj() {
     echo ${template:="<NONE>"}
     echo
 
-    if ! gum confirm "Create project?" --padding="0 1" --no-show-help --prompt.foreground="$VIRID_ORANGE" --selected.foreground="$VIRID_DARK" --selected.background="$VIRID_MINT"; then
+    if [ -d "$path" ]; then
+        choice=$(gum choose --padding="0 2" --no-show-help 'Open' 'Recreate' 'Do nothing')
+
+        case "$choice" in
+            "Open")
+                tps "$path"
+                exit
+            ;;
+            "Recreate")
+                if gum confirm --no-show-help --padding="0 1" 'Delete existing project and re-create it?'; then
+                    if [ -z "$path" ] || [ "$path" == "/" ]; then
+                        echo "DANGEROUS COMMAND DETECTED: 'rm -rf $path'"
+                        exit 1
+                    fi
+                    rm -rf "$path"
+                fi
+            ;;
+            *)
+                exit 0
+            ;;
+        esac
+    elif ! gum confirm "Create project?" --padding="0 1" --no-show-help; then
         exit 0
     fi
 
@@ -122,4 +147,16 @@ create_proj() {
     open_proj "$path"
 }
 
-main $@
+case "$1" in
+    "new")
+        create_proj
+    ;;
+
+    "clone")
+        clone_proj
+    ;;
+
+    *)
+        main $@
+    ;;
+esac
