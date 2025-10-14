@@ -1,13 +1,13 @@
 {
   "layer": "top",
   "position": "top",
-  "spacing": 6,
+  "spacing": 5,
   "reload_style_on_change": true,
   "modules-left": [
     "cpu",
     "memory",
-    "disk",
     "battery",
+    "backlight",
     "custom/updates",
     "custom/face"
   ],
@@ -17,7 +17,6 @@
   "modules-right": [
     "mpris",
     "tray",
-    "backlight",
     "pulseaudio",
     "custom/notification",
     "clock"
@@ -46,7 +45,7 @@
     ]
   },
   "clock": {
-    "format": "{:%a %d %h, %H:%M}",
+    "format": "{:%a %d %h %H:%M}",
     "tooltip": false,
     "on-click": "ghostty -e ~/dev/personal/calren/calren"
   },
@@ -117,7 +116,7 @@
   },
   "mpris": {
     "format": "{status_icon}  {player_icon} {title}  {artist}",
-    "title-len": 30,
+    "title-len": 18,
     "artist-len": 16,
     "player-icons": {
       "default": "🎵",
