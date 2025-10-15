@@ -9,8 +9,7 @@ main() {
                 "󰄨  System monitor      " b 'neww -n Monitor btop' \
                 "" \
                 "  Main session"         m "new-session -A -s main -c $HOME" \
-                "󰉗  New project"          n "display-popup -w 50% -h 50% -T ' New Project ' -EE tps new" \
-                "󰊢  Clone project"        c "display-popup -w 50% -h 50% -T ' Clone Project ' -EE tps clone" \
+                "󰉗  New project"          n "display-popup -w 50% -h 50% -T ' New Project ' -EE tps-new" \
                 "" \
                 "  Packages…"            p 'run "globalmenu packages"' \
                 "  Services…"            s 'run "globalmenu services"' \

@@ -5,35 +5,30 @@
 main() {
     path=$1
 
-    dotfiles="~/.dotfiles"
-
     if [ -z "$path" ]; then
-        dev_dirs="$(fd . "$DEV_PATH" --hidden --max-depth 2 --type d | sed "s|^$DEV_PATH/||")"
-        path="$(printf "%s\n%s" "$dotfiles" "$dev_dirs" | fzf --reverse --prompt '> ')"
+        choice="$(fd . "$DEV_PATH" -H -t dir --exact-depth 2 | sed "s|^$DEV_PATH/||" | fzf)"
+        [[ -z "$choice" ]] && exit 0
+        path="$DEV_PATH/$choice"
     fi
 
-    if [[ "$path" == "$dotfiles" ]]; then
-        open_proj "$HOME/.dotfiles"
-    elif [[ -n "$path" ]]; then
-        open_proj "$DEV_PATH/$path"
-    fi
+    [[ -n "$path" ]] && open_proj "$path"
 }
 
 # opens or switches to a project session
 # @param $path string
 open_proj() {
     path=$1
-    path_name=$(basename "$path" | tr . _)
+    session_name=$(basename "$path" | tr . _)
 
     if [[ -z "$TMUX" ]]; then
-        tmux new-session -A -s "$path_name" -c "$path"
+        tmux new-session -A -s "$session_name" -c "$path"
     fi
 
-    if ! tmux has-session -t=$path_name 2> /dev/null; then
-        tmux new-session -ds "$path_name" -c "$path"
+    if ! tmux has-session -t=$session_name 2> /dev/null; then
+        tmux new-session -ds "$session_name" -c "$path"
     fi
 
-    tmux switch-client -t $path_name
+    tmux switch-client -t $session_name
 
     if [ -f "$path/.project" ]; then
         pushd $path &> /dev/null
@@ -52,7 +47,7 @@ clone_proj() {
     fi
     name=$(basename $url .git)
 
-    dir="$(fd . "$DEV_PATH" --max-depth 1 --type d | fzf --reverse --height 12 --prompt "  Location: ")"
+    dir="$(fd . "$DEV_PATH" --max-depth 1 --type d | fzf --height 12 --prompt "  Location: ")"
     if [ -z "$dir" ]; then
         exit 0
     fi
@@ -94,7 +89,7 @@ create_proj() {
         exit 0
     fi
 
-    path="$(fd . "$DEV_PATH" --max-depth 1 --type d | fzf --reverse --height 12 --prompt "  Location: ")"
+    path="$(fd . "$DEV_PATH" --max-depth 1 --type d | fzf --height 12 --prompt "  Location: ")"
     if [[ -z "$path" ]]; then
         exit 0
     fi
@@ -104,7 +99,7 @@ create_proj() {
     echo $path
 
     mkdir -p "$DEV_PATH/templates"
-    template="$(fd . "$DEV_PATH/templates" --max-depth 1 --type f --format {/} | fzf --reverse --prompt "  Template: " --height 10)"
+    template="$(fd . "$DEV_PATH/templates" --max-depth 1 --type f --format {/} | fzf --prompt "  Template: " --height 10)"
 
     echo -n "  {{ Foreground \"$VIRID_WHITE\" ( Bold \"  Template: \" ) }} " | gum format -t template
     echo ${template:="<NONE>"}
@@ -140,11 +135,11 @@ create_proj() {
         cd "$path" && git init -q -b main
     fi
 
+    open_proj "$path"
+
     if [[ -n "$template" ]]; then
         cd "$path" && bash "$DEV_PATH/templates/$template"
     fi
-
-    open_proj "$path"
 }
 
 case "$1" in
