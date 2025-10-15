@@ -1,0 +1,78 @@
+#! /bin/env bash
+
+bold() {
+    echo "$(tput bold)$@$(tput sgr0)"
+}
+
+from_scratch='Scratch'
+from_git_repo='Git repo'
+
+bootstrap=$(gum choose --padding="0 2" --no-show-help --header="Create from:" "$from_scratch" "$from_git_repo")
+[[ -z "$bootstrap" ]] && exit 0
+
+is_clone=$([[ "$bootstrap" == "$from_git_repo" ]] && echo "1")
+
+if [[ $is_clone ]]; then
+    repo_url=$(gum input --prompt="Repo URL: " --prompt.bold --padding="0 2" --no-show-help)
+    [[ -z "$repo_url" ]] && exit 0
+    name=$(basename $repo_url .git)
+    echo "$(bold "Repo URL"): $repo_url" | gum style --padding "0 2"
+fi
+
+name=$(gum input --value="$name" --prompt="Name: " --prompt.bold --padding="0 2" --no-show-help)
+[[ -z "$name" ]] && exit 0
+echo "  $(bold "Name"): $name"
+
+path="$(fd . "$DEV_PATH" --max-depth 1 --type d | fzf --reverse --height 12 --prompt "  Path: ")"
+[[ -z "$path" ]] && exit 0
+path="$path$name"
+echo "  $(bold "Path"): $path"
+
+if [[ ! $is_clone ]]; then
+    mkdir -p "$DEV_PATH/templates"
+    template="$(fd . "$DEV_PATH/templates" --max-depth 1 --type f --format {/} | fzf --reverse --prompt "  Template: " --height 10)"
+    echo "  $(bold "Template"): ${template:="<none>"}"
+fi
+
+echo
+if [[ -d "$path" ]]; then
+    gum style "Project already exists! What do you want to do?" --bold --foreground="$VIRID_CORAL" --padding "0 2"
+    choice=$(gum choose --padding="0 2" --no-show-help --header="" 'Open' 'Recreate' 'Abort')
+
+    case "$choice" in
+        "Open")
+            tps "$path"
+            exit
+        ;;
+        "Recreate")
+            if gum confirm --no-show-help --padding="0 1" 'Delete existing project and re-create it?'; then
+                if [[ -z "$path" ]] || [[ "$path" == "/" ]]; then
+                    echo "DANGEROUS COMMAND DETECTED: 'rm -rf $path'"
+                    exit 1
+                fi
+                rm -rf "$path"
+            fi
+        ;;
+        *)
+            exit 0
+        ;;
+    esac
+else
+    confirm_msg=$([[ $is_clone ]] && echo "Clone project?" || echo "Create project?")
+    ! gum confirm "$confirm_msg" --padding="0 1" --no-show-help && exit 0
+fi
+
+if [[ $is_clone ]]; then
+    git clone "$repo_url" "$path"
+
+    if [[ $? -ne 0 && ! -d "$path" ]]; then
+        echo "Failed to clone."
+        read -n 1
+        exit 1
+    fi
+elif [[ -n "$template" ]]; then
+    mkdir -p "$path"
+    cd "$path" && bash "$DEV_PATH/templates/$template"
+fi
+
+tps "$path"

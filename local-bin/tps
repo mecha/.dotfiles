@@ -5,35 +5,30 @@
 main() {
     path=$1
 
-    dotfiles="~/.dotfiles"
-
     if [ -z "$path" ]; then
-        dev_dirs="$(fd . "$DEV_PATH" --hidden --max-depth 2 --type d | sed "s|^$DEV_PATH/||")"
-        path="$(printf "%s\n%s" "$dotfiles" "$dev_dirs" | fzf --reverse --prompt '> ')"
+        choice="$(fd . "$DEV_PATH" -H -t dir --exact-depth 2 | sed "s|^$DEV_PATH/||" | fzf)"
+        [[ -z "$choice" ]] && exit 0
+        path="$DEV_PATH/$choice"
     fi
 
-    if [[ "$path" == "$dotfiles" ]]; then
-        open_proj "$HOME/.dotfiles"
-    elif [[ -n "$path" ]]; then
-        open_proj "$DEV_PATH/$path"
-    fi
+    [[ -n "$path" ]] && open_proj "$path"
 }
 
 # opens or switches to a project session
 # @param $path string
 open_proj() {
     path=$1
-    path_name=$(basename "$path" | tr . _)
+    session_name=$(basename "$path" | tr . _)
 
     if [[ -z "$TMUX" ]]; then
-        tmux new-session -A -s "$path_name" -c "$path"
+        tmux new-session -A -s "$session_name" -c "$path"
     fi
 
-    if ! tmux has-session -t=$path_name 2> /dev/null; then
-        tmux new-session -ds "$path_name" -c "$path"
+    if ! tmux has-session -t=$session_name 2> /dev/null; then
+        tmux new-session -ds "$session_name" -c "$path"
     fi
 
-    tmux switch-client -t $path_name
+    tmux switch-client -t $session_name
 
     if [ -f "$path/.project" ]; then
         pushd $path &> /dev/null
