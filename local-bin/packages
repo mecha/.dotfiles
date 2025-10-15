@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-FZF_OPTS="--reverse --preview-window down --bind ctrl-u:preview-up,ctrl-d:preview-down"
+FZF_OPTS="--preview-window down --bind ctrl-u:preview-up,ctrl-d:preview-down"
 
 arg="${1,,}"
 

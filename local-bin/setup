@@ -44,7 +44,7 @@ help() {
 }
 
 if [ "$1" == "" ]; then
-    choice=$(fd . $HOME/.dotfiles/scripts/setup --type=f --format={/} | fzf --reverse)
+    choice=$(fd . $HOME/.dotfiles/scripts/setup --type=f --format={/} | fzf)
     if [ -z "$choice" ]; then
         exit 0
     fi

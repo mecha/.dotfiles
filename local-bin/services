@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-FZF_OPTS="--reverse --preview-window down --bind ctrl-u:preview-up,ctrl-d:preview-down"
+FZF_OPTS="--preview-window down --bind ctrl-u:preview-up,ctrl-d:preview-down"
 FZF_PREVIEW="[ ! -z '{}' ] && SYSTEMD_COLORS=1 systemctl status {}"
 FZF_STATUS_BIND="enter:execute(SYSTEMD_COLORS=1 systemctl status {} | less)"
 LIST_OPTS="--type=service --no-legend --no-pager --plain"
@@ -58,7 +58,7 @@ case "$arg" in
 
     "edit")
         echo "Choose which service to edit:" 
-        filepath=$(fd . /etc/systemd/system --type=f --type=l --max-depth=1 | fzf --reverse --height 20)
+        filepath=$(fd . /etc/systemd/system --type=f --type=l --max-depth=1 | fzf --height 20)
         [ -z "$filepath" ] && exit 1
 
         sudoedit "$filepath"
@@ -67,7 +67,7 @@ case "$arg" in
 
     "delete")
         echo "Choose which service to delete:" 
-        filepath=$(fd . /etc/systemd/system --type=f --type=l --max-depth=1 | fzf --reverse --height 20)
+        filepath=$(fd . /etc/systemd/system --type=f --type=l --max-depth=1 | fzf --height 20)
         [ -z "$filepath" ] && exit 1
 
         filename=$(basename "$filepath")

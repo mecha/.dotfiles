@@ -11,7 +11,7 @@ if [ -f "$markfile" ]; then
     marks=$(cat "$markfile" | jq -r $query 2> /dev/null | jq -r '.value | select(. != null)')
 fi
 
-choice=$(echo -n "$marks" | fzf --reverse --preview-window down --preview='bat --color=always --style=plain {}' --bind ctrl-u:preview-up,ctrl-d:preview-down)
+choice=$(echo -n "$marks" | fzf --preview-window down --preview='bat --color=always --style=plain {}' --bind ctrl-u:preview-up,ctrl-d:preview-down)
 
 if [ -z "$choice" ]; then
     exit 0
