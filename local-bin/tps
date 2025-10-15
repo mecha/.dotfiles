@@ -47,7 +47,7 @@ clone_proj() {
     fi
     name=$(basename $url .git)
 
-    dir="$(fd . "$DEV_PATH" --max-depth 1 --type d | fzf --reverse --height 12 --prompt "  Location: ")"
+    dir="$(fd . "$DEV_PATH" --max-depth 1 --type d | fzf --height 12 --prompt "  Location: ")"
     if [ -z "$dir" ]; then
         exit 0
     fi
@@ -89,7 +89,7 @@ create_proj() {
         exit 0
     fi
 
-    path="$(fd . "$DEV_PATH" --max-depth 1 --type d | fzf --reverse --height 12 --prompt "  Location: ")"
+    path="$(fd . "$DEV_PATH" --max-depth 1 --type d | fzf --height 12 --prompt "  Location: ")"
     if [[ -z "$path" ]]; then
         exit 0
     fi
@@ -99,7 +99,7 @@ create_proj() {
     echo $path
 
     mkdir -p "$DEV_PATH/templates"
-    template="$(fd . "$DEV_PATH/templates" --max-depth 1 --type f --format {/} | fzf --reverse --prompt "  Template: " --height 10)"
+    template="$(fd . "$DEV_PATH/templates" --max-depth 1 --type f --format {/} | fzf --prompt "  Template: " --height 10)"
 
     echo -n "  {{ Foreground \"$VIRID_WHITE\" ( Bold \"  Template: \" ) }} " | gum format -t template
     echo ${template:="<NONE>"}

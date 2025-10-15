@@ -23,14 +23,14 @@ name=$(gum input --value="$name" --prompt="Name: " --prompt.bold --padding="0 2"
 [[ -z "$name" ]] && exit 0
 echo "  $(bold "Name"): $name"
 
-path="$(fd . "$DEV_PATH" --max-depth 1 --type d | fzf --reverse --height 12 --prompt "  Path: ")"
+path="$(fd . "$DEV_PATH" --max-depth 1 --type d | fzf --height 12 --prompt "  Path: ")"
 [[ -z "$path" ]] && exit 0
 path="$path$name"
 echo "  $(bold "Path"): $path"
 
 if [[ ! $is_clone ]]; then
     mkdir -p "$DEV_PATH/templates"
-    template="$(fd . "$DEV_PATH/templates" --max-depth 1 --type f --format {/} | fzf --reverse --prompt "  Template: " --height 10)"
+    template="$(fd . "$DEV_PATH/templates" --max-depth 1 --type f --format {/} | fzf --prompt "  Template: " --height 10)"
     echo "  $(bold "Template"): ${template:="<none>"}"
 fi
 
