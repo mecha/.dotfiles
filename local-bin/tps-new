@@ -4,10 +4,12 @@ bold() {
     echo "$(tput bold)$@$(tput sgr0)"
 }
 
-from_scratch='Scratch'
-from_git_repo='Git repo'
+templates_path="$DEV_PATH/personal/templates"
+from_scratch='Create from scratch'
+from_git_repo='Clone git repo'
 
-bootstrap=$(gum choose --padding="0 2" --no-show-help --header="Create from:" "$from_scratch" "$from_git_repo")
+echo
+bootstrap=$(gum choose --padding="0 2" --no-show-help --header="Choose method:" "$from_scratch" "$from_git_repo")
 [[ -z "$bootstrap" ]] && exit 0
 
 is_clone=$([[ "$bootstrap" == "$from_git_repo" ]] && echo "1")
@@ -29,8 +31,8 @@ path="$path$name"
 echo "  $(bold "Path"): $path"
 
 if [[ ! $is_clone ]]; then
-    mkdir -p "$DEV_PATH/templates"
-    template="$(fd . "$DEV_PATH/templates" --max-depth 1 --type f --format {/} | fzf --prompt "  Template: " --height 10)"
+    mkdir -p "$templates_path"
+    template="$(fd . "$templates_path" --max-depth 1 --type f --format {/} | fzf --prompt "  Template: " --height 10)"
     echo "  $(bold "Template"): ${template:="<none>"}"
 fi
 
@@ -72,7 +74,7 @@ if [[ $is_clone ]]; then
     fi
 elif [[ -n "$template" ]]; then
     mkdir -p "$path"
-    cd "$path" && bash "$DEV_PATH/templates/$template"
+    cd "$path" && bash "$templates_path/$template"
 fi
 
 tps "$path"

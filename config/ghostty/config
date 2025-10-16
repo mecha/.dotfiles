@@ -12,6 +12,8 @@ window-padding-color = extend
 mouse-hide-while-typing = true
 
 keybind = ctrl+enter=unbind
+keybind = ctrl+-=decrease_font_size:0.5
+keybind = ctrl+equal=increase_font_size:0.5
 
 palette =  0=#282b33
 palette =  1=#fe5548
