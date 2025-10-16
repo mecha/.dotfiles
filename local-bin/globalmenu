@@ -6,19 +6,20 @@ main() {
     case "$1" in
         "")
             tmux display-menu -T " MENU " $menu_pos \
-                "󰄨  System monitor      " b 'neww -n Monitor btop' \
-                "" \
-                "  Main session"         m "new-session -A -s main -c $HOME" \
+                "  Main session        " m "new-session -A -s main -c $HOME" \
                 "󰉗  New project"          n "display-popup -w 50% -h 50% -T ' New Project ' -EE tps-new" \
                 "" \
                 "  Packages…"            p 'run "globalmenu packages"' \
                 "  Services…"            s 'run "globalmenu services"' \
-                "  Journal… #[align=right]$(journal_status_icon)" j 'run "globalmenu journal"' \
+                "󱚌  Journal… #[align=right]$(journal_status_icon)" j 'run "globalmenu journal"' \
                 "󱧼  Configs…"             c 'run "globalmenu configs"' \
-                "󰦬  Utilities…"           u 'run "globalmenu utils"' \
+                "󱁤  Utilities…"           u 'run "globalmenu utils"' \
                 "" \
-                "  Reboot"               R 'display-popup -w 30% -h 8 -EE "gum confirm --default=no \"Reboot now?\" && reboot"' \
-                "󰐥  Shutdown"             S 'display-popup -w 30% -h 8 -EE "gum confirm --default=no \"Shutdown now?\" && shutdown -h now"' \
+                "󰄨  Resources"            r 'neww -n Resources btop' \
+                "󱉟  Help"                 h 'neww -n Help help' \
+                "" \
+                "  Reboot"               R 'display-popup -w 30% -h 8 -E "gum confirm --default=no \"Reboot now?\" && reboot"' \
+                "󰐥  Shutdown"             S 'display-popup -w 30% -h 8 -E "gum confirm --default=no \"Shutdown now?\" && shutdown -h now"' \
         ;;
 
         "packages")
