@@ -26,15 +26,15 @@ open_proj() {
 
     if ! tmux has-session -t=$session_name 2> /dev/null; then
         tmux new-session -ds "$session_name" -c "$path"
+
+        if [ -f "$path/.project" ]; then
+            pushd $path &> /dev/null
+            exec "$path/.project"
+            popd &> /dev/null
+        fi
     fi
 
     tmux switch-client -t $session_name
-
-    if [ -f "$path/.project" ]; then
-        pushd $path &> /dev/null
-        exec "$path/.project"
-        popd &> /dev/null
-    fi
 }
 
 # Clones a git repo and opens its tmux session.
