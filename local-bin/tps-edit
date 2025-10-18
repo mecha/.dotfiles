@@ -11,7 +11,10 @@ if [ -z "$file" ]; then
     exit
 fi
 
-if tmux select-window -t nvim 2> /dev/null; then
+session=$(tmux display-message -p '#S')
+editor_win="$session:nvim"
+
+if tmux select-window -t "$editor_win" 2> /dev/null; then
     tmux send-keys -t nvim Escape ":e $file" Enter
 else
     tmux neww -bt 1 nvim "$file"
