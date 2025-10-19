@@ -9,6 +9,8 @@ main() {
         choice="$(fd . "$DEV_PATH" -H -t dir --exact-depth 2 | sed "s|^$DEV_PATH/||" | fzf)"
         [[ -z "$choice" ]] && exit 0
         path="$DEV_PATH/$choice"
+    elif [[ "$path" == "here" ]]; then
+        path="$PWD"
     fi
 
     [[ -n "$path" ]] && open_proj "$path"
