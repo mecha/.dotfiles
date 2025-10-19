@@ -31,7 +31,7 @@
 @define-color tan #d2b487;
 
 * {
-	font-size: 20px;
+	font-size: 17px;
 	font-family: 'JetBrainsMono Nerd Font';
 	color: @bright_mint;
 }
