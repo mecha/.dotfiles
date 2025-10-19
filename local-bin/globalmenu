@@ -68,10 +68,10 @@ main() {
 
         "configs")
             tmux display-menu -T " MENU > CONFIGS " $menu_pos \
-                "󱁻  Dotfiles            " d "run 'tps $HOME/.dotfiles'" \
-                "  Neovim"               n "run 'tps $HOME/dev/personal/config.nvim'" \
-                "  Hyprland"             h "run 'tps $HOME/.dotfiles && tps-edit config/hypr/hyprland.conf'" \
-                "󰠷  Waybar"               w "run 'tps $HOME/.dotfiles && tps-edit config/waybar/config'" \
+                "󱁻  Dotfiles            " d "run 'tps $DOTFILES_PATH'" \
+                "  Neovim"               n "run 'tps $DEV_PATH/personal/config.nvim'" \
+                "  Hyprland"             h "run 'tps $DOTFILES_PATH && tps-edit config/hypr/hyprland.conf'" \
+                "󰠷  Waybar"               w "run 'tps $DOTFILES_PATH && tps-edit config/waybar/config'" \
                 "" \
                 "󰏗  Pacman"               p 'neww -n "Pacman config" sudoedit /etc/pacman.conf' \
                 "󰈙  Hosts"                H 'neww -n "Hosts file" sudoedit /etc/hosts' \

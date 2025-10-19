@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
-if [ -z $SCRIPTS_DIR ]; then
-    SCRIPTS_DIR="$HOME/.dotfiles/scripts/setup"
+if [ -z $SCRIPTS_PATH ]; then
+    SCRIPTS_PATH="$DOTFILES_PATH/scripts/setup"
 fi
 
 help() {
@@ -10,7 +10,7 @@ help() {
     fullpath=$(realpath "$0")
 
     if [ ! -z "$arg" ]; then
-        script="$SCRIPTS_DIR/$arg"
+        script="$SCRIPTS_PATH/$arg"
 
         if [ ! -f "$script" ]; then
             echo "setup script '$arg' does not exist"
@@ -31,7 +31,7 @@ help() {
     echo "SCRIPTS:"
 
     echo
-    find "$SCRIPTS_DIR" -type f -exec basename {} ';' | sort | sed 's/^/    /'
+    find "$SCRIPTS_PATH" -type f -exec basename {} ';' | sort | sed 's/^/    /'
     echo
 
     echo "To see exactly what packages are installed by each set, run the below command to read the source code. You can read bash, right?"
@@ -44,7 +44,7 @@ help() {
 }
 
 if [ "$1" == "" ]; then
-    choice=$(fd . $HOME/.dotfiles/scripts/setup --type=f --format={/} | fzf)
+    choice=$(fd . $DOTFILES_PATH/scripts/setup --type=f --format={/} | fzf)
     if [ -z "$choice" ]; then
         exit 0
     fi
@@ -57,10 +57,10 @@ if [ "$1" == "help" ]; then
     exit 1
 fi
 
-if [ ! -f "$SCRIPTS_DIR/$1" ]; then
+if [ ! -f "$SCRIPTS_PATH/$1" ]; then
     echo "setup script '$1' does not exist"
     exit 1
 fi
 
-source "$SCRIPTS_DIR/$1"  
+source "$SCRIPTS_PATH/$1"  
 exit $?

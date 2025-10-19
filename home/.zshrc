@@ -13,6 +13,7 @@ bashcompinit
 source "$ZSH/oh-my-zsh.sh"
 
 export DEV_PATH="$HOME/dev"
+export DOTFILES_PATH="$DEV_PATH/personal/.dotfiles/"
 export PATH="/$HOME/.local/bin:$PATH"
 
 export NVIM="nvim"
@@ -45,7 +46,7 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 # nvm end
 
 # pnpm
-export PNPM_HOME="/home/miguel/.local/share/pnpm"
+export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
