@@ -9,7 +9,7 @@ case "$arg" in
         echo -e "Add\nRemove\nInstalled\nUpgrade" | fzf $FZF_OPTS | xargs -ro packages
     ;;
     "add")
-        pacman -Slq | fzf $FZF_OPTS --multi --preview 'pacman -Si {1}' | xargs -ro sudo pacman -Sy
+        paru -Slq | fzf $FZF_OPTS --multi --preview 'paru -Si {1}' | xargs -ro paru -Sy
     ;;
     "remove")
         pacman -Qq | fzf $FZF_OPTS --multi --multi --preview 'pacman -Qi {1}' | xargs -ro sudo pacman -Rns
