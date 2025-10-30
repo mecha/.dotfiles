@@ -1,7 +1,7 @@
 {
   "layer": "top",
   "position": "top",
-  "spacing": 6,
+  "spacing": 4,
   "reload_style_on_change": true,
   "modules-left": [
     "cpu",
@@ -46,7 +46,7 @@
     ]
   },
   "clock": {
-    "format": "{:%a %d %h, %H:%M}",
+    "format": "{:%a %d %h  %H:%M}",
     "tooltip": false,
     "on-click": "ghostty -e ~/dev/personal/calren/calren"
   },
@@ -59,8 +59,8 @@
     "on-click": "blueman-manager"
   },
   "pulseaudio": {
-    "format": "{icon} {volume:3}%",
-    "format-bluetooth": "{icon} {volume:3}%",
+    "format": "{icon}  {volume}%",
+    "format-bluetooth": "{icon}  {volume}%",
     "format-muted": " ---%",
     "format-icons": {
       "headphones": "",
@@ -117,8 +117,8 @@
   },
   "mpris": {
     "format": "{status_icon}  {player_icon} {title}  {artist}",
-    "title-len": 30,
-    "artist-len": 16,
+    "title-len": 50,
+    "artist-len": 20,
     "player-icons": {
       "default": "🎵",
       "firefox": "󰈹"

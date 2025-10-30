@@ -31,13 +31,13 @@
 @define-color tan #d2b487;
 
 * {
-	font-size: 17px;
+	font-size: 16px;
 	font-family: 'JetBrainsMono Nerd Font';
 	color: @bright_mint;
 }
 
 window > .horizontal {
-    padding: 8px 5px 0;
+    padding: 8px 8px 0;
 }
 
 window#waybar {
@@ -68,10 +68,10 @@ tooltip * {
 #custom-updates,
 #custom-face,
 #tray {
-    border-radius: 6px;
-	background: @dark;
+    border-radius: 10px;
+    background: @dark;
     margin: 0 2px;
-	padding: 0 10px;
+    padding: 1px 10px;
 }
 
 #workspaces {
@@ -96,13 +96,13 @@ tooltip * {
     box-shadow: none;
 }
 #workspaces button:first-child {
-    border-radius: 5px 0 0 5px;
+    border-radius: 12px 0 0 12px;
 }
 #workspaces button:last-child {
-    border-radius: 0 5px 5px 0;
+    border-radius: 0 12px 12px 0;
 }
 #workspaces button:only-child {
-    border-radius: 5px;
+    border-radius: 12px;
 }
 
 #pulseaudio.muted {
@@ -151,7 +151,7 @@ tooltip * {
 #mpris {
     color: @dark;
     background-color: @bright_mint;
-    font-size: 15px;
+    font-size: 14px;
     font-style: normal;
 }
 #mpris.paused {
