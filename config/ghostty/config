@@ -1,5 +1,5 @@
 shell-integration = zsh
-shell-integration-features = no-cursor
+shell-integration-features = no-cursor, ssh-terminfo, ssh-env
 cursor-style = block
 linux-cgroup = always
 confirm-close-surface = false
