@@ -7,20 +7,20 @@
     "cpu",
     "memory",
     "disk",
-    "battery",
-    "custom/updates",
+    "mpris",
     "custom/face"
   ],
   "modules-center": [
       "hyprland/workspaces"
   ],
   "modules-right": [
-    "mpris",
+    "custom/updates",
     "tray",
     "backlight",
     "pulseaudio",
-    "custom/notification",
-    "clock"
+    "battery",
+    "clock",
+    "custom/notification"
   ],
   "cpu": {
     "interval": 5,
