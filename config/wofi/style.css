@@ -26,6 +26,9 @@ window {
     padding: 0 2px;
 }
 
+#entry {
+    background-color: none;
+}
 #entry:selected {
     border: 0;
     outline: 0;
@@ -34,10 +37,11 @@ window {
 
 #text {
     padding: 6px;
+    background: none;
 }
 #text:selected {
     color: #95d5b2;
 }
 *:placeholder {
-    text: #84a98c;
+    color: #84a98c;
 }
