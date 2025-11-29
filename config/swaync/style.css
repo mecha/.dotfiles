@@ -395,6 +395,10 @@
   background-color: @noti-bg-hover-opaque;
 }
 
+#control-center-window {
+  background-color: transparent;
+}
+
 .control-center {
   color: @fg;
   background: @bg_tr;
@@ -440,7 +444,7 @@
 
 .blank-window {
   /* Window behind control center and on all other monitors */
-  background: transparent;
+  background-color: transparent;
 }
 
 .floating-notifications {
