@@ -56,3 +56,7 @@ esac
 if [ -f "$HOME/.env" ]; then
     source "$HOME/.env"
 fi
+
+export ANDROID_HOME=$HOME/Android/Sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
