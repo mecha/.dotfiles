@@ -20,11 +20,8 @@ export SUDO_EDITOR="nvim"
 export VISUAL="nvim"
 export GIT_EDITOR="nvim"
 export MANPAGER="less -isg"
-
 export FZF_DEFAULT_OPTS="--reverse --color=fg:$VIRID_FG,bg+:$VIRID_DARK,fg+:$VIRID_BRIGHT_MINT,hl+:$VIRID_BRIGHT_RED,pointer:$VIRID_BRIGHT_MINT,prompt:$VIRID_WHITE,border:$VIRID_MINT"
 
-bindkey "^[[H" beginning-of-line
-bindkey "^[[F" end-of-line
 
 alias tam="tmux -u new-session -A -s main"
 alias ll="eza -lga --icons --group-directories-first --git"
