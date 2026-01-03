@@ -47,6 +47,9 @@ sudo pacman -S --needed \
 _heading "V4L2 LOOPBACK (FOR OBS VIRTUAL CAMERA)"
 sudo pacman -S --needed v4l2loopback-dkms
 
+_heading "WINDOW THEMING"
+sudo pacman -S nwg-look qt5ct qt6ct kvantum
+
 _heading "GUI APPS"
 sudo pacman -S --needed ghostty mpv pavucontrol nautilus bitwarden bitwarden-cli obs-studio gimp okular discover qbittorrent
 paru -S --needed zen-browser-bin slack-desktop-wayland waybar-media-git localsend-bin
