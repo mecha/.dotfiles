@@ -33,11 +33,12 @@ bindkey '^xc' copy-cmd-buffer
 hash -d dev="$DEV_PATH"
 
 alias tam="tmux -u new-session -A -s main"
-alias ll="eza -lga --icons --group-directories-first --git"
-alias l="eza -1ga --icons --group-directories-first"
+alias ll="eza -lga --icons --group-directories-first --color=always --git --git-ignore"
+alias l="eza -g --icons --group-directories-first --color=always --git --git-ignore"
+alias t="eza -T -L 2 --icons --group-directories-first --color=always --git --git-ignore"
+alias tt="eza -T -L 3 -lha --icons --group-directories-first --color=always --git --git-ignore"
 alias n="nvim"
 alias f="fzfn"
-alias tt="eza -T -lha"
 alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)'
 
 # go
