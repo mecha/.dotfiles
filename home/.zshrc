@@ -22,6 +22,13 @@ export GIT_EDITOR="nvim"
 export MANPAGER="less -isg"
 export FZF_DEFAULT_OPTS="--reverse --color=fg:$VIRID_FG,bg+:$VIRID_DARK,fg+:$VIRID_BRIGHT_MINT,hl+:$VIRID_BRIGHT_RED,pointer:$VIRID_BRIGHT_MINT,prompt:$VIRID_WHITE,border:$VIRID_MINT"
 
+# copy command buffer to system clipboard
+copy-cmd-buffer() {
+    echo -n $BUFFER | wl-copy
+    zle -M "Copied to clipboard"
+}
+zle -N copy-cmd-buffer
+bindkey '^xc' copy-cmd-buffer
 
 alias tam="tmux -u new-session -A -s main"
 alias ll="eza -lga --icons --group-directories-first --git"
