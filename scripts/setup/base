@@ -27,6 +27,7 @@ sudo pacman -S --needed \
     jq \
     bat \
     eza \
+    jless \
     ripgrep \
     htop \
     btop \
