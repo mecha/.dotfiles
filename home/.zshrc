@@ -42,6 +42,8 @@ alias f="fzfn"
 alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)'
 alias open='xdg-open'
 
+alias -g C='| wl-copy'
+
 # go
 export PATH="$HOME/go/bin:$PATH"
 
