@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 heading "FONTS"
-sudo pacman -S --needed noto-fonts ttf-roboto ttf-jetbrains-mono ttf-jetbrains-mono-nerd
+sudo pacman -S --needed noto-fonts noto-fonts-cjk ttf-roboto ttf-jetbrains-mono ttf-jetbrains-mono-nerd
 paru -S --needed ttf-ms-win10-auto ttf-ms-win11-auto
 
 if [ ! -d "$HOME/.config/oh-my-zsh/" ]; then
