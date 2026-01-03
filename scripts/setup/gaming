@@ -7,7 +7,7 @@ heading "===> OPTIMISATIONS & MONITORING"
 sudo pacman -S --needed gamemode mangohud
 
 heading "===> LAUNCHERS"
-sudo pacman -S --needed steam lutris
+sudo pacman -S --needed steam lutris wine winetricks wine-mono
 
 heading "===> MINECRAFT"
 sudo pacman -S --needed prismlauncher jre8-openjdk-headless jre8-openjdk jre17-openjdk jre21-openjdk
