@@ -30,6 +30,8 @@ copy-cmd-buffer() {
 zle -N copy-cmd-buffer
 bindkey '^xc' copy-cmd-buffer
 
+hash -d dev="$DEV_PATH"
+
 alias tam="tmux -u new-session -A -s main"
 alias ll="eza -lga --icons --group-directories-first --git"
 alias l="eza -1ga --icons --group-directories-first"
