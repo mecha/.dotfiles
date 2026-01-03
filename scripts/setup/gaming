@@ -3,8 +3,8 @@
 heading "===> DRIVERS"
 sudo pacman -S --needed vulkan-radeon lib32-vulkan-radeon
 
-heading "===> OPTIMISATIONS"
-sudo pacman -S --needed gamemode
+heading "===> OPTIMISATIONS & MONITORING"
+sudo pacman -S --needed gamemode mangohud
 
 heading "===> LAUNCHERS"
 sudo pacman -S --needed steam lutris
