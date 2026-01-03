@@ -44,6 +44,26 @@ alias open='xdg-open'
 
 alias -g C='| wl-copy'
 
+alias -s md='bat'
+alias -s txt='bat'
+alias -s json='jless'
+alias -s yaml='jless'
+alias -s yml='jless'
+alias -s go="$EDITOR"
+alias -s php="$EDITOR"
+alias -s js="$EDITOR"
+alias -s ts="$EDITOR"
+alias -s xml="$EDITOR"
+alias -s sqlite="sqlite3"
+alias -s pdf="xdg-open"
+alias -s html="xdg-open"
+alias -s jpg="xdg-open"
+alias -s png="xdg-open"
+alias -s gif="xdg-open"
+alias -s mp4="xdg-open"
+alias -s mkv="xdg-open"
+alias -s mov="xdg-open"
+
 # go
 export PATH="$HOME/go/bin:$PATH"
 
