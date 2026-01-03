@@ -74,13 +74,25 @@ function virid_prompt {
         PROMPT+="[]"
     fi
 
-    PROMPT+="$(git_prompt_info)" # TODO: not working
+    PROMPT+="$(git_prompt_info)"
     PROMPT+=$'\n'"%F{$VIRID_MINT}└┈ %f"
 }
 
-precmd_functions+=(virid_prompt)
+function git_prompt_info {
+    ref_name=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
 
-# ZSH_THEME_GIT_PROMPT_PREFIX="┈┈[%F{$VIRID_YELLOW} "
-# ZSH_THEME_GIT_PROMPT_SUFFIX="%F{$VIRID_DIM}]"
-# ZSH_THEME_GIT_PROMPT_DIRTY="*"
-# ZSH_THEME_GIT_PROMPT_CLEAN=""
+    if [ -n "$ref_name" ]; then
+
+        STATUS=$(git status --porcelain 2> /dev/null)
+        if [ -n "$STATUS" ]; then
+            color=$VIRID_YELLOW
+            dirty="*"
+        else
+            color=$VIRID_BRIGHT_GREEN
+        fi
+
+        echo -n "%F{$color}[ $ref_name$dirty]%F{$VIRID_MINT}"
+    fi
+}
+
+precmd_functions+=(virid_prompt)
