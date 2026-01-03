@@ -40,6 +40,7 @@ alias tt="eza -T -L 3 -lha --icons --group-directories-first --color=always --gi
 alias n="nvim"
 alias f="fzfn"
 alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)'
+alias open='xdg-open'
 
 # go
 export PATH="$HOME/go/bin:$PATH"
