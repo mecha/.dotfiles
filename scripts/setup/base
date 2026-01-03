@@ -9,6 +9,7 @@ heading "BASE PACKAGES"
 sudo pacman -S --needed \
     base-devel \
     networkmanager \
+    dosfstools \
     dkms \
     linux-headers \
     openssh \
