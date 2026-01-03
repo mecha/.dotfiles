@@ -6,7 +6,7 @@ plugins=(git ssh-agent zsh-autosuggestions zsh-history-substring-search fast-syn
 
 fpath+="${ZSH_CUSTOM}/plugins/zsh-completions/src"
 
-autoload -U compinit bashcompinit
+autoload -U compinit bashcompinit zmv
 compinit
 bashcompinit
 
