@@ -75,6 +75,7 @@ function virid_prompt {
     fi
 
     PROMPT+="$(git_prompt_info)"
+    PROMPT+="┈$(lang_prompt_info)"
     PROMPT+=$'\n'"%F{$VIRID_MINT}└┈ %f"
 }
 
@@ -92,6 +93,32 @@ function git_prompt_info {
         fi
 
         echo -n "%F{$color}[ $ref_name$dirty]%F{$VIRID_MINT}"
+    fi
+}
+
+function lang_prompt_info {
+    if [ -f "docker-compose.yml" ]; then
+        echo -n "%F{#1D63ED}[󰡨]%F{$VIRID_MINT}"
+    fi
+
+    if [ -f "go.mod" ]; then
+        echo -n "%F{#00ADD8}[]%F{$VIRID_MINT}"
+    fi
+
+    if [ -f "composer.json" ]; then
+        echo -n "%F{#8892bf}[󰌟]%F{$VIRID_MINT}"
+    fi
+
+    if [ -f "package.json" ]; then
+        echo -n "%F{#f7df1e}[]%F{$VIRID_MINT}"
+    fi
+
+    if [ -f "tsconfig.json" ]; then
+        echo -n "%F{#007ACC}[]%F{$VIRID_MINT}"
+    fi
+
+    if [ -f "project.godot" ]; then
+        echo -n "%F{#478CBF}[]%F{$VIRID_MINT}"
     fi
 }
 
