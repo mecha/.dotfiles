@@ -30,9 +30,7 @@ open_proj() {
         tmux new-session -ds "$session_name" -c "$path"
 
         if [ -f "$path/.project" ]; then
-            pushd $path &> /dev/null
-            exec "$path/.project"
-            popd &> /dev/null
+            (cd "$path" && source "$path/.project")
         fi
     fi
 
