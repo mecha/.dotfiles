@@ -12,7 +12,7 @@ bashcompinit
 
 source "$ZSH/oh-my-zsh.sh"
 
-export DEV_PATH="$HOME/dev"
+export DEV_PATH="$(realpath "$HOME/dev")"
 export DOTFILES_PATH="$DEV_PATH/personal/.dotfiles/"
 export PATH="/$HOME/.local/bin:$PATH"
 export EDITOR="nvim"
