@@ -7,7 +7,7 @@ app-notifications = no-clipboard-copy
 
 font-family = "JetBrainsMono Nerd Font Mono"
 font-feature = -calt, -liga, -dlig
-font-size = 19.5
+font-size = 16.5
 window-decoration = false
 window-padding-color = extend
 mouse-hide-while-typing = true
@@ -15,7 +15,7 @@ mouse-hide-while-typing = true
 keybind = ctrl+enter=unbind
 keybind = ctrl+-=decrease_font_size:0.5
 keybind = ctrl+equal=increase_font_size:0.5
-keybind = ctrl+9=set_font_size:15.0
+keybind = ctrl+9=set_font_size:12.5
 
 palette =  0=#282b33
 palette =  1=#fe5548
