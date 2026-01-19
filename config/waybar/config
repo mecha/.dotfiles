@@ -6,7 +6,7 @@
   "modules-left": [
     "cpu",
     "memory",
-    "disk",
+    "battery",
     "mpris",
     "custom/face"
   ],
@@ -18,7 +18,6 @@
     "tray",
     "backlight",
     "pulseaudio",
-    "battery",
     "clock",
     "custom/notification"
   ],
