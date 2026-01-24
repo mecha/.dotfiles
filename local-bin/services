@@ -9,7 +9,7 @@ arg="${1,,}"
 
 case "$arg" in
     "")
-        echo -e "List\nStart\nRestart\nStop\nNew\nEdit\nDelete" | fzf $FZF_OPTS | xargs -ro services
+        echo -e "List\nStart\nRestart\nStop\nEnable\nDisable\nNew\nEdit\nDelete" | fzf $FZF_OPTS | xargs -ro services
     ;;
 
     "list")
@@ -33,6 +33,14 @@ case "$arg" in
 
     "stop")
         systemctl list-units $LIST_OPTS --state active | awk '{print $1}' | fzf $FZF_OPTS --multi --preview "$FZF_PREVIEW" | xargs -ro systemctl stop
+    ;;
+
+    "enable")
+        systemctl list-unit-files --state=disabled $LIST_OPTS  | awk '{print $1}' | fzf $FZF_OPTS --multi --preview "$FZF_PREVIEW" | xargs -ro systemctl enable
+    ;;
+
+    "disable")
+        systemctl list-unit-files --state=enabled $LIST_OPTS | awk '{print $1}' | fzf $FZF_OPTS --multi --preview "$FZF_PREVIEW" | xargs -ro systemctl disable
     ;;
 
     "new")

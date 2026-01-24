@@ -84,11 +84,12 @@ main() {
                 "󰐊  Start               " s 'display-popup -w 80% -h 80% -T " Start service " -EE "services start"' \
                 "  Restart"              r 'display-popup -w 80% -h 80% -T " Restart service " -EE "services restart"' \
                 "󰓛  Stop"                 k 'display-popup -w 80% -h 80% -T " Start service " -EE "services stop"' \
+                "  Enable"               e 'display-popup -w 80% -h 80% -T " Enable service " -EE "services enable"' \
+                "  Disable"              d 'display-popup -w 80% -h 80% -T " Disable service " -EE "services disable"' \
                 "" \
                 "  List all"             l 'display-popup -w 80% -h 80% -T " Services " -E "services list"' \
                 "  Active"               a 'display-popup -w 80% -h 80% -T " Services (active) " -E "services list active"' \
                 "  Inactive"             i 'display-popup -w 80% -h 80% -T " Services (inactive) " -E "services list inactive"' \
-                "󰌵  Enabled"              e 'display-popup -w 80% -h 80% -T " Services (enabled) " -E "services list enabled"' \
                 "  Failed"               f 'display-popup -w 80% -h 80% -T " Services (failed) " -E "services list failed"' \
                 "" \
                 "󰝒  Create new"           C 'neww -n "New service" "services new"' \
