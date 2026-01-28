@@ -2,156 +2,30 @@
 # My version of tps, adapted from ThePrimegen's script:
 # https://github.com/ThePrimeagen/.dotfiles/blob/master/bin/.local/scripts/tmux-sessionizer"
 
-main() {
-    path=$1
+path=$1
 
-    if [ -z "$path" ]; then
-        choice="$(fd . "$DEV_PATH" -H -t dir -L --exact-depth 2 | sed "s|^$DEV_PATH/||" | fzf)"
-        [[ -z "$choice" ]] && exit 0
-        path="$DEV_PATH/$choice"
-    elif [[ "$path" == "here" ]]; then
-        path="$PWD"
+if [ -z "$path" ]; then
+    choice="$(fd . "$DEV_PATH" -H -t dir -L --exact-depth 2 | sed "s|^$DEV_PATH/||" | fzf)"
+    [[ -z "$choice" ]] && exit 0
+    path="$DEV_PATH/$choice"
+elif [[ "$path" == "here" ]]; then
+    path="$PWD"
+fi
+
+[[ -z "$path" ]] && exit 0
+
+session_name=$(basename "$path" | tr . _)
+
+if [[ -z "$TMUX" ]]; then
+    tmux new-session -A -s "$session_name" -c "$path"
+fi
+
+if ! tmux has-session -t=$session_name 2> /dev/null; then
+    tmux new-session -ds "$session_name" -c "$path"
+
+    if [ -f "$path/.project" ]; then
+        (cd "$path" && source "$path/.project")
     fi
+fi
 
-    [[ -n "$path" ]] && open_proj "$path"
-}
-
-# opens or switches to a project session
-# @param $path string
-open_proj() {
-    path=$1
-    session_name=$(basename "$path" | tr . _)
-
-    if [[ -z "$TMUX" ]]; then
-        tmux new-session -A -s "$session_name" -c "$path"
-    fi
-
-    if ! tmux has-session -t=$session_name 2> /dev/null; then
-        tmux new-session -ds "$session_name" -c "$path"
-
-        if [ -f "$path/.project" ]; then
-            (cd "$path" && source "$path/.project")
-        fi
-    fi
-
-    tmux switch-client -t $session_name
-}
-
-# Clones a git repo and opens its tmux session.
-clone_proj() {
-    echo    
-    echo -n "  {{ Foreground \"$VIRID_WHITE\" ( Bold \"  Repo URL: \" ) }} " | gum format -t template
-    read -r url
-    if [ -z "$url" ]; then
-        exit 0
-    fi
-    name=$(basename $url .git)
-
-    dir="$(fd . "$DEV_PATH" --max-depth 1 --type d | fzf --height 12 --prompt "  Location: ")"
-    if [ -z "$dir" ]; then
-        exit 0
-    fi
-
-    path="$dir/$name"
-
-    echo -n "  {{ Foreground \"$VIRID_WHITE\" ( Bold \"  Location: \" ) }} " | gum format -t template
-    echo $path
-
-    if ! gum confirm "Clone project?" --padding="0 1" --no-show-help; then
-        exit 0
-    fi
-
-    if [ -d "$path" ]; then
-        echo "  Project already exists."
-        read -n 1
-        open_proj "$path"
-        exit
-    fi
-
-    git clone "$url" "$path"
-
-    if [[ $? -ne 0 && ! -d "$path" ]]; then
-        echo "Failed to clone."
-        read -n 1
-        exit 1
-    fi
-
-    open_proj "$path"
-    tmux send-keys -t "${name}:1.1" "nvim README.md" Enter
-}
-
-# Creates a new project interactively and opens its tmux session.
-create_proj() {
-    echo
-    echo -n "  {{ Foreground \"$VIRID_WHITE\" ( Bold \"  Name: \" ) }} " | gum format -t template
-    read -r name
-    if [[ -z "$name" ]]; then
-        exit 0
-    fi
-
-    path="$(fd . "$DEV_PATH" --max-depth 1 --type d | fzf --height 12 --prompt "  Location: ")"
-    if [[ -z "$path" ]]; then
-        exit 0
-    fi
-    path="$path$name"
-
-    echo -n "  {{ Foreground \"$VIRID_WHITE\" ( Bold \"  Location: \" ) }} " | gum format -t template
-    echo $path
-
-    mkdir -p "$DEV_PATH/templates"
-    template="$(fd . "$DEV_PATH/templates" --max-depth 1 --type f --format {/} | fzf --prompt "  Template: " --height 10)"
-
-    echo -n "  {{ Foreground \"$VIRID_WHITE\" ( Bold \"  Template: \" ) }} " | gum format -t template
-    echo ${template:="<NONE>"}
-    echo
-
-    if [ -d "$path" ]; then
-        choice=$(gum choose --padding="0 2" --no-show-help 'Open' 'Recreate' 'Do nothing')
-
-        case "$choice" in
-            "Open")
-                tps "$path"
-                exit
-            ;;
-            "Recreate")
-                if gum confirm --no-show-help --padding="0 1" 'Delete existing project and re-create it?'; then
-                    if [ -z "$path" ] || [ "$path" == "/" ]; then
-                        echo "DANGEROUS COMMAND DETECTED: 'rm -rf $path'"
-                        exit 1
-                    fi
-                    rm -rf "$path"
-                fi
-            ;;
-            *)
-                exit 0
-            ;;
-        esac
-    elif ! gum confirm "Create project?" --padding="0 1" --no-show-help; then
-        exit 0
-    fi
-
-    if [[ ! -d "$path" ]]; then
-        mkdir -p "$path"
-        cd "$path" && git init -q -b main
-    fi
-
-    open_proj "$path"
-
-    if [[ -n "$template" ]]; then
-        cd "$path" && bash "$DEV_PATH/templates/$template"
-    fi
-}
-
-case "$1" in
-    "new")
-        create_proj
-    ;;
-
-    "clone")
-        clone_proj
-    ;;
-
-    *)
-        main $@
-    ;;
-esac
+tmux switch-client -t $session_name
