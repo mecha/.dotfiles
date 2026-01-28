@@ -165,7 +165,7 @@
     "hide-empty-text": true,
     "exec-if": "which waybar-module-pacman-updates",
     "exec": "waybar-module-pacman-updates --interval-seconds 5 --network-interval-seconds 600 --no-zero-output",
-    "on-click": "ghostty -e bash -c 'echo \"=> FULL SYSTEM UPDATE\" && paru && echo \"=> SYSTEM UPDATED\" && read -n 1'",
+    "on-click": "ghostty -e bash -c 'packages upgrade' && read -n 1",
     "on-click-right": "xdg-open https://archlinux.org/news"
   },
   "custom/face": {
