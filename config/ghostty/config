@@ -35,3 +35,5 @@ palette = 14=#30c1e5
 palette = 15=#bbc2cf
 foreground = #e0edb6
 background = #2c3333
+
+custom-shader = shaders/cursor_warp.glsl
