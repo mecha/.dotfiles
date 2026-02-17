@@ -1,0 +1,6 @@
+#! /bin/env bash
+
+target=$(tmux list-windows -a -F "#{session_name}:#{window_name}" | fzf)
+[[ -z "$target" ]] && exit 1;
+
+tmux switch -t "$target"

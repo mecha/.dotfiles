@@ -6,17 +6,18 @@ main() {
     case "$1" in
         "")
             tmux display-menu -T " MENU " $menu_pos \
-                "  Main session        " m "new-session -A -s main -c $HOME" \
+                "󰄨  Resource monitor    " r 'neww -n Resources btop' \
+                "  Journal"              j 'neww -n Journal "journal $JOURNAL_ENC_DIR"' \
+                "󱉟  Help"                 h 'neww -n Help help' \
+                "" \
+                "  Main session"         m "new-session -A -s main -c $HOME" \
+                "󱁴  Find window"          f "display-popup -w 48 -h 24 -T ' Find window ' -E tps-win" \
                 "󰉗  New project"          n "display-popup -w 50% -h 50% -T ' New Project ' -EE tps-new" \
                 "" \
-                "  Journal…            " j 'neww -n Journal "journal $JOURNAL_ENC_DIR"' \
-                "󱧼  Configs…"             c 'run "globalmenu configs"' \
                 "  Packages…"            p 'run "globalmenu packages"' \
                 "  Services…"            s 'run "globalmenu services"' \
+                "󱧼  Configs…"             c 'run "globalmenu configs"' \
                 "󱁤  Utilities…"           u 'run "globalmenu utils"' \
-                "" \
-                "󰄨  Resources"            r 'neww -n Resources btop' \
-                "󱉟  Help"                 h 'neww -n Help help' \
                 "" \
                 "  Reboot"               R 'display-popup -w 30% -h 8 -E "gum confirm --default=no \"Reboot now?\" && reboot"' \
                 "󰐥  Shutdown"             S 'display-popup -w 30% -h 8 -E "gum confirm --default=no \"Shutdown now?\" && shutdown -h now"' \
