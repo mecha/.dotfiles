@@ -116,8 +116,8 @@
   },
   "mpris": {
     "format": "{status_icon}  {player_icon} {title}  {artist}",
-    "title-len": 50,
-    "artist-len": 20,
+    "title-len": 40,
+    "artist-len": 14,
     "player-icons": {
       "default": "🎵",
       "firefox": "󰈹"
