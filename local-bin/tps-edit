@@ -4,7 +4,7 @@
 file="$1"
 
 if [ -z "$file" ]; then
-    file=$(rg -L --files --hidden --glob "!**/.git/**" | fzf --preview-window down --preview 'bat --color=always --style=plain {}' --bind ctrl-u:preview-up,ctrl-d:preview-down)
+    file=$(rg -L --files --hidden --glob "!**/.git/**" | fzf --preview-window down:70% --preview 'bat --color=always --style=plain {}' --bind ctrl-u:preview-up,ctrl-d:preview-down)
 fi
 
 if [ -z "$file" ]; then
