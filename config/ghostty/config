@@ -4,6 +4,8 @@ cursor-style = block
 linux-cgroup = always
 confirm-close-surface = false
 app-notifications = no-clipboard-copy
+clipboard-read = allow
+clipboard-write = allow
 
 font-family = "JetBrainsMono Nerd Font Mono"
 font-feature = -calt, -liga, -dlig
