@@ -52,6 +52,8 @@ export GUM_INPUT_PROMPT_FOREGROUND=$VIRID_WHITE
 export GUM_INPUT_CURSOR_FOREGROUND=$VIRID_GREEN
 export GUM_INPUT_CURSOR_BACKGROUND=$VIRID_DARK
 
+export GUM_CONFIRM_SHOW_HELP="0"
+
 function virid_prompt {
     line=$(seq -s ┈ $COLUMNS | tr -d '[:digit:]')
     PROMPT=$'\n'"%F{$VIRID_MINT}$line"$'\r'"┌┈[%F{$VIRID_MINT}"
