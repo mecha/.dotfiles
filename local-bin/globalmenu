@@ -6,18 +6,19 @@ main() {
     case "$1" in
         "")
             tmux display-menu -T " MENU " $menu_pos \
-                "󰄨  Resource monitor    " r 'neww -n Resources btop' \
-                "  Journal"              j 'neww -n Journal "journal $JOURNAL_ENC_DIR"' \
-                "󱉟  Help"                 h 'neww -n Help help' \
-                "" \
-                "  Main session"         m "new-session -A -s main -c $HOME" \
-                "󱁴  Find window"          f "display-popup -w 48 -h 24 -T ' Find window ' -E tps-win" \
-                "󰉗  New project"          n "display-popup -w 50% -h 50% -T ' New Project ' -EE tps-new" \
+                "  Main session        " m "new-session -A -s main -c $HOME" \
+                "󱁴  Find window"          f "display-popup -w 50 -h 50% -T ' Find window ' -E project window" \
+                "󰉗  New project"          n "display-popup -w 60 -h 35% -T ' New Project ' -EE project new" \
+                "󰩹  Delete project"       d "display-popup -w 50 -h 35% -T ' Delete Project ' project delete" \
                 "" \
                 "  Packages…"            p 'run "globalmenu packages"' \
                 "  Services…"            s 'run "globalmenu services"' \
                 "󱧼  Configs…"             c 'run "globalmenu configs"' \
                 "󱁤  Utilities…"           u 'run "globalmenu utils"' \
+                "" \
+                "󰄨  Resource monitor"     r 'neww -n Resources btop' \
+                "  Journal"              j 'neww -n Journal "journal $JOURNAL_ENC_DIR"' \
+                "󱉟  Help"                 h 'neww -n Help help' \
                 "" \
                 "  Reboot"               R 'display-popup -w 30% -h 8 -E "gum confirm --default=no \"Reboot now?\" && reboot"' \
                 "󰐥  Shutdown"             S 'display-popup -w 30% -h 8 -E "gum confirm --default=no \"Shutdown now?\" && shutdown -h now"' \
@@ -43,13 +44,13 @@ main() {
 
         "configs")
             tmux display-menu -T " MENU > CONFIGS " $menu_pos \
-                "󱁻  Dotfiles            " d "run 'tps $DOTFILES_PATH'" \
+                "󱁻  Dotfiles            " d "run 'project open $DOTFILES_PATH'" \
                 "" \
-                "󰊠  Ghostty"              g "run 'tps $DOTFILES_PATH config/ghostty/config'" \
-                "  Neovim"               n "run 'tps $DEV_PATH/personal/config.nvim'" \
-                "  Hyprland"             h "run 'tps $DOTFILES_PATH config/hypr/hyprland.conf'" \
-                "󰠷  Waybar"               w "run 'tps $DOTFILES_PATH config/waybar/config'" \
-                "  Globalmenu"           m "run 'tps $DOTFILES_PATH local-bin/globalmenu'" \
+                "󰊠  Ghostty"              g "run 'project open $DOTFILES_PATH config/ghostty/config'" \
+                "  Neovim"               n "run 'project open $DEV_PATH/personal/config.nvim'" \
+                "  Hyprland"             h "run 'project open $DOTFILES_PATH config/hypr/hyprland.conf'" \
+                "󰠷  Waybar"               w "run 'project open $DOTFILES_PATH config/waybar/config'" \
+                "  Globalmenu"           m "run 'project open $DOTFILES_PATH local-bin/globalmenu'" \
                 "" \
                 "󰏗  Pacman"               P 'neww -n "Pacman config" sudoedit /etc/pacman.conf' \
                 "󰈙  Hosts"                H 'neww -n "Hosts file" sudoedit /etc/hosts' \
@@ -82,8 +83,8 @@ main() {
             tmux display-menu -T " MENU > UTILITIES " $menu_pos \
                 "󱝁  Setup"                s "display-popup -w 80% -h 80% -T ' Setup ' setup " \
                 "󱩖  Reset RGB           " r "display-popup -w 50% -h 12 -T ' Reset RGB ' -EE 'openrgb -p ~/.config/OpenRGB/viridescent.orp'" \
-                "󱅞  Reset faillock"       f "display-popup -w 50% -h 10 -T ' Reset faillock ' -EE 'faillock --user $USER --reset' " \
                 "󱂇  Ping google.com"      p "display-popup -w 80% -h 80% -T ' Pinging google.com ' -EE 'gping google.com' " \
+                "󱅞  Reset faillock"       F "display-popup -w 50% -h 10 -T ' Reset faillock ' -EE 'faillock --user $USER --reset' " \
                 "" \
                 "󰜱  Back"                 q 'run "globalmenu"'
         ;;

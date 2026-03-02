@@ -1,0 +1,276 @@
+#! /usr/bin/env bash
+
+templates_path="$DEV_PATH/personal/templates"
+
+main() {
+    arg="${1,,}"
+    shift
+
+    case "$arg" in
+        ""|"open")
+            path="$1"
+            [ -z "$path" ] && path="$(pick_project)"
+
+            open_project "$path"
+
+            file="$2"
+            if [ -n "$file" ]; then
+                session=$(project_session_name "$path")
+                (cd "$path" && edit_file "$file" "$session")
+            fi
+            ;;
+        "close")
+            path="$1"
+            [ -z "$path" ] path="$(pick_project)"
+
+            close_project "$path"
+            ;;
+        "new"|"create")
+            new_project
+            ;;
+        "delete")
+            path="$1"
+            [ -z "$path" ] && path="$(pick_project)"
+
+            delete_project "$path"
+            ;;
+        "file"|"edit"|"edit-file")
+            [ -n "$2" ] && file="$2" || file="$(pick_file)"
+            edit_file "$file"
+            ;;
+        "window")
+            target=$(tmux list-windows -a -F "#{session_name}:#{window_name}" | fzf)
+            [[ -z "$target" ]] && exit 1;
+
+            tmux switch -t "$target"
+            ;;
+        "harpoon")
+            path="$1"
+            [ -z "$path" ] && path="$(realpath "$PWD")"
+
+            harpoon "$path"
+            ;;
+        "help")
+            echo "Manage projects and tmux sessions"
+            echo
+            echo "USAGE"
+            echo "    project [<COMMAND>=open] [<...ARGUMENTS>]"
+            echo
+            echo "COMMANDS"
+            echo "    open [<PATH>]             Switch to a project's session, creating it if it doesn't exist."
+            echo "    close [<PATH>]            Kills the session for a project."
+            echo "    new, create               Create a new project."
+            echo "    delete [<PATH>]           Delete a project."
+            echo "    edit, file, edit-file     Fuzzy find a file in the current project to open in the editor."
+            echo "    window                    Fuzzy find tmux windows (TODO: move this somewhere else)."
+            echo "    harpoon                   Fuzzy find harpoon marks to open in the editor."
+            ;;
+        *)
+            echo "invalid command"
+            exit 1
+            ;;
+    esac
+}
+
+project_session_name() {
+    path="$1"
+    [ -z "$path" ] && return 1
+
+    echo $(basename "$path" | tr . _)
+}
+
+pick_project() {
+    choice="$(fd . "$DEV_PATH" -H -t dir -L --exact-depth 2 | sed "s|^$DEV_PATH/||" | fzf)"
+
+    [ -n "$choice" ] && echo "$DEV_PATH/$choice"
+}
+
+open_project() {
+    path="$1"
+    file="$2"
+    [ -z "$path" ] && return 1
+
+    session_name=$(basename "$path" | tr . _)
+
+    # if not in tmux, run tmux with new session
+    if [ -z "$TMUX" ]; then
+        tmux new-session -A -s "$session_name" -c "$path"
+        run_project_script
+        return 0
+    fi
+
+    # if session does not exist, create it
+    if ! tmux has-session -t=$session_name 2> /dev/null; then
+        tmux new-session -ds "$session_name" -c "$path"
+        run_project_script
+    fi
+
+    # switch to the session
+    tmux switch-client -t $session_name
+}
+
+close_project() {
+    path="$1"
+    [ -z "$path" ] && return 1
+
+    tmux kill-session -t "$(project_session_name "$path")" 2> /dev/null
+}
+
+run_project_script() {
+    path=$1
+    [ -z "$path" ] && return 1
+
+    if [ -f "$path/.project" ]; then
+        (cd "$path" && source "$path/.project")
+    fi
+}
+
+delete_project() {
+    path=$1
+    [ -z "$path" ] && return 1
+
+    gum style --bold --foreground="$VIRID_BLACK" --background "$VIRID_RED" "DELETE: $path"
+    echo
+
+    confirm_args="--no-show-help --prompt.foreground=$VIRID_BRIGHT_RED --selected.background=$VIRID_BRIGHT_RED"
+
+    if gum confirm $confirm_args; then
+        if gum confirm $confirm_args "Are you REALLY sure? Last chance."; then
+            rm -rf --preserve-root "$path"
+
+            session_name=$(project_session_name "$path")
+            if tmux has-session -t=$session_name 2> /dev/null && gum confirm "Close the currently open session?"; then
+                tmux kill-session -t "$session_name"
+            fi
+
+            gum style --bold --foreground="$VIRID_BRIGHT_RED" "DELETED"
+            return 1
+        fi
+    fi
+}
+
+pick_file() {
+    file=$(rg -L --files --hidden --glob "!**/.git/**" | fzf --preview-window down:70% --preview 'bat --color=always --style=plain {}' --bind ctrl-u:preview-up,ctrl-d:preview-down)
+    echo "$file"
+}
+
+edit_file() {
+    file="$1"
+    [ -z "$file" ] && return 1
+
+    session="$2"
+    [ -z "$session" ] && session=$(tmux display-message -p '#S')
+
+    editor_win="$session:nvim"
+
+    if tmux select-window -t "$editor_win" 2> /dev/null; then
+        tmux send-keys -t nvim Escape ":e $file" Enter
+    else
+        tmux neww -bt 1 nvim "$file"
+    fi
+}
+
+new_project() {
+    # ask repo url
+    repo_url=$(gum input --prompt="Repo URL (Optional): " --no-show-help)
+    [ -n "$repo_url" ] && name="$(basename $repo_url .git)"
+
+    # ask name
+    name=$(gum input --value="$name" --prompt="Projects name: " --no-show-help)
+    [ -z "$name" ] && return 0
+
+    # ask directory
+    dir="$(fd . "$DEV_PATH" --max-depth 1 --type d | fzf --height 12 --prompt "Project location: ")"
+    [ -z "$dir" ] && return 0
+
+    path="$dir$name"
+
+    # check if already exists
+    if [ -d "$path" ]; then
+        gum style "Project already exists! What do you want to do?" --bold --foreground="$VIRID_BLACK" --background="$VIRID_YELLOW"
+        echo
+        open_choice="Open existing"
+        delete_choice="Delete existing"
+        case "$(gum choose --no-show-help --header.foreground="$VIRID_YELLOW" "$open_choice" "$delete_choice" "Abort")" in
+            "$open_choice")
+                open_project "$path"
+                return 0
+                ;;
+            "$delete_choice")
+                delete_project "$path"
+                echo
+                ;;
+            *)
+                return 0
+                ;;
+        esac
+    fi
+
+    # clone from git
+    if [ -n "$repo_url" ]; then
+        echo "$(gum style --bold --foreground "$VIRID_GREEN" "Repository: ") $repo_url"
+        echo "$(gum style --bold --foreground "$VIRID_GREEN" "Location:")    $path"
+        echo
+
+        if ! gum confirm --no-show-help --prompt.foreground="$VIRID_GREEN" "Clone?"; then
+            return 0
+        fi
+
+        git clone "$repo_url" "$path"
+
+        if [[ $? -ne 0 && ! -d "$path" ]]; then
+            echo
+
+            if gum confirm --prompt.foreground="$VIRID_YELLOW" "Continue without repo or quit?"; then
+                clear
+            else
+                return 0
+            fi
+        fi
+    fi
+
+    # create from scratch
+    if [ ! -d "$path" ]; then
+        mkdir -p "$templates_path"
+        template="$(fd . "$templates_path" --max-depth 1 --type f --format {/} | fzf --prompt "  Template: " --height 10)"
+
+        echo " $(gum style --bold --foreground "$VIRID_GREEN" "Location:") $path"
+        echo " $(gum style --bold --foreground "$VIRID_GREEN" "Template:") $template"
+        echo
+
+        if gum confirm --no-show-help --prompt.foreground="$VIRID_GREEN" "Create project?"; then
+            mkdir -p "$path"
+            cd "$path" && git init
+            if [ -n "$template" ]; then
+                cd "$path" && bash "$templates_path/$template"
+            fi
+        fi
+    fi
+
+    if [ -d "$path" ]; then
+        close_project "$path"
+        open_project "$path"
+    fi
+}
+
+harpoon() {
+    path="$1"
+    [ -z "$path" ] && return 1
+
+    hash=$(echo "$path" | tr -d '\n' | sha256sum | head -c 64)
+    markfile="$HOME/.local/share/nvim/harpoon/$hash.json" 
+    marks=""
+
+    if [ -f "$markfile" ]; then
+        query=".\"$path\".__harpoon_files[]"
+        marks=$(cat "$markfile" | jq -r $query 2> /dev/null | jq -r '.value | select(. != null)')
+    fi
+
+    choice=$(echo -n "$marks" | fzf --height=10)
+
+    if [ -n "$choice" ]; then
+        edit_file "$choice"
+    fi
+}
+
+main "$@"

@@ -33,6 +33,7 @@ bindkey '^xc' copy-cmd-buffer
 hash -d dev="$DEV_PATH"
 
 alias tam="tmux -u new-session -A -s main"
+alias tps="project open"
 alias ll="eza -lga --icons --group-directories-first --color=always --git --git-ignore"
 alias l="eza -g --icons --group-directories-first --color=always --git --git-ignore"
 alias t="eza -T -L 2 --icons --group-directories-first --color=always --git --git-ignore"
