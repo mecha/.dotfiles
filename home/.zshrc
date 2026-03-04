@@ -1,26 +1,69 @@
-export ZSH="$HOME/.config/oh-my-zsh"
-export ZSH_CUSTOM="$ZSH/custom"
+#==============================================================================#
+# ENV VARS                                                                     #
+#==============================================================================#
 
-ZSH_THEME="viridescent"
-plugins=(git ssh-agent zsh-autosuggestions zsh-history-substring-search fast-syntax-highlighting)
-
-fpath+="${ZSH_CUSTOM}/plugins/zsh-completions/src"
-
-autoload -U compinit bashcompinit zmv
-compinit
-bashcompinit
-
-source "$ZSH/oh-my-zsh.sh"
-
-export DEV_PATH="$(realpath "$HOME/dev")"
-export DOTFILES_PATH="$DEV_PATH/personal/.dotfiles/"
-export PATH="/$HOME/.local/bin:$PATH"
 export EDITOR="nvim"
-export SUDO_EDITOR="nvim"
 export VISUAL="nvim"
+export SUDO_EDITOR="nvim"
 export GIT_EDITOR="nvim"
 export MANPAGER="less -isg"
-export FZF_DEFAULT_OPTS="--reverse --color=fg:$VIRID_FG,bg+:$VIRID_DARK,fg+:$VIRID_BRIGHT_MINT,hl+:$VIRID_BRIGHT_RED,pointer:$VIRID_BRIGHT_MINT,prompt:$VIRID_WHITE,border:$VIRID_MINT"
+
+export DEV_PATH="$(realpath "$HOME/dev")"
+export DEV_TEMPLATES_PATH="$DEV_PATH/devtools/templates"
+export DOTFILES_PATH="$DEV_PATH/personal/.dotfiles"
+
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+
+export ZSH="$XDG_CONFIG_HOME/zsh"
+export HISTFILE=~/.zsh_history
+export HISTSIZE=10000
+export SAVEHIST=10000
+
+export ANDROID_HOME=$HOME/Android/Sdk
+export NVM_DIR=$XDG_CONFIG_HOME/nvm
+export PNPM_HOME="$HOME/.local/share/pnpm"
+
+export PATH="$HOME/go/bin:$PATH"
+export PATH="$PNPM_HOME:$PATH"
+export PATH="$ANDROID_HOME/emulator:$PATH"
+export PATH="$ANDROID_HOME/platform-tools:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+
+export FZF_DEFAULT_OPTS="--reverse"
+
+export GUM_CONFIRM_SHOW_HELP="0"
+
+if [ -f "$HOME/.env" ]; then
+    source "$HOME/.env"
+fi
+
+#==============================================================================#
+# THEME & PLUGINS                                                              #
+#==============================================================================#
+
+source "$DOTFILES_PATH/scripts/viridescent.zsh"
+
+plugins=(
+    $ZSH/plugins/zsh-completions/zsh-completions.plugin.zsh
+    $ZSH/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
+    $ZSH/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+    $ZSH/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+)
+
+for plugin in $plugins; do
+    if [ -f "$plugin" ]; then
+        source "$plugin"
+    else
+        echo "cannot find plugin: $plugin"
+    fi
+done
+
+#==============================================================================#
+# KEYBINDS                                                                     #
+#==============================================================================#
 
 # copy command buffer to system clipboard
 copy-cmd-buffer() {
@@ -30,7 +73,16 @@ copy-cmd-buffer() {
 zle -N copy-cmd-buffer
 bindkey '^xc' copy-cmd-buffer
 
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+
+#==============================================================================#
+# ALIASES                                                                      #
+#==============================================================================#
+
 hash -d dev="$DEV_PATH"
+hash -d dot="$DOTFILES_PATH"
+hash -d config="$XDG_CONFIG_HOME"
 
 alias tam="tmux -u new-session -A -s main"
 alias tps="project open"
@@ -65,27 +117,16 @@ alias -s mp4="xdg-open"
 alias -s mkv="xdg-open"
 alias -s mov="xdg-open"
 
-# go
-export PATH="$HOME/go/bin:$PATH"
+#==============================================================================#
+# MISCELLANEOUS                                                                #
+#==============================================================================#
 
-# nvm
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-# nvm end
+setopt appendhistory
+fpath+="$ZSH/plugins/zsh-completions/src"
 
-# pnpm
-export PNPM_HOME="$HOME/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
+autoload -U compinit bashcompinit zmv
+compinit
+bashcompinit
 
-if [ -f "$HOME/.env" ]; then
-    source "$HOME/.env"
-fi
-
-export ANDROID_HOME=$HOME/Android/Sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/platform-tools
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
