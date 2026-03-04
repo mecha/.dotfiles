@@ -11,10 +11,10 @@ main() {
                 "󰉗  New project"          n "display-popup -w 60 -h 35% -T ' New Project ' -EE project new" \
                 "󰩹  Delete project"       d "display-popup -w 50 -h 35% -T ' Delete Project ' project delete" \
                 "" \
-                "  Packages…"            p 'run "globalmenu packages"' \
-                "  Services…"            s 'run "globalmenu services"' \
-                "󱧼  Configs…"             c 'run "globalmenu configs"' \
-                "󱁤  Utilities…"           u 'run "globalmenu utils"' \
+                "  Packages           󰜴" p 'run "globalmenu packages"' \
+                "  Services           󰜴" s 'run "globalmenu services"' \
+                "󱧼  Configs            󰜴" c 'run "globalmenu configs"' \
+                "󱁤  Utilities          󰜴" u 'run "globalmenu utils"' \
                 "" \
                 "󰄨  Resource monitor"     r 'neww -n Resources btop' \
                 "  Journal"              j 'neww -n Journal "journal $JOURNAL_ENC_DIR"' \
