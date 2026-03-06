@@ -17,6 +17,9 @@ install:
 		mkdir -p "$$target"; \
 		stow $(STOW_ARGS) -t $$target $$pkg; \
 	done
+	@if [ ! -f "$HOME/.env" ]; then \
+		cp -R .env.example "$HOME/.env"
+	fi
 
 uninstall:
 	@for pair in $(STOW_PACKAGES); do \
