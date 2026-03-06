@@ -1,5 +1,0 @@
-#! /usr/bin/env bash
-
-heading "Android"
-paru -S --needed binder_linux-dkms waydroid
-systemctl enable waydroid-container.service

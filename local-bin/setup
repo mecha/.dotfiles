@@ -1,66 +1,303 @@
 #! /usr/bin/env bash
 
-if [ -z $SCRIPTS_PATH ]; then
-    SCRIPTS_PATH="$DOTFILES_PATH/scripts/setup"
-fi
+self="$(basename "$0")"
+heading="--bold --foreground=$VIRID_BRIGHT_GREEN"
 
-help() {
-    arg="$1"
-    name=$(basename "$0")
-    fullpath=$(realpath "$0")
+setup() {
+    # install dependencies for this script
+    gum style $heading "[DEPENDENCIES]"
+    sudo pacman -S --needed --noconfirm base-devel git gum
 
-    if [ ! -z "$arg" ]; then
-        script="$SCRIPTS_PATH/$arg"
+    for arg in "$@"; do
+        case "$arg" in
+            "mirrorlist")
+                gum style $heading "[MIRRORLIST]"
+                if ! $(pacman -Qi reflector &> /dev/null); then
+                    sudo pacman -S --needed --noconfirm reflector
+                fi
+                if [ "$(systemctl is-enabled reflector.service)" != "enabled" ]; then
+                    systemctl enable reflector.service
+                fi
+                systemctl start reflector.service
+                ;;
 
-        if [ ! -f "$script" ]; then
-            echo "setup script '$arg' does not exist"
-            exit 1
-        fi
+            "paru")
+                if ! $(pacman -Qi paru &> /dev/null); then
+                    gum style $heading "[PARU]"
+                    rm -rf /tmp/paru
+                    git clone https://aur.archlinux.org/paru.git /tmp/paru
+                    cd /tmp/paru
+                    makepkg -si
+                fi
+                ;;
 
-        if pacman -Qi bat &> /dev/null; then
-            bat "$script"
-        else
-            cat "$script" | less
-        fi
+            "flatpak")
+                gum style $heading "[FLATPAK]"
+                sudo pacman -S --needed --noconfirm flatpak flatpak-kcm
+                flatpak install flathub com.github.tchx84.Flatseal
+                ;;
 
-        exit 0
-    fi
+            "base")
+                gum style $heading "[KERNEL]"
+                sudo pacman -S --needed \
+                    linux-headers \
+                    linux-lts \
+                    linux-lts-headers \
+                    dkms
 
-    echo "$(basename "$0") <SCRIPT>"
-    echo
-    echo "SCRIPTS:"
+                gum style $heading "[NETWORK]"
+                sudo pacman -S --needed --noconfirm networkmanager
+                systemctl enable --now NetworkManager.service
 
-    echo
-    find "$SCRIPTS_PATH" -type f -exec basename {} ';' | sort | sed 's/^/    /'
-    echo
+                gum style $heading "[BLUETOOTH]"
+                sudo pacman -S --needed bluez bluez-utils bluez-deprecated-tools blueman
+                systemctl enable bluetooth.service
 
-    echo "To see exactly what packages are installed by each set, run the below command to read the source code. You can read bash, right?"
-    echo
-    echo "    help <SCRIPT>"
-    echo
+                gum style $heading "[FIREWALL]"
+                sudo pacman -S --needed ufw
+                sudo ufw enable
 
-    echo "Lastly, this script is not intended to be run unattended."
-    echo "I know myself. HEY ME! Sit down and don't get distracted. Watch for errors and be ready to kill that sumbish."
+                gum style $heading "[SSH]"
+                sudo pacman -S --needed --noconfirm openssh
+
+                gum style $heading "[DOCKER]"
+                sudo pacman -S --needed docker docker-compose
+                sudo usermod -aG docker $USER
+                newgrp docker
+
+                gum style $heading "[FAT FILESYSTEM]"
+                sudo pacman -S --needed --noconfirm dosfstools
+                ;;
+
+            "zsh")
+                gum style $heading "[ZSH]"
+                if [ "$SHELL" != "/usr/bin/zsh" ]; then
+                    chsh -s /usr/bin/zsh
+                fi
+
+                [ -z "$ZSH" ] && ZSH="$HOME/.config/zsh"
+                mkdir -p "$ZSH/plugins"
+                git clone https://github.com/zsh-users/zsh-completions $ZSH/plugins/zsh-completions
+                git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH/plugins/zsh-autosuggestions
+                git clone https://github.com/zsh-users/zsh-history-substring-search $ZSH/plugins/zsh-history-substring-search
+                git clone https://github.com/zdharma-continuum/fast-syntax-highlighting $ZSH/plugins/fast-syntax-highlighting
+                ;;
+
+            "tmux")
+                gum style $heading "[TMUX]"
+                sudo pacman -S --needed --noconfirm tmux
+                git clone https://github.com/tmux-plugins/tpm ~/.local/share/tmux/plugins/tpm
+                ;;
+
+            "neovim")
+                gum style $heading "[NEOVIM]"
+                sudo pacman -S --needed --noconfirm neovim vim
+                clone_path="$DEV_PATH/personal/config.nvim"
+                if [ ! -d "$clone_path" ]; then
+                    git clone git@github.com:mecha/config.nvim "$clone_path"
+                    ln -s 
+                fi
+                ;;
+
+            "cli")
+                gum style $heading "[CLI TOOLS]"
+                sudo pacman -S --needed \
+                    man-db \
+                    curl \
+                    wget \
+                    rsync \
+                    tldr \
+                    fastfetch \
+                    fd \
+                    fzf \
+                    jq \
+                    bat \
+                    eza \
+                    jless \
+                    ripgrep \
+                    htop \
+                    btop \
+                    ncdu \
+                    lazygit \
+                    gping \
+                    noto-fonts \
+                    noto-fonts-cjk \
+                    ttf-roboto \
+                    ttf-jetbrains-mono \
+                    ttf-jetbrains-mono-nerd
+
+                setup aur
+
+                paru -S --needed \
+                    timg \
+                    ttf-ms-win10-auto \
+                    ttf-ms-win11-auto
+                ;;
+
+            "dev")
+                gum style $heading "[DEVELOPMENT]"
+
+                sudo pacman -S --needed \
+                    go \
+                    delve \
+                    nodejs-lts-iron \
+                    npm \
+                    yarn \
+                    nvm \
+                    php \
+                    php-sqlite \
+                    composer \
+                    clang \
+                    lua \
+                    bun
+
+                sudo sed -i 's/^;extension=sqlite3$/extension=sqlite3/g' /etc/php/php.ini
+                sudo sed -i 's/^;extension=iconv$/extension=iconv/g' /etc/php/php.ini
+                sudo sed -i 's/^;extension=zip$/extension=zip/g' /etc/php/php.ini
+                ;;
+
+            "multimedia")
+                gum style $heading "[MULTIMEDIA]"
+                sudo pacman -S --needed \
+                    pipewire \
+                    pipewire-alse \
+                    pipewire-pulse \
+                    wireplumber \
+                    ffmpeg \
+                    gstreamer \
+                    speech-dispatcher \
+                    v4l2loopback-dkms
+                ;;
+
+            "gui")
+                gum style $heading "[GRAPHICAL ENVIRONMENT]"
+
+                sudo pacman -S --needed \
+                    hyprland \
+                    xorg-xwayland \
+                    hyprpolkitagent \
+                    xdg-desktop-portal \
+                    xdg-desktop-portal-hyprland \
+                    wl-clipboard \
+                    wev \
+                    libappindicator-gtk3 \
+                    nwg-look \
+                    qt5ct \
+                    qt6ct \
+                    kvantum \
+                    gnome-keyring \
+                    hyprlock \
+                    hyprshot \
+                    hyprpaper \
+                    waybar \
+                    wofi \
+                    swaync \
+                    network-manager-applet \
+                    udisks2 \
+                    udiskie
+
+                paru -S --needed \
+                    waybar-module-pacman-updates-git
+                ;;
+
+            "gui_apps")
+                gum style $heading "[GUI APPS]"
+
+                sudo pacman -S --needed \
+                    ghostty \
+                    nautilus \
+                    mpv \
+                    pavucontrol \
+                    bitwarden \
+                    bitwarden-cli \
+                    obs-studio \
+                    gimp \
+                    feh \
+                    okular \
+                    discover \
+                    qbittorrent
+
+                paru -S --needed \
+                    zen-browser-bin \
+                    slack-desktop-wayland \
+                    localsend-bin \
+                    waybar-media-git
+
+                flatpak install flathub com.discordapp.Discord
+
+                sudo ufw allow 53317 comment "localsend"
+                ;;
+
+            "gaming")
+                gum style $heading "[GAMING]"
+                sudo pacman -S --needed \
+                    vulkan-radeon \
+                    lib32-vulkan-radeon \
+                    gamemode \
+                    mangohud \
+                    steam \
+                    lutris \
+                    wine \
+                    winetricks \
+                    wine-mono
+                ;;
+
+            "minecraft")
+                gum style $heading "[MINECRAFT]"
+                sudo pacman -S --needed \
+                    prismlauncher \
+                    jre8-openjdk-headless \
+                    jre8-openjdk \
+                    jre17-openjdk \
+                    jre21-openjdk
+                ;;
+
+            "journal")
+                gum style $heading "[JOURNAL]"
+                sudo pacman -S --needed go gocryptfs
+                go install https://github.com/mecha/journal@latest
+                ;;
+
+            "llms")
+                gum style $heading "[LLMs]"
+                sudo pacman -S --needed \
+                    ollama \
+                    ollama-rocm
+                systemctl enable ollama.service
+                ;;
+
+            "rgb")
+                gum style $heading "[RGB]"
+                sudo pacman -S --needed openrgb i2c-tools
+                sudo modprobe i2c-dev
+                systemctl enable openrgb.service
+                ;;
+
+            *)
+                gum style --foreground=$VIRID_BRIGHT_RED "Invalid argument: $what"
+                ;;
+        esac
+    done
 }
 
-if [ "$1" == "" ]; then
-    choice=$(fd . $DOTFILES_PATH/scripts/setup --type=f --format={/} | fzf)
-    if [ -z "$choice" ]; then
-        exit 0
-    fi
-    $0 "$choice"
-    exit $?
-fi
+case "$1" in
+    "help"|"--help"|"-h")
+        echo "Install packages and configure Arch the mecha way."
+        echo
+        echo "USAGE"
+        echo "      $self [<ARGUMENT>]"
+        echo
+        echo "ARGUMENTS"
+        echo "      help        Show this message."
+        echo "      all         Run setup for everything."
+        echo "      <category>  Run setup for a single category."
+        ;;
 
-if [ "$1" == "help" ]; then
-    help "$2"
-    exit 1
-fi
+    "all")
+        setup mirrorlist paru flatpak base zsh tmux neovim cli dev multimedia gui gui_apps gaming minecraft journal llms rgb
+        ;;
 
-if [ ! -f "$SCRIPTS_PATH/$1" ]; then
-    echo "setup script '$1' does not exist"
-    exit 1
-fi
-
-source "$SCRIPTS_PATH/$1"  
-exit $?
+    *)
+        setup $@
+        ;;
+esac

@@ -1,5 +1,0 @@
-#! /usr/bin/env bash
-
-heading "JOURNAL"
-sudo pacman -S --needed go gocryptfs
-go install https://github.com/mecha/journal@latest
