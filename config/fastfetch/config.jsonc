@@ -1,0 +1,68 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/master/doc/json_schema.json",
+  "modules": [
+    "title",
+    "separator",
+    "os",
+    "kernel",
+    "uptime",
+    "packages",
+    "shell",
+    "wm",
+    "cpu",
+    "gpu",
+    {
+      "type": "memory",
+      "percent": {
+        "type": 3
+      }
+    },
+    {
+      "type": "swap",
+      "percent": {
+        "type": 3
+      }
+    },
+    {
+      "type": "disk",
+      "percent": {
+        "type": 3
+      }
+    },
+    "localip",
+    "battery",
+    "poweradapter"
+  ],
+  "display": {
+    "color": {
+      "title": "#95d5b2",
+      "keys": "#84a98c",
+      "separator": "#84a98c"
+    },
+    "percent": {
+      "color": {
+        "red": "#ff6676",
+        "yellow": "#e3ca65",
+        "green": "#a1d858"
+      }
+    },
+    "key": {
+      "type": "both"
+    },
+    "bar": {
+      "width": 8
+    }
+  },
+  "logo": {
+    "source": "$XDG_CONFIG_HOME/fastfetch/logo.txt",
+    "type": "file",
+    "color": {
+      "1": "#95d5b2",
+      "2": "#4adaf7"
+    },
+    "padding": {
+      "top": 3,
+      "left": 2
+    }
+  }
+}
