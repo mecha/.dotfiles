@@ -65,6 +65,9 @@ done
 # KEYBINDS                                                                     #
 #==============================================================================#
 
+# emacs mode
+bindkey -e
+
 # copy command buffer to system clipboard
 copy-cmd-buffer() {
     echo -n $BUFFER | wl-copy
