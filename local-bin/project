@@ -156,7 +156,7 @@ pick_file() {
 
 edit_file() {
     file="$1"
-    [ -z "$file" ] && return 1
+    [ -z "$file" ] && return
 
     session="$2"
     [ -z "$session" ] && session=$(tmux display-message -p '#S')
