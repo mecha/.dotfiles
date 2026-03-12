@@ -40,6 +40,11 @@ if [ -f "$HOME/.env" ]; then
     source "$HOME/.env"
 fi
 
+if [ ! -S "$SSH_AUTH_SOCK" ] && [ -z "$SSH_AGENT_PID" ]; then
+    eval "$(ssh-agent)" &> /dev/null
+    ssh-add $HOME/.ssh/id_rsa
+fi
+
 #==============================================================================#
 # THEME & PLUGINS                                                              #
 #==============================================================================#
