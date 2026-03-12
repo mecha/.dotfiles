@@ -17,6 +17,7 @@ main() {
                 "󱁤  Utilities          󰜴" u 'run "globalmenu utils"' \
                 "" \
                 "󰄨  Resource monitor"     r 'neww -n Resources btop' \
+                "󰚩  Opencode"             o 'run "tmux select-window -t opencode || tmux neww -n opencode opencode"' \
                 "  Journal"              j 'neww -n Journal "journal $JOURNAL_ENC_DIR"' \
                 "󱉟  Help"                 h 'neww -n Help help' \
                 "" \
