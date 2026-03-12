@@ -149,7 +149,9 @@ setup() {
                     composer \
                     clang \
                     lua \
-                    bun
+                    bun \
+                    cargo \
+                    rust-src
 
                 sudo sed -i 's/^;extension=sqlite3$/extension=sqlite3/g' /etc/php/php.ini
                 sudo sed -i 's/^;extension=iconv$/extension=iconv/g' /etc/php/php.ini
