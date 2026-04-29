@@ -35,7 +35,7 @@ main() {
             delete_project "$path"
             ;;
         "file"|"edit"|"edit-file")
-            [ -n "$2" ] && file="$2" || file="$(pick_file)"
+            [ -n "$1" ] && file="$1" || file="$(pick_file)"
             edit_file "$file"
             ;;
         "window")
@@ -45,10 +45,8 @@ main() {
             tmux switch -t "$target"
             ;;
         "harpoon")
-            path="$1"
-            [ -z "$path" ] && path="$(realpath "$PWD")"
-
-            harpoon "$path"
+            idx="$1"
+            harpoon "$(realpath "$PWD")" "$idx"
             ;;
         "help")
             echo "Manage projects and tmux sessions"
@@ -94,14 +92,11 @@ open_project() {
 
     # if not in tmux, run tmux with new session
     if [ -z "$TMUX" ]; then
-        tmux new-session -A -s "$session_name" -c "$path"
+        tmux new-session -A -s "$session_name" -c "$path" -n home "$DEV_PATH/personal/projtop/projtop"
         run_project_script
-        return 0
-    fi
-
-    # if session does not exist, create it
-    if ! tmux has-session -t=$session_name 2> /dev/null; then
-        tmux new-session -ds "$session_name" -c "$path"
+    elif ! tmux has-session -t=$session_name 2> /dev/null; then
+        # if session does not exist, create it
+        tmux new-session -ds "$session_name" -c "$path" -n home "$DEV_PATH/personal/projtop/projtop"
         run_project_script
     fi
 
@@ -166,13 +161,21 @@ edit_file() {
     if tmux select-window -t "$editor_win" 2> /dev/null; then
         tmux send-keys -t nvim Escape ":e $file" Enter
     else
-        tmux neww -bt 1 nvim "$file"
+        tmux neww -at 1 nvim "$file"
     fi
 }
 
 new_project() {
     # ask repo url
     repo_url=$(gum input --prompt="Repo URL (Optional): " --no-show-help)
+    if [ -z "$repo_url" ]; then
+        if gum confirm --no-show-help --prompt.foreground="$VIRID_GREEN" "Create one?"; then
+            xdg-open "https://github.com/new"
+            repo_url=$(gum input --prompt="Repo URL: " --no-show-help)
+            [ -z "$repo_url" ] && echo "bruh"
+        fi
+    fi
+
     [ -n "$repo_url" ] && name="$(basename $repo_url .git)"
 
     # ask name
@@ -255,21 +258,31 @@ new_project() {
 
 harpoon() {
     path="$1"
+    idx="$2"
     [ -z "$path" ] && return 1
 
     hash=$(echo "$path" | tr -d '\n' | sha256sum | head -c 64)
     markfile="$HOME/.local/share/nvim/harpoon/$hash.json" 
-    marks=""
 
-    if [ -f "$markfile" ]; then
-        query=".\"$path\".__harpoon_files[]"
-        marks=$(cat "$markfile" | jq -r $query 2> /dev/null | jq -r '.value | select(. != null)')
-    fi
+    if [ -z "$idx" ]; then
+        if [ -f "$markfile" ]; then
+            query=".\"$path\".__harpoon_files[]"
+            marks=$(cat "$markfile" | jq -r $query 2> /dev/null | jq -r '.value | select(. != null)')
+        fi
 
-    choice=$(echo -n "$marks" | fzf --height=10)
+        choice=$(echo -n "$marks" | fzf --height=10)
 
-    if [ -n "$choice" ]; then
-        edit_file "$choice"
+        if [ -n "$choice" ]; then
+            edit_file "$choice"
+        fi
+    else
+        if [ -f "$markfile" ]; then
+            query=".\"$path\".__harpoon_files[$idx]"
+            file=$(cat "$markfile" | jq -r $query 2> /dev/null | jq -r '.value')
+            if [ -f "$file" ]; then
+                edit_file "$file"
+            fi
+        fi
     fi
 }
 
