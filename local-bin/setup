@@ -91,7 +91,7 @@ setup() {
 
             "neovim")
                 gum style $heading "[NEOVIM]"
-                sudo pacman -S --needed --noconfirm neovim vim
+                sudo pacman -S --needed --noconfirm neovim vim lua luajit luarocks tree-sitter-cli
                 clone_path="$DEV_PATH/personal/config.nvim"
                 if [ ! -d "$clone_path" ]; then
                     git clone git@github.com:mecha/config.nvim "$clone_path"
