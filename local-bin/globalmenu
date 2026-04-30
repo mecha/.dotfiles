@@ -15,7 +15,8 @@ main() {
                 "" \
                 "  Packages           󰜴" p 'run "globalmenu packages"' \
                 "  Services           󰜴" s 'run "globalmenu services"' \
-                "󱧼  Configs            󰜴" c 'run "globalmenu configs"' \
+                "  Containers         󰜴" c 'run "globalmenu containers"' \
+                "󱧼  Configs            󰜴" C 'run "globalmenu configs"' \
                 "󱁤  Utilities          󰜴" u 'run "globalmenu utils"' \
                 "" \
                 "󰄨  Resource monitor"     r 'neww -n Resources btop' \
@@ -41,6 +42,16 @@ main() {
                 "  Arch News"            n 'run "xdg-open https://archlinux.org/news"' \
                 "  Arch Wiki"            w 'run "xdg-open https://wiki.archlinux.org"' \
                 "  AUR (if it's up)"     a 'run "xdg-open https://aur.archlinux.org"' \
+                "" \
+                "󰜱  Back"                 q 'run globalmenu'
+        ;;
+
+        "containers")
+            tmux display-menu -T " MENU > CONTAINERS " $menu_pos \
+                "  List                " l 'display-popup -w 80% -h 80% -T " Toggle container " -EE "container show"' \
+                "󰐊  Up"                   u 'display-popup -w 80% -h 80% -T " Start container " -EE "container up"' \
+                "󰓛  Down"                 d 'display-popup -w 80% -h 80% -T " Start container " -EE "container down"' \
+                "  Web page"             o 'display-popup -w 80% -h 80% -T " Open container web page " -EE "container web"' \
                 "" \
                 "󰜱  Back"                 q 'run globalmenu'
         ;;
