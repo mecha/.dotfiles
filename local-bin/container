@@ -68,7 +68,7 @@ get_containers() {
 }
 
 pick_container() {
-    choice="$(get_containers | fzf --ansi --preview-window down:75% --accept-nth=2 --preview "cd $basedir/{2} && docker compose ps")"
+    choice="$(get_containers | fzf --ansi --preview-window down:75% --accept-nth=2 --preview "cd $basedir/{2} && docker compose ps" --bind "ctrl-o:execute(container web $basedir/{2})")"
     [ -n "$choice" ] && echo "$basedir/$choice"
 }
 
