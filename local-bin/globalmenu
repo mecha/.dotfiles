@@ -6,19 +6,23 @@ main() {
     case "$1" in
         "")
             tmux display-menu -T " MENU " $menu_pos \
-                "  Main session        " m "new-session -A -s main -c $HOME" \
-                "󱁴  Find window"          f "display-popup -w 50 -h 50% -T ' Find window ' -E project window" \
-                "󰉗  New project"          n "display-popup -w 60 -h 35% -T ' New Project ' -EE project new" \
-                "󰩹  Delete project"       d "display-popup -w 50 -h 35% -T ' Delete Project ' project delete" \
+                "  Main session"       m "new-session -A -s main -c $HOME" \
+                "󱁴  Find window"        f "display-popup -w 50 -h 50% -T ' Find window ' -E project window" \
+                "" \
+                "󰉗  New project"        n "display-popup -w 60 -h 35% -T ' New Project ' -EE project new" \
+                "  Open project"       ' ' "display-popup -w 50 -h 65% -T ' Open project ' -EE project open" \
+                "󰩹  Delete project"     d "display-popup -w 50 -h 35% -T ' Delete Project ' project delete" \
                 "" \
                 "  Packages           󰜴" p 'run "globalmenu packages"' \
                 "  Services           󰜴" s 'run "globalmenu services"' \
-                "󱧼  Configs            󰜴" c 'run "globalmenu configs"' \
+                "  Containers         󰜴" c 'run "globalmenu containers"' \
+                "󱧼  Configs            󰜴" C 'run "globalmenu configs"' \
                 "󱁤  Utilities          󰜴" u 'run "globalmenu utils"' \
                 "" \
                 "󰄨  Resource monitor"     r 'neww -n Resources btop' \
+                "󰚩  Opencode"             o 'run "tmux select-window -t opencode || tmux neww -n opencode opencode"' \
                 "  Journal"              j 'neww -n Journal "journal $JOURNAL_ENC_DIR"' \
-                "󱉟  Help"                 h 'neww -n Help help' \
+                "󱉟  Help"                 h "display-popup -w 50 -h 65% -T ' Search Help Manuals ' -E help" \
                 "" \
                 "  Reboot"               R 'display-popup -w 30% -h 8 -E "gum confirm --default=no \"Reboot now?\" && reboot"' \
                 "󰐥  Shutdown"             S 'display-popup -w 30% -h 8 -E "gum confirm --default=no \"Shutdown now?\" && shutdown -h now"' \
@@ -38,6 +42,16 @@ main() {
                 "  Arch News"            n 'run "xdg-open https://archlinux.org/news"' \
                 "  Arch Wiki"            w 'run "xdg-open https://wiki.archlinux.org"' \
                 "  AUR (if it's up)"     a 'run "xdg-open https://aur.archlinux.org"' \
+                "" \
+                "󰜱  Back"                 q 'run globalmenu'
+        ;;
+
+        "containers")
+            tmux display-menu -T " MENU > CONTAINERS " $menu_pos \
+                "  List                " l 'display-popup -w 80% -h 80% -T " Toggle container " -EE "container show"' \
+                "󰐊  Up"                   u 'display-popup -w 80% -h 80% -T " Start container " -EE "container up"' \
+                "󰓛  Down"                 d 'display-popup -w 80% -h 80% -T " Start container " -EE "container down"' \
+                "  Web page"             o 'display-popup -w 80% -h 80% -T " Open container web page " -EE "container web"' \
                 "" \
                 "󰜱  Back"                 q 'run globalmenu'
         ;;

@@ -91,7 +91,7 @@ setup() {
 
             "neovim")
                 gum style $heading "[NEOVIM]"
-                sudo pacman -S --needed --noconfirm neovim vim
+                sudo pacman -S --needed --noconfirm neovim vim lua luajit luarocks tree-sitter-cli
                 clone_path="$DEV_PATH/personal/config.nvim"
                 if [ ! -d "$clone_path" ]; then
                     git clone git@github.com:mecha/config.nvim "$clone_path"
@@ -122,6 +122,7 @@ setup() {
                     gping \
                     noto-fonts \
                     noto-fonts-cjk \
+                    noto-fonts-emoji \
                     ttf-roboto \
                     ttf-jetbrains-mono \
                     ttf-jetbrains-mono-nerd
@@ -149,7 +150,9 @@ setup() {
                     composer \
                     clang \
                     lua \
-                    bun
+                    bun \
+                    cargo \
+                    rust-src
 
                 sudo sed -i 's/^;extension=sqlite3$/extension=sqlite3/g' /etc/php/php.ini
                 sudo sed -i 's/^;extension=iconv$/extension=iconv/g' /etc/php/php.ini
@@ -179,6 +182,7 @@ setup() {
                     xdg-desktop-portal \
                     xdg-desktop-portal-hyprland \
                     wl-clipboard \
+                    wtype \
                     wev \
                     libappindicator-gtk3 \
                     nwg-look \
@@ -190,8 +194,9 @@ setup() {
                     hyprshot \
                     hyprpaper \
                     waybar \
-                    wofi \
+                    fuzzel \
                     swaync \
+                    bemoji \
                     network-manager-applet \
                     udisks2 \
                     udiskie

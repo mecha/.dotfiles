@@ -1,0 +1,84 @@
+#! /usr/bin/env bash
+
+basedir="$DEV_PATH/personal/homelab"
+
+main() {
+    arg="${1,,}"
+    shift
+
+    path="$1"
+    [ -z "$path" ] && path="$(pick_container)"
+    [ -z "$path" ] && exit 0
+    cd "$path"
+
+    case "$arg" in
+        "up")
+            docker compose up -d
+            ;;
+        "down")
+            docker compose down
+            ;;
+        ""|"toggle")
+            if [ -z "$(get_id)" ]; then
+                docker compose up -d
+            else
+                docker compose down
+            fi
+            ;;
+        "show"|"info"|"stat")
+            sep=$(seq -s ┈ $(tput cols) | tr -d '[:digit:]')
+            echo -e "$(docker compose ps)\n$sep\n$(docker compose config)" | less -c
+            ;;
+        "web")
+            if [ -z "$(get_id)" ]; then
+                docker compose up -d
+            fi
+            port=$(docker compose config --format json | jq -r '.services.[].ports[0].published | select(. != null)')
+            xdg-open "http://localhost:$port"
+            ;;
+        "help")
+            echo "Manage container services"
+            echo
+            echo "USAGE"
+            echo "    container [<COMMAND>=toggle] [<...ARGUMENTS>]"
+            echo
+            echo "COMMANDS"
+            echo "    up [<PATH>]               Starts the container if it's down."
+            echo "    down [<PATH>]             Stops the container if it's up."
+            echo "    toggle [<PATH>]           Starts the container if it's down, stops it if it's up."
+            echo "    show|info|stat [<PATH>]   Shows information about the container."
+            echo "    web [<PATH>]              Opens the container's web UI, if it has one."
+            ;;
+        *)
+            echo "invalid command"
+            exit 1
+            ;;
+    esac
+}
+
+get_containers() {
+    fd . "$basedir" -t dir -L --exact-depth 1 | while IFS= read -r dir; do
+        dirname="$(echo "${dir%/}" | sed "s|$basedir/||")"
+        if (cd "$dir" && docker compose ps --services --status running | grep -q .); then
+            printf '\033[32m●\033[0m %s\n' "$dirname"
+        else
+            printf '\033[31m●\033[0m %s\n' "$dirname"
+        fi
+    done
+}
+
+pick_container() {
+    choice="$(get_containers | fzf --ansi --preview-window down:75% --accept-nth=2 --preview "cd $basedir/{2} && docker compose ps" --bind "ctrl-o:execute(container web $basedir/{2})")"
+    [ -n "$choice" ] && echo "$basedir/$choice"
+}
+
+get_id() {
+    id=$(docker compose ps -q)
+    if [ -z "$id" ]; then
+        docker compose up -d
+        id=$(docker compose ps -q)
+    fi
+    echo $id
+}
+
+main "$@"

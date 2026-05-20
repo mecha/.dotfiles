@@ -1,4 +1,4 @@
-STOW_PACKAGES := home:$(HOME) config:$(HOME)/.config local-bin:$(HOME)/.local/bin
+STOW_PACKAGES := home:$(HOME) config:$(HOME)/.config local-bin:$(HOME)/.local/bin local-share:$(XDG_DATA_HOME)
 STOW_ARGS :=
 
 .PHONY: help install uninstall reinstall
@@ -17,9 +17,7 @@ install:
 		mkdir -p "$$target"; \
 		stow $(STOW_ARGS) -t $$target $$pkg; \
 	done
-	@if [ ! -f "$HOME/.env" ]; then \
-		cp -R .env.example "$HOME/.env"
-	fi
+	@[ ! -f "~/.env" ] && cp .env.example ~/.env
 
 uninstall:
 	@for pair in $(STOW_PACKAGES); do \

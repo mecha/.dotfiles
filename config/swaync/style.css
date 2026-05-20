@@ -334,7 +334,7 @@
 }
 
 .notification-group {
-  /* Styling only for Grouped Notifications */
+  background: transparent;
 }
 
 .notification-group.low {
@@ -372,7 +372,6 @@
 }
 
 .notification-group.collapsed .notification-row .notification {
-  background-color: @noti-bg-opaque;
 }
 
 .notification-group.collapsed .notification-row:not(:last-child) {
