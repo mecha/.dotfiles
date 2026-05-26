@@ -192,7 +192,7 @@ setup() {
                     hyprshot \
                     hyprpaper \
                     waybar \
-                    wofi \
+                    fuzzel \
                     swaync \
                     network-manager-applet \
                     udisks2 \
