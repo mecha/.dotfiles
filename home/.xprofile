@@ -17,6 +17,7 @@ export GIT_EDITOR="$NVIM"
 export BROWSER="firefox"
 export MANPAGER="less -isg"
 
+export PROJECTS_PATH="$HOME/Projects"
 export DEV_PATH="$HOME/dev"
 
 export GOPATH="$HOME/go"

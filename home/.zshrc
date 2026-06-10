@@ -2,25 +2,27 @@
 # ENV VARS                                                                     #
 #==============================================================================#
 
+export ZSH="$XDG_CONFIG_HOME/zsh"
+export HISTFILE=~/.zsh_history
+export HISTSIZE=10000
+export SAVEHIST=10000
+
 export EDITOR="nvim"
 export VISUAL="nvim"
 export SUDO_EDITOR="nvim"
 export GIT_EDITOR="nvim"
 export MANPAGER="less -isg"
 
+export PROJECTS_PATH="$(realpath "$HOME/Projects")"
+export PROJECT_TEMPLATES_PATH="$PROJECTS_PATH/templates"
 export DEV_PATH="$(realpath "$HOME/dev")"
-export DEV_TEMPLATES_PATH="$DEV_PATH/devtools/templates"
-export DOTFILES_PATH="$DEV_PATH/personal/.dotfiles"
+export DOTFILES_PATH="$PROJECTS_PATH/personal/.dotfiles"
 
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
-
-export ZSH="$XDG_CONFIG_HOME/zsh"
-export HISTFILE=~/.zsh_history
-export HISTSIZE=10000
-export SAVEHIST=10000
+export XDG_PROJECT_HOME="$PROJECTS_PATH"
 
 export ANDROID_HOME=$HOME/Android/Sdk
 export NVM_DIR=$XDG_CONFIG_HOME/nvm
@@ -31,6 +33,7 @@ export PATH="$PNPM_HOME:$PATH"
 export PATH="$ANDROID_HOME/emulator:$PATH"
 export PATH="$ANDROID_HOME/platform-tools:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.config/composer/vendor/bin:$PATH"
 
 export FZF_DEFAULT_OPTS="--reverse"
 
@@ -87,10 +90,6 @@ bindkey '^[[B' history-substring-search-down
 #==============================================================================#
 # ALIASES                                                                      #
 #==============================================================================#
-
-hash -d dev="$DEV_PATH"
-hash -d dot="$DOTFILES_PATH"
-hash -d config="$XDG_CONFIG_HOME"
 
 alias tam="tmux -u new-session -A -s main"
 alias tps="project open"

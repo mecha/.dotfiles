@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-templates_path="$DEV_PATH/personal/templates"
+templates_path="$PROJECTS_PATH/templates"
 
 main() {
     arg="${1,,}"
@@ -48,6 +48,9 @@ main() {
             idx="$1"
             harpoon "$(realpath "$PWD")" "$idx"
             ;;
+        "script")
+            run_project_script "$PWD"
+            ;;
         "help")
             echo "Manage projects and tmux sessions"
             echo
@@ -78,9 +81,9 @@ project_session_name() {
 }
 
 pick_project() {
-    choice="$(fd . "$DEV_PATH" -H -t dir -L --exact-depth 2 | sed "s|^$DEV_PATH/||" | fzf)"
+    choice="$(fd . "$PROJECTS_PATH" -H -t dir -L --exact-depth 2 | sed "s|^$PROJECTS_PATH/||" | fzf)"
 
-    [ -n "$choice" ] && echo "$DEV_PATH/$choice"
+    [ -n "$choice" ] && echo "$PROJECTS_PATH/$choice"
 }
 
 open_project() {
@@ -92,12 +95,12 @@ open_project() {
 
     # if not in tmux, run tmux with new session
     if [ -z "$TMUX" ]; then
-        tmux new-session -A -s "$session_name" -c "$path" -n home "$DEV_PATH/personal/projtop/projtop"
-        run_project_script
+        tmux new-session -A -s "$session_name" -c "$path" -n project "$DEV_PATH/personal/projtop/projtop"
+        run_project_script "$path"
     elif ! tmux has-session -t=$session_name 2> /dev/null; then
         # if session does not exist, create it
-        tmux new-session -ds "$session_name" -c "$path" -n home "$DEV_PATH/personal/projtop/projtop"
-        run_project_script
+        tmux new-session -ds "$session_name" -c "$path" -n project "$DEV_PATH/personal/projtop/projtop"
+        run_project_script "$path"
     fi
 
     # switch to the session
@@ -132,14 +135,15 @@ delete_project() {
     if gum confirm $confirm_args; then
         if gum confirm $confirm_args "Are you REALLY sure? Last chance."; then
             rm -rf --preserve-root "$path"
+            gum style --bold --foreground="$VIRID_BRIGHT_RED" "DELETED"
+            echo
 
             session_name=$(project_session_name "$path")
             if tmux has-session -t=$session_name 2> /dev/null && gum confirm "Close the currently open session?"; then
                 tmux kill-session -t "$session_name"
             fi
 
-            gum style --bold --foreground="$VIRID_BRIGHT_RED" "DELETED"
-            return 1
+            return 0
         fi
     fi
 }
@@ -183,7 +187,7 @@ new_project() {
     [ -z "$name" ] && return 0
 
     # ask directory
-    dir="$(fd . "$DEV_PATH" --max-depth 1 --type d | fzf --height 12 --prompt "Project location: ")"
+    dir="$(fd . "$PROJECTS_PATH" --max-depth 1 --type d | fzf --height 12 --prompt "Project location: ")"
     [ -z "$dir" ] && return 0
 
     path="$dir$name"
