@@ -54,38 +54,51 @@ export GUM_INPUT_CURSOR_BACKGROUND=$VIRID_DARK
 
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --color=fg:$VIRID_FG,bg+:$VIRID_DARK,fg+:$VIRID_BRIGHT_MINT,hl+:$VIRID_BRIGHT_RED,pointer:$VIRID_BRIGHT_MINT,prompt:$VIRID_WHITE,border:$VIRID_MINT"
 
-function virid_prompt {
-    line=$(seq -s ┈ $COLUMNS | tr -d '[:digit:]')
-    PROMPT=$'\n'"%F{$VIRID_MINT}$line"$'\r'"┌┈[%F{$VIRID_MINT}"
+precmd() {
+    virid_prompt
+    precmd() {
+        echo
+        virid_prompt
+    }
+}
 
+virid_prompt() {
+    # line=$(seq -s ┈ $COLUMNS | tr -d '[:digit:]')
+    # PROMPT=$'\n'"%F{$VIRID_MINT}$line"$'\r'"┌┈[%F{$VIRID_MINT}"
+    PROMPT="%F{$VIRID_MINT}┌┈["
+
+    # path
     if [[ $PWD == "/" ]]; then
         PROMPT+="/"
     elif [[ $PWD == $HOME ]]; then
         PROMPT+="~"
     else
-        local head=$(pwd -P | sed "s|^$HOME|~|" | sed -E 's|/(\.+?[^/])[^/]*|/\1|g; s|/[^/]+$||')
-        local tail=$(basename "$(pwd -P)")
-        PROMPT+="$head/%F{$VIRID_FG}$tail"
+        local parent=$(pwd -P | sed "s|^$HOME|~|" | sed -E 's|/(\.+?[^/])[^/]*|/\1|g; s|/[^/]+$||')
+        local dirname=$(basename "$(pwd -P)")
+        PROMPT+="$parent/%F{$VIRID_FG}$dirname"
     fi
 
-    PROMPT+="%F{$VIRID_MINT}"
-    PROMPT+="]┈"
+    PROMPT+="%F{$VIRID_MINT}]"
 
+    # journal icon
     if [[ "$JOURNAL_SHELL" == "1" ]]; then
         PROMPT+="%F{$VIRID_PURPLE}"
         PROMPT+="[]"
     fi
 
-    PROMPT+="$(git_prompt_info)"
-    PROMPT+="┈$(lang_prompt_info)"
+    langs=$(lang_prompt_info)
+    [ -n "$langs" ] && PROMPT+="┈$langs"
+
+    git=$(git_prompt_info)
+    [ -n "$git" ] && PROMPT+="┈$git"
+
     PROMPT+=$'\n'"%F{$VIRID_MINT}└┈ %f"
 }
 
-function git_prompt_info {
+git_prompt_info() {
     ref_name=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
 
     if [ -n "$ref_name" ]; then
-
         STATUS=$(git status --porcelain 2> /dev/null)
         if [ -n "$STATUS" ]; then
             color=$VIRID_YELLOW
@@ -98,7 +111,7 @@ function git_prompt_info {
     fi
 }
 
-function lang_prompt_info {
+lang_prompt_info() {
     if [ -f "docker-compose.yml" ]; then
         echo -n "%F{#1D63ED}[󰡨]%F{$VIRID_MINT}"
     fi
@@ -123,5 +136,3 @@ function lang_prompt_info {
         echo -n "%F{#478CBF}[]%F{$VIRID_MINT}"
     fi
 }
-
-precmd_functions+=(virid_prompt)
