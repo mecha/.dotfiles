@@ -1,4 +1,4 @@
-STOW_PACKAGES := home:$(HOME) config:$(HOME)/.config local-bin:$(HOME)/.local/bin
+STOW_PACKAGES := home:$(HOME) config:$(HOME)/.config local-bin:$(HOME)/.local/bin local-share:$(XDG_DATA_HOME)
 STOW_ARGS :=
 
 .PHONY: help install uninstall reinstall
