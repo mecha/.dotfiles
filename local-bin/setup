@@ -46,7 +46,7 @@ setup() {
                     dkms
 
                 gum style $heading "[NETWORK]"
-                sudo pacman -S --needed --noconfirm networkmanager
+                sudo pacman -S --needed --noconfirm networkmanager nmap
                 systemctl enable --now NetworkManager.service
 
                 gum style $heading "[BLUETOOTH]"
