@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+host=$(tailscale status --json | jq -r '.Peer[] | select(.Online == true) | select(.TailscaleIPs[0] != null) | "\(.HostName)"' | fzf )
+if [ -z "$host" ]; then
+    exit 1
+fi
+
+tmux neww -n "$host" ssh miguel@$host

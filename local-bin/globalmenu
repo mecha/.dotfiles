@@ -22,6 +22,7 @@ main() {
                 "󰄨  Resource monitor"     r 'neww -n Resources btop' \
                 "󰚩  Opencode"             o 'run "tmux select-window -t opencode || tmux neww -n opencode opencode"' \
                 "  Journal"              j 'neww -n Journal "journal $JOURNAL_ENC_DIR"' \
+                "  Local network"        l "display-popup -w 30 -h 40% -T ' Local network ' -E localnet" \
                 "󱉟  Help"                 h "display-popup -w 50 -h 65% -T ' Search Help Manuals ' -E help" \
                 "" \
                 "  Reboot"               R 'display-popup -w 30% -h 8 -E "gum confirm --default=no \"Reboot now?\" && reboot"' \
