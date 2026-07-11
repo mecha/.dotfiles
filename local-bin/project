@@ -219,19 +219,33 @@ new_project() {
         echo "$(gum style --bold --foreground "$VIRID_GREEN" "Location:")    $path"
         echo
 
-        if ! gum confirm --no-show-help --prompt.foreground="$VIRID_GREEN" "Clone?"; then
-            return 0
-        fi
+        if gum confirm --no-show-help --prompt.foreground="$VIRID_GREEN" "Clone?"; then
+            git clone "$repo_url" "$path"
 
-        git clone "$repo_url" "$path"
+            if [[ $? -ne 0 && ! -d "$path" ]]; then
+                echo
 
-        if [[ $? -ne 0 && ! -d "$path" ]]; then
-            echo
-
-            if gum confirm --prompt.foreground="$VIRID_YELLOW" "Continue without repo or quit?"; then
-                clear
+                if gum confirm --prompt.foreground="$VIRID_YELLOW" "Continue without repo or quit?"; then
+                    clear
+                else
+                    return 0
+                fi
+            fi
+        else
+            mkdir -p "$path"
+            if (
+                cd "$path"
+                git init "$path"
+                git checkout -b main
+                echo "# $name" > README.md
+                git add README.md
+                git commit -m "initial commit"
+                git remote add origin $repo_url
+            ); then
+                echo "Repo created successfully"
             else
-                return 0
+                echo "Failed to create repo"
+                return 1
             fi
         fi
     fi
