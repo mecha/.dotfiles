@@ -63,76 +63,56 @@ precmd() {
 }
 
 virid_prompt() {
-    # line=$(seq -s ┈ $COLUMNS | tr -d '[:digit:]')
-    # PROMPT=$'\n'"%F{$VIRID_MINT}$line"$'\r'"┌┈[%F{$VIRID_MINT}"
-    PROMPT="%F{$VIRID_MINT}┌┈["
+    reset="%F{$VIRID_MINT}%k"
+    box="%k"
 
-    # path
-    if [[ $PWD == "/" ]]; then
-        PROMPT+="/"
-    elif [[ $PWD == $HOME ]]; then
-        PROMPT+="~"
-    else
-        local parent=$(pwd -P | sed "s|^$HOME|~|" | sed -E 's|/(\.+?[^/])[^/]*|/\1|g; s|/[^/]+$||')
-        local dirname=$(basename "$(pwd -P)")
-        PROMPT+="$parent/%F{$VIRID_FG}$dirname"
+    user="%F{$VIRID_BRIGHT_MINT}$USER@$HOST$reset"
+    pwd="$(nicepwd)$reset"
+
+    PROMPT="$reset╭─[$user $pwd]"
+
+    git=$(prompt_git)
+    if [ -n "$git" ]; then
+        PROMPT+="$reset $git$reset"
     fi
 
-    PROMPT+="%F{$VIRID_MINT}]"
-
-    # journal icon
-    if [[ "$JOURNAL_SHELL" == "1" ]]; then
-        PROMPT+="%F{$VIRID_PURPLE}"
-        PROMPT+="[]"
-    fi
-
-    langs=$(lang_prompt_info)
-    [ -n "$langs" ] && PROMPT+="┈$langs"
-
-    git=$(git_prompt_info)
-    [ -n "$git" ] && PROMPT+="┈$git"
-
-    PROMPT+=$'\n'"%F{$VIRID_MINT}└┈ %f"
+    PROMPT+=$'\n╰─ %f'
 }
 
-git_prompt_info() {
+nicepwd() {
+    if [[ $PWD == "/" ]]; then
+        echo "%F{$VIRID_FG}/"
+    elif [[ $PWD == $HOME ]]; then
+        echo "%F{$VIRID_FG}~"
+    else
+        echo "%F{$VIRID_MINT}$(dirname $PWD)/%F{$VIRID_FG}$(basename $PWD)"
+    fi
+}
+
+prompt_git() {
     ref_name=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
 
     if [ -n "$ref_name" ]; then
         STATUS=$(git status --porcelain 2> /dev/null)
         if [ -n "$STATUS" ]; then
             color=$VIRID_YELLOW
-            dirty="*"
         else
             color=$VIRID_BRIGHT_GREEN
         fi
 
-        echo -n "%F{$color}[ $ref_name$dirty]%F{$VIRID_MINT}"
+        echo -n "%F{$color}%B $ref_name%b"
+
+        stats=$(git_diff_stats)
+        if [ -n "$stats" ]; then
+            echo -n " $stats"
+        fi
     fi
 }
 
-lang_prompt_info() {
-    if [ -f "docker-compose.yml" ]; then
-        echo -n "%F{#1D63ED}[󰡨]%F{$VIRID_MINT}"
-    fi
+git_diff_stats() {
+  git rev-parse --is-inside-work-tree >/dev/null 2>&1 || return
 
-    if [ -f "go.mod" ]; then
-        echo -n "%F{#00ADD8}[]%F{$VIRID_MINT}"
-    fi
-
-    if [ -f "composer.json" ]; then
-        echo -n "%F{#8892bf}[󰌟]%F{$VIRID_MINT}"
-    fi
-
-    if [ -f "package.json" ]; then
-        echo -n "%F{#f7df1e}[]%F{$VIRID_MINT}"
-    fi
-
-    if [ -f "tsconfig.json" ]; then
-        echo -n "%F{#007ACC}[]%F{$VIRID_MINT}"
-    fi
-
-    if [ -f "project.godot" ]; then
-        echo -n "%F{#478CBF}[]%F{$VIRID_MINT}"
-    fi
+  git diff --numstat |
+    awk '$1 ~ /^[0-9]+$/ && $2 ~ /^[0-9]+$/ { add += $1; del += $2 }
+         END { if (add || del) printf "%%F{green}+%d %%F{red}-%d", add, del }'
 }
