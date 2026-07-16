@@ -81,7 +81,7 @@ project_session_name() {
 }
 
 pick_project() {
-    choice="$(fd . "$PROJECTS_PATH" -H -t dir -L --exact-depth 2 | sed "s|^$PROJECTS_PATH/||" | fzf)"
+    choice="$(fd . "$PROJECTS_PATH" -H -t dir -L --exact-depth 2 | sed "s|^$PROJECTS_PATH/||; s|/$||" | fzf)"
 
     [ -n "$choice" ] && echo "$PROJECTS_PATH/$choice"
 }
