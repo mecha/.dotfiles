@@ -46,7 +46,8 @@
   },
   "clock": {
     "format": "{:%a %d %h  %H:%M}",
-    "tooltip": false,
+    "tooltip-format": "{:%T}",
+    "interval": 1,
     "on-click": "ghostty -e ~/dev/personal/calren/calren"
   },
   "bluetooth": {
