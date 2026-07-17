@@ -127,7 +127,7 @@
     "title-len": 50,
     "artist-len": 20,
     "player-icons": {
-      "default": "🎵",
+      "default": "󰎇",
       "firefox": "󰈹"
     },
     "status-icons": {
