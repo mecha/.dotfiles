@@ -99,6 +99,8 @@ open_project() {
     file="$2"
     [ -z "$path" ] && return 1
 
+    path="$(absolute_project_path "$path")"
+
     session_name=$(basename "$path" | tr . _)
 
     # if not in tmux, run tmux with new session
@@ -118,6 +120,8 @@ open_project() {
 close_project() {
     path="$1"
     [ -z "$path" ] && return 1
+
+    path="$(absolute_project_path "$path")"
 
     tmux kill-session -t "$(project_session_name "$path")" 2> /dev/null
 }
@@ -310,6 +314,16 @@ harpoon() {
             fi
         fi
     fi
+}
+
+absolute_project_path() {
+    path="$1"
+    if [ ! -d "$path" ]; then
+        if [ -d "$DEV_PATH/$path" ]; then
+            path="$DEV_PATH/$path"
+        fi
+    fi
+    echo "$path"
 }
 
 main "$@"
