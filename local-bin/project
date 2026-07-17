@@ -28,6 +28,9 @@ main() {
         "new"|"create")
             new_project
             ;;
+        "list")
+            list_projects
+            ;;
         "delete")
             path="$1"
             [ -z "$path" ] && path="$(pick_project)"
@@ -61,6 +64,7 @@ main() {
             echo "    open [<PATH>]             Switch to a project's session, creating it if it doesn't exist."
             echo "    close [<PATH>]            Kills the session for a project."
             echo "    new, create               Create a new project."
+            echo "    list                      List all projects."
             echo "    delete [<PATH>]           Delete a project."
             echo "    edit, file, edit-file     Fuzzy find a file in the current project to open in the editor."
             echo "    window                    Fuzzy find tmux windows (TODO: move this somewhere else)."
@@ -80,8 +84,12 @@ project_session_name() {
     echo $(basename "$path" | tr . _)
 }
 
+list_projects() {
+    fd . "$PROJECTS_PATH" -H -t dir -L --exact-depth 2 | sed "s|^$PROJECTS_PATH/||; s|/$||"
+}
+
 pick_project() {
-    choice="$(fd . "$PROJECTS_PATH" -H -t dir -L --exact-depth 2 | sed "s|^$PROJECTS_PATH/||; s|/$||" | fzf)"
+    choice="$(list_projects | fzf)"
 
     [ -n "$choice" ] && echo "$PROJECTS_PATH/$choice"
 }
