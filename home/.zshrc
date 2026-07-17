@@ -2,6 +2,11 @@
 # ENV VARS                                                                     #
 #==============================================================================#
 
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+
 export ZSH="$XDG_CONFIG_HOME/zsh"
 export HISTFILE=~/.zsh_history
 export HISTSIZE=10000
@@ -17,12 +22,6 @@ export PROJECTS_PATH="$(realpath "$HOME/Projects")"
 export PROJECT_TEMPLATES_PATH="$PROJECTS_PATH/templates"
 export DEV_PATH="$(realpath "$HOME/dev")"
 export DOTFILES_PATH="$PROJECTS_PATH/personal/.dotfiles"
-
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_CACHE_HOME="$HOME/.cache"
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_STATE_HOME="$HOME/.local/state"
-export XDG_PROJECT_HOME="$PROJECTS_PATH"
 
 export ANDROID_HOME=$HOME/Android/Sdk
 export NVM_DIR=$XDG_CONFIG_HOME/nvm
