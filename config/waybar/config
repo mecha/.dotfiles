@@ -6,6 +6,7 @@
   "modules-left": [
     "cpu",
     "memory",
+    "custom/homebase-storage",
     "battery",
     "mpris",
     "custom/face"
@@ -29,6 +30,12 @@
   "memory": {
     "interval": 5,
     "format": " {:-2}%"
+  },
+  "custom/homebase-storage": {
+    "interval": 60,
+    "format": "󰒋 {}%",
+    "exec": "ssh homebase \"df --output=pcent / | tail -1 | tr -dc '0-9'\"",
+    "on-click": "ghostty -e ssh homebase"
   },
   "disk": {
     "interval": 5,

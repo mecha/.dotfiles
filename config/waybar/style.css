@@ -57,6 +57,7 @@ tooltip * {
 #cpu,
 #memory,
 #disk,
+#custom-homebase-storage,
 #mpris,
 #workspaces,
 #backlight,
@@ -126,6 +127,9 @@ tooltip * {
 	color: @light_gray;
 }
 #disk {
+	color: @tan;
+}
+#custom-homebase-storage {
 	color: @tan;
 }
 
