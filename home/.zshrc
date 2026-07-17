@@ -34,6 +34,8 @@ export PATH="$ANDROID_HOME/platform-tools:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.config/composer/vendor/bin:$PATH"
 
+export HERMES_TUI=1
+
 export FZF_DEFAULT_OPTS="--reverse"
 
 export GUM_CONFIRM_SHOW_HELP="0"
@@ -90,6 +92,7 @@ bindkey '^[[B' history-substring-search-down
 # ALIASES                                                                      #
 #==============================================================================#
 
+alias edit="$EDITOR"
 alias tam="tmux -u new-session -A -s main"
 alias tps="project open"
 alias ll="eza -lga --icons --group-directories-first --color=always --git"
