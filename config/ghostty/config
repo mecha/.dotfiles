@@ -9,7 +9,7 @@ clipboard-write = allow
 
 font-family = "JetBrainsMono Nerd Font Mono"
 font-feature = -calt, -liga, -dlig
-font-size = 15.5
+font-size = 13.0
 window-decoration = false
 window-padding-color = extend-always
 window-padding-balance = true
