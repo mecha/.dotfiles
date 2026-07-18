@@ -1,0 +1,189 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+read_text() {
+    local path=$1
+
+    [[ -r $path ]] || return 1
+    <"$path" tr -d '\n'
+}
+
+round_number() {
+    awk -v value="$1" 'BEGIN { printf "%.0f", value }'
+}
+
+find_gpu() {
+    local preferred_bus=${WAYBAR_GPU_BUS:-}
+    local fallback=""
+    local first=""
+    local line pci_slot bus record
+
+    while IFS= read -r line; do
+        [[ $line =~ (VGA|3D|Display) ]] || [[ $line =~ (vga|3d|display) ]] || continue
+        [[ $line =~ (AMD|ATI|Radeon) ]] || [[ $line =~ (amd|ati|radeon) ]] || continue
+
+        pci_slot=${line%% *}
+        bus=${pci_slot#*:}
+        bus=${bus%%:*}
+        record=$bus$'\t'$pci_slot$'\t'$line
+
+        if [[ -n $preferred_bus && ${bus,,} == ${preferred_bus,,} ]]; then
+            printf '%s\n' "$record"
+            return 0
+        fi
+
+        [[ -n $first ]] || first=$record
+        if [[ -z $fallback && $line != *Raphael* ]]; then
+            fallback=$record
+        fi
+    done < <(lspci -D)
+
+    if [[ -n $fallback ]]; then
+        printf '%s\n' "$fallback"
+        return 0
+    fi
+
+    [[ -n $first ]] || return 1
+    printf '%s\n' "$first"
+}
+
+find_device_path() {
+    local pci_slot=$1
+    local device card_name uevent
+
+    for device in /sys/class/drm/card*/device; do
+        [[ -e $device ]] || continue
+
+        card_name=${device%/device}
+        card_name=${card_name##*/}
+        [[ $card_name == *-* ]] && continue
+
+        uevent=$(read_text "$device/uevent" || true)
+        if [[ $uevent == *"PCI_SLOT_NAME=$pci_slot"* ]]; then
+            printf '%s\n' "$device"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+get_usage() {
+    local bus=$1
+    local output usage
+
+    output=$(timeout 3 radeontop -b "$bus" -d - -l 1 2>/dev/null)
+    usage=$(sed -nE 's/.*gpu ([0-9.]+)%.*/\1/p' <<<"$output" | head -n1 || true)
+
+    [[ -n $usage ]] || {
+        printf 'Could not parse GPU usage from radeontop\n' >&2
+        return 1
+    }
+
+    round_number "$usage"
+}
+
+label_name() {
+    local label=${1,,}
+
+    case $label in
+        edge) printf 'Edge' ;;
+        junction) printf 'Junction' ;;
+        mem) printf 'Memory' ;;
+        *) printf '%s' "${label^}" ;;
+    esac
+}
+
+append_temperatures() {
+    local device=$1
+    local hwmon input_path sensor label value display value_c
+
+    [[ -n $device ]] || return 0
+
+    for hwmon in "$device"/hwmon/hwmon*; do
+        [[ -d $hwmon ]] || continue
+
+        for input_path in "$hwmon"/temp*_input; do
+            [[ -r $input_path ]] || continue
+
+            sensor=${input_path##*/}
+            sensor=${sensor%_input}
+            label=$(read_text "$hwmon/${sensor}_label" || printf '%s' "$sensor")
+            value=$(read_text "$input_path" || true)
+            [[ -n $value ]] || continue
+
+            display=$(label_name "$label")
+            value_c=$(round_number "$(awk -v value="$value" 'BEGIN { print value / 1000 }')")
+            tooltip_lines+=("$display: $value_c°C")
+        done
+    done
+}
+
+append_vram() {
+    local device=$1
+    local used total percent used_gib total_gib
+
+    [[ -n $device ]] || return 0
+
+    used=$(read_text "$device/mem_info_vram_used" || true)
+    total=$(read_text "$device/mem_info_vram_total" || true)
+    [[ -n $used && -n $total ]] || return 0
+
+    if (( total > 0 )); then
+        percent=$(round_number "$(awk -v used="$used" -v total="$total" 'BEGIN { print (used / total) * 100 }')")
+    else
+        percent=0
+    fi
+
+    used_gib=$(awk -v bytes="$used" 'BEGIN { printf "%.1f", bytes / 1024 / 1024 / 1024 }')
+    total_gib=$(awk -v bytes="$total" 'BEGIN { printf "%.1f", bytes / 1024 / 1024 / 1024 }')
+    tooltip_lines+=("VRAM: $used_gib / $total_gib GiB ($percent%)")
+}
+
+get_power() {
+    local device=$1
+    local hwmon power_path microwatts
+
+    [[ -n $device ]] || return 1
+
+    for hwmon in "$device"/hwmon/hwmon*; do
+        [[ -d $hwmon ]] || continue
+
+        for power_path in "$hwmon"/power1_average "$hwmon"/power1_input; do
+            [[ -r $power_path ]] || continue
+
+            microwatts=$(read_text "$power_path" || true)
+            [[ -n $microwatts ]] || continue
+
+            awk -v microwatts="$microwatts" 'BEGIN { printf "%.0fW", microwatts / 1000000 }'
+            return 0
+        done
+    done
+
+    return 1
+}
+
+main() {
+    local gpu bus pci_slot device usage power text tooltip
+
+    gpu=$(find_gpu) || return 1
+    IFS=$'\t' read -r bus pci_slot _line <<<"$gpu"
+
+    usage=$(get_usage "$bus")
+    device=$(find_device_path "$pci_slot" || true)
+    power=$(get_power "$device" || true)
+
+    tooltip_lines=("GPU: $usage%")
+    [[ -n $power ]] && tooltip_lines+=("Power: $power")
+    append_temperatures "$device"
+    append_vram "$device"
+
+    text="$usage%"
+
+    printf -v tooltip '%s\n' "${tooltip_lines[@]}"
+    tooltip=${tooltip%$'\n'}
+
+    jq -cn --arg text "$text" --arg tooltip "$tooltip" '{text: $text, tooltip: $tooltip}'
+}
+
+main "$@"

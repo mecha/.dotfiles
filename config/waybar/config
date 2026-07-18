@@ -5,6 +5,7 @@
   "reload_style_on_change": true,
   "modules-left": [
     "cpu",
+    "custom/gpu",
     "memory",
     "custom/homebase-storage",
     "battery",
@@ -26,6 +27,14 @@
     "interval": 5,
     "format": " {usage:2}%",
     "on-click": "ghostty -e btop"
+  },
+  "custom/gpu": {
+    "interval": 5,
+    "format": "󰢮 {text}",
+    "return-type": "json",
+    "exec-if": "which radeontop",
+    "exec": "waybar-gpu-usage",
+    "on-click": "lact"
   },
   "memory": {
     "interval": 5,
