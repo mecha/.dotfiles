@@ -111,6 +111,7 @@ setup() {
                     fd \
                     fzf \
                     jq \
+                    yq \
                     bat \
                     eza \
                     jless \
