@@ -2,124 +2,175 @@
 
 menu_pos="-x C -y C"
 
-main() {
-    case "$1" in
-        "")
-            tmux display-menu -T " MENU " $menu_pos \
-                "  Main session"       m "new-session -A -s main -c $HOME" \
-                "󱁴  Find window"        f "display-popup -w 50 -h 50% -T ' Find window ' -E project window" \
-                "" \
-                "󰉗  New project"        n "display-popup -w 60 -h 35% -T ' New Project ' -EE project new" \
-                "  Open project"       ' ' "display-popup -w 50 -h 65% -T ' Open project ' -EE project open" \
-                "󰩹  Delete project"     d "display-popup -w 50 -h 35% -T ' Delete Project ' project delete" \
-                "" \
-                "  Packages           󰜴" p 'run "globalmenu packages"' \
-                "  Services           󰜴" s 'run "globalmenu services"' \
-                "  Containers         󰜴" c 'run "globalmenu containers"' \
-                "󱧼  Configs            󰜴" C 'run "globalmenu configs"' \
-                "󱁤  Utilities          󰜴" u 'run "globalmenu utils"' \
-                "" \
-                "󰄨  Resource monitor"     r 'neww -n Resources btop' \
-                "󰚩  Opencode"             o 'run "tmux select-window -t opencode || tmux neww -n opencode opencode"' \
-                "  Journal"              j 'neww -n Journal "journal $JOURNAL_ENC_DIR"' \
-                "  Local network"        l "display-popup -w 30 -h 40% -T ' Local network ' -E localnet" \
-                "󱉟  Help"                 h "display-popup -w 50 -h 65% -T ' Search Help Manuals ' -E help" \
-                "" \
-                "  Reboot"               R 'display-popup -w 30% -h 8 -E "gum confirm --default=no \"Reboot now?\" && reboot"' \
-                "󰐥  Shutdown"             S 'display-popup -w 30% -h 8 -E "gum confirm --default=no \"Shutdown now?\" && shutdown -h now"' \
-        ;;
+full_width=26
+label_width=$(expr $full_width - 2 - 2 - 3 - 4) # 2 for borders, 2 for paddings, 3 for left icons, 4 for (most) keybinds
 
-        "packages")
-            tmux display-menu -T " MENU > PACKAGES " $menu_pos \
-                "󰇚  Install             " i 'display-popup -w 80% -h 80% -T " Install a new package " -EE packages add' \
-                "󰛌  Remove"               r 'display-popup -w 80% -h 80% -T " Remove a package " -EE packages remove' \
-                "" \
-                "  List"                 l 'display-popup -w 80% -h 80% -T " Installed packages " -E packages installed' \
-                "  List AUR"             L 'display-popup -w 80% -h 80% -T " Installed packages " -E packages installed-aur' \
-                "󰦗  Check updates"        c 'display-popup -w 80% -h 80% -T " Available Updates " -E "checkupdates | less"' \
-                "󰚰  Update all"           u 'neww -n "Full system update" packages upgrade' \
-                "󰈞  File owner"           f 'display-popup -w 80% -h 80% -T " Which package owns a file " -E packages owner' \
-                "" \
-                "  Arch News"            n 'run "xdg-open https://archlinux.org/news"' \
-                "  Arch Wiki"            w 'run "xdg-open https://wiki.archlinux.org"' \
-                "  AUR (if it's up)"     a 'run "xdg-open https://aur.archlinux.org"' \
-                "" \
-                "󰜱  Back"                 q 'run globalmenu'
-        ;;
+picker_width=38
+picker_height=32
 
-        "containers")
-            tmux display-menu -T " MENU > CONTAINERS " $menu_pos \
-                "  List                " l 'display-popup -w 80% -h 80% -T " Toggle container " -EE "container show"' \
-                "󰐊  Up"                   u 'display-popup -w 80% -h 80% -T " Start container " -EE "container up"' \
-                "󰓛  Down"                 d 'display-popup -w 80% -h 80% -T " Start container " -EE "container down"' \
-                "  Web page"             o 'display-popup -w 80% -h 80% -T " Open container web page " -EE "container web"' \
-                "" \
-                "󰜱  Back"                 q 'run globalmenu'
-        ;;
-
-        "configs")
-            tmux display-menu -T " MENU > CONFIGS " $menu_pos \
-                "󱁻  Dotfiles            " d "run 'project open $DOTFILES_PATH'" \
-                "" \
-                "󰊠  Ghostty"              g "run 'project open $DOTFILES_PATH config/ghostty/config'" \
-                "  Neovim"               n "run 'project open $DEV_PATH/personal/config.nvim'" \
-                "  Hyprland"             h "run 'project open $DOTFILES_PATH config/hypr/hyprland.conf'" \
-                "󰠷  Waybar"               w "run 'project open $DOTFILES_PATH config/waybar/config'" \
-                "  Globalmenu"           m "run 'project open $DOTFILES_PATH local-bin/globalmenu'" \
-                "" \
-                "󰏗  Pacman"               P 'neww -n "Pacman config" sudoedit /etc/pacman.conf' \
-                "󰈙  Hosts"                H 'neww -n "Hosts file" sudoedit /etc/hosts' \
-                "" \
-                "󰜱  Back"                 q 'run "globalmenu"'
-        ;;
-
-        "services")
-            tmux display-menu -T " MENU > SERVICES " $menu_pos \
-                "󰐊  Start               " s 'display-popup -w 80% -h 80% -T " Start service " -EE "services start"' \
-                "󰓛  Stop"                 k 'display-popup -w 80% -h 80% -T " Start service " -EE "services stop"' \
-                "  Restart"              r 'display-popup -w 80% -h 80% -T " Restart service " -EE "services restart"' \
-                "  Enable"               e 'display-popup -w 80% -h 80% -T " Enable service " -EE "services enable"' \
-                "  Disable"              d 'display-popup -w 80% -h 80% -T " Disable service " -EE "services disable"' \
-                "" \
-                "  List all"             l 'display-popup -w 80% -h 80% -T " Services " -E "services list"' \
-                "  Active"               a 'display-popup -w 80% -h 80% -T " Services (active) " -E "services list active"' \
-                "  Inactive"             i 'display-popup -w 80% -h 80% -T " Services (inactive) " -E "services list inactive"' \
-                "  Failed"               f 'display-popup -w 80% -h 80% -T " Services (failed) " -E "services list failed"' \
-                "" \
-                "󰝒  Create new"           C 'neww -n "New service" "services new"' \
-                "󱇧  Edit"                 E 'neww -n "Edit service" "services edit"' \
-                "󰮘  Delete"               D 'display-popup -w 50% -h 20 -T " Delete service " -EE "services delete"' \
-                "󰑐  Reload daemon"        R 'display-popup -w 50% -h 6 -T " Reload daemon " -EE "systemctl daemon-reload"' \
-                "" \
-                "󰜱  Back"                 q 'run "globalmenu"'
-        ;;
-
-        "utils")
-            tmux display-menu -T " MENU > UTILITIES " $menu_pos \
-                "󱝁  Setup"                s "display-popup -w 80% -h 80% -T ' Setup ' setup " \
-                "󱩖  Reset RGB           " r "display-popup -w 50% -h 12 -T ' Reset RGB ' -EE 'openrgb -p ~/.config/OpenRGB/viridescent.orp'" \
-                "󱂇  Ping google.com"      p "display-popup -w 80% -h 80% -T ' Pinging google.com ' -EE 'gping google.com' " \
-                "󱅞  Reset faillock"       F "display-popup -w 50% -h 10 -T ' Reset faillock ' -EE 'faillock --user $USER --reset' " \
-                "" \
-                "󰜱  Back"                 q 'run "globalmenu"'
-        ;;
-    esac
+pad_width() {
+    printf %-$2s "$1"
 }
 
-journal_status_icon() {
-    if journal status &>/dev/null; then
-        echo "#[fg=${VIRID_YELLOW}] "
-    else
-        echo "#[fg=${VIRID_GREEN}] "
-    fi
+arrow() {
+    echo "$(pad_width "$1" $(expr $label_width - 1))󰜴"
 }
 
-journal_status_text() {
-    if journal status &>/dev/null; then
-        echo "#[fg=${VIRID_YELLOW}]Unlocked"
-    else
-        echo "#[fg=${VIRID_GREEN}]Locked"
-    fi
-}
+# the 5 caters for the "Escape" keybind text being 5 chars longer than most
+back="󰜱  $(pad_width "Back" $(expr $label_width - 5))"
 
-main $@
+case "$1" in
+    "")
+        root_menu_items=(
+            "  Main session"      m "new-session -A -s main -c $HOME"
+            "󱉟  Help manuals"      h "display-popup -w $picker_width -h $picker_height -T ' Search help manuals ' -E help"
+            ""
+            "󰉗  New project"       n "display-popup -w 50% -h 12 -T ' New Project ' -EE project new"
+            "  Open project"      o "display-popup -w $picker_width -h $picker_height -T ' Open project ' -EE project open"
+            "󰩹  Delete project"    D "display-popup -w $picker_width -h $picker_height -T ' Delete project ' project delete"
+            ""
+        )
+
+        PROJECTS_PATH_LEN="${#PROJECTS_PATH}"
+        if test "${PWD:0:$PROJECTS_PATH_LEN}" = "$PROJECTS_PATH"; then
+            root_menu_items+=(
+                "󰨝  Project"        p 'run "tmux select-window -t :project || tmux neww -bt 1 -n project project dashboard"'
+                "  Editor"         e "run 'tmux select-window -t :nvim || tmux neww -bt 2 -n nvim nvim'"
+                "󱇧  Open file"      f "run 'tmux display-popup -w 80% -h 80% -T \" Edit file \" -EE project edit'"
+                ""
+            )
+        fi
+
+        root_menu_items+=(
+            "  $(arrow "Agents")"    a 'run "globalmenu agent pi"'
+            "󰍂  $(arrow "Log into")"  l 'run "globalmenu login"'
+            "  $(arrow "Tools")"     t 'run "globalmenu tools"'
+            ""
+            "  $(arrow "Packages")"  P 'run "globalmenu packages"'
+            "  $(arrow "Services")"  S 'run "globalmenu services"'
+            "󱧼  $(arrow "Configs")"   C 'run "globalmenu configs"'
+            ""
+            "  Reboot"           F4 'display-popup -w 23 -h 5 -E "gum confirm --default=no \"Reboot now?\" && reboot"'
+            "󰐥  Shutdown"         F5 'display-popup -w 23 -h 5 -E "gum confirm --default=no \"Shutdown now?\" && shutdown -h now"'
+        )
+
+        tmux display-menu -T " MENU " $menu_pos "${root_menu_items[@]}"
+    ;;
+
+    "agent")
+        agent=$2
+        if [ -z "$agent" ]; then
+            agent_items=(
+                "  Pi               " p 'run "globalmenu agent pi"'
+                "󰚩  Hermes"            h 'run "globalmenu agent hermes"'
+                "󰚩  Opencode"          o 'run "globalmenu agent opencode"'
+                ""
+                "󰜱  Back"         Escape 'run "globalmenu"'
+            )
+            tmux display-menu -T " MENU > AGENTS " $menu_pos "${agent_items[@]}"
+        else
+            agent_items=(
+                "󰚩  Change ($agent)"   c 'run "globalmenu agent"'
+                ""
+                "  Sidebar          " s "split-pane -h -l 36% $agent"
+                "  Bottombar"         b "split-pane -v -l 36% $agent"
+                "󰊓  Window"            w "new-window -n $agent $agent"
+                "󰖲  Popup"             p "new-pane $agent"
+                "  Terminal"          t "run 'ghostty -e $agent'"
+                ""
+                "$back"         Escape 'run "globalmenu"'
+            )
+            tmux display-menu -T " MENU > AGENT > ${agent^^} " $menu_pos "${agent_items[@]}"
+        fi
+    ;;
+
+    "login")
+        login_items=(
+            "  List all"             l "display-popup -w 30 -h 10 -T ' Local Network ' -E localnet"
+            ""
+            "  Homebase"             h 'run "tmux select-window -t homebase || tmux neww -n homebase ssh miguel@homebase"'
+            "󰌢  Framework 13"         f 'run "tmux select-window -t framework13 || tmux neww -n framework13 ssh miguel@framework13"'
+            "󰖟  Website (mecha.dev)"  w 'neww -n mecha.dev ssh root@mecha.dev'
+            ""
+            "$back"              Escape 'run "globalmenu"'
+        )
+        tmux display-menu -T " MENU > LOG INTO " $menu_pos "${login_items[@]}"
+    ;;
+
+    "tools")
+        tools_items=(
+            "󰄨  Resource monitor"  r 'neww -n Resources btop'
+            "  Journal"           j 'neww -n Journal "journal $JOURNAL_ENC_DIR"'
+            ""
+            "󱁴  Find tmux window"  f "display-popup -w $full_width -h 50% -T ' Find window ' -E project window"
+            "󱩖  Reset RGB"         R "display-popup -w 65 -h 11 -T ' Reset RGB ' -EE 'openrgb -p ~/.config/OpenRGB/viridescent.orp'"
+            "󱂇  Ping google.com"   p "display-popup -w 80% -h 80% -T ' Pinging google.com ' -EE 'gping google.com' "
+            "󱅞  Reset faillock"    F "display-popup -w 50% -h 10 -T ' Reset faillock ' -EE 'faillock --user $USER --reset' "
+            "󱝁  Setup"             s "display-popup -w 80% -h 80% -T ' Setup ' setup "
+            ""
+            "$back"           Escape 'run "globalmenu"'
+        )
+        tmux display-menu -T " MENU > TOOLS " $menu_pos "${tools_items[@]}"
+    ;;
+
+    "packages")
+        packages_items=(
+            "󰇚  Install"            i "display-popup -w 100 -h 60% -T ' Install a new package ' -EE packages add"
+            "󰛌  Remove"             r 'display-popup -w 80% -h 80% -T " Remove a package " -EE packages remove'
+            "" 
+            "  List"               l 'display-popup -w 80% -h 80% -T " Installed packages " -E packages installed'
+            "  List AUR"           L 'display-popup -w 80% -h 80% -T " Installed packages " -E packages installed-aur'
+            "󰦗  Check updates"      c 'display-popup -w 80% -h 80% -T " Available Updates " -E "checkupdates | less"'
+            "󰚰  Update all"         u 'neww -n "Full system update" packages upgrade'
+            "󰈞  File owner"         f 'display-popup -w 80% -h 80% -T " Which package owns a file " -E packages owner'
+            "" 
+            "  Arch News"          n 'run "xdg-open https://archlinux.org/news"'
+            "  Arch Wiki"          w 'run "xdg-open https://wiki.archlinux.org"'
+            "  AUR (if it's up)"   a 'run "xdg-open https://aur.archlinux.org"'
+            "" 
+            "$back"            Escape 'run globalmenu'
+        )
+        tmux display-menu -T " MENU > PACKAGES " $menu_pos "${packages_items[@]}"
+    ;;
+
+    "services")
+        service_items=(
+            "󰐊  Start            " s 'display-popup -w 80% -h 80% -T " Start service " -EE "services start"'
+            "󰓛  Stop"              k 'display-popup -w 80% -h 80% -T " Start service " -EE "services stop"'
+            "  Restart"           r 'display-popup -w 80% -h 80% -T " Restart service " -EE "services restart"'
+            "  Enable"            e 'display-popup -w 80% -h 80% -T " Enable service " -EE "services enable"'
+            "  Disable"           d 'display-popup -w 80% -h 80% -T " Disable service " -EE "services disable"'
+            ""
+            "  List all"          l 'display-popup -w 80% -h 80% -T " Services " -E "services list"'
+            "  Active"            a 'display-popup -w 80% -h 80% -T " Services (active) " -E "services list active"'
+            "  Inactive"          i 'display-popup -w 80% -h 80% -T " Services (inactive) " -E "services list inactive"'
+            "  Failed"            f 'display-popup -w 80% -h 80% -T " Services (failed) " -E "services list failed"'
+            ""
+            "󰝒  Create new"        C 'neww -n "New service" "services new"'
+            "󱇧  Edit"              E 'neww -n "Edit service" "services edit"'
+            "󰮘  Delete"            D 'display-popup -w 50% -h 20 -T " Delete service " -EE "services delete"'
+            "󰑐  Reload daemon"     R 'display-popup -w 50% -h 6 -T " Reload daemon " -EE "systemctl daemon-reload"'
+            ""
+            "$back"           Escape 'run "globalmenu"'
+        )
+        tmux display-menu -T " MENU > SERVICES " $menu_pos "${service_items[@]}"
+    ;;
+
+    "configs")
+        config_items=(
+            "󱁻  Dotfiles         " d "run 'project open $DOTFILES_PATH'"
+            ""
+            "󰊠  Ghostty"           g "run 'project open $DOTFILES_PATH config/ghostty/config'"
+            "  Neovim"            n "run 'project open $DEV_PATH/personal/config.nvim'"
+            "  Hyprland"          h "run 'project open $DOTFILES_PATH config/hypr/hyprland.conf'"
+            "󰠷  Waybar"            w "run 'project open $DOTFILES_PATH config/waybar/config'"
+            "  Globalmenu"        m "run 'project open $DOTFILES_PATH local-bin/globalmenu'"
+            ""
+            "󰏗  Pacman"            P 'neww -n "Pacman config" sudoedit /etc/pacman.conf'
+            "󰈙  Hosts"             H 'neww -n "Hosts file" sudoedit /etc/hosts'
+            ""
+            "$back"         Escape 'run "globalmenu"'
+        )
+        tmux display-menu -T " MENU > CONFIGS " $menu_pos "${config_items[@]}"
+    ;;
+esac
