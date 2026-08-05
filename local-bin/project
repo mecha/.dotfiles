@@ -25,6 +25,9 @@ main() {
 
             close_project "$path"
             ;;
+        "is")
+            is_project
+            ;;
         "new"|"create")
             new_project
             ;;
@@ -38,6 +41,7 @@ main() {
             delete_project "$path"
             ;;
         "file"|"edit"|"edit-file")
+            is_project || return 1
             [ -n "$1" ] && file="$1" || file="$(pick_file)"
             edit_file "$file"
             ;;
@@ -92,6 +96,19 @@ pick_project() {
     choice="$(list_projects | fzf)"
 
     [ -n "$choice" ] && echo "$PROJECTS_PATH/$choice"
+}
+
+
+is_project() {
+    path=$1
+    [ -z "$path" ] && path="$(realpath $PWD)"
+
+    PROJECTS_PATH_LEN="${#PROJECTS_PATH}"
+    if test "${path:0:$PROJECTS_PATH_LEN}" = "$PROJECTS_PATH"; then
+        return 0
+    else
+        return 1
+    fi
 }
 
 open_project() {
