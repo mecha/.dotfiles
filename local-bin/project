@@ -194,7 +194,7 @@ edit_file() {
     if tmux select-window -t "$editor_win" 2> /dev/null; then
         tmux send-keys -t nvim Escape ":e $file" Enter
     else
-        tmux neww -at 1 nvim "$file"
+        tmux neww -at 1 -n nvim nvim "$file"
     fi
 }
 
