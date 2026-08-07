@@ -20,8 +20,8 @@ BarBlock {
     text: format()
 
     Process {
-        id: calrenRunner
-        command: ["ghostty", "-e", "/home/miguel/dev/personal/calren/calren"]
+        id: drawerRunner
+        command: ["quickshell", "ipc", "call", "drawer", "toggle"]
     }
 
     Timer {
@@ -36,8 +36,8 @@ BarBlock {
         cursorShape: Qt.PointingHandCursor
 
         onClicked: {
-            calrenRunner.running = false
-            calrenRunner.running = true
+            drawerRunner.running = false
+            drawerRunner.running = true
         }
     }
 }

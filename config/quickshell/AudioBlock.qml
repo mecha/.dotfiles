@@ -38,8 +38,8 @@ BarBlock {
     }
 
     Process {
-        id: pavucontrolRunner
-        command: ["pavucontrol"]
+        id: drawerRunner
+        command: ["quickshell", "ipc", "call", "drawer", "toggle"]
     }
 
     Process {
@@ -74,8 +74,8 @@ BarBlock {
                 muteRunner.running = false
                 muteRunner.running = true
             } else {
-                pavucontrolRunner.running = false
-                pavucontrolRunner.running = true
+                drawerRunner.running = false
+                drawerRunner.running = true
             }
         }
 

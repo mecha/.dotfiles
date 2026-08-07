@@ -148,7 +148,7 @@ Scope {
             NetworkPanel {
                 id: networkPanel
                 x: audioPanel.x
-                y: audioPanel.y + audioPanel.height + panel.pillGap
+                y: audioPanel.y + audioPanel.closedHeight + panel.pillGap
                 width: audioPanel.width
                 height: panel.headerHeight + panel.drawerHeight - panel.edgeMargin - y
             }
