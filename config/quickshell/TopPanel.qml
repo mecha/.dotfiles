@@ -144,6 +144,13 @@ Scope {
                 x: Math.max(panel.edgeMargin + 120 + panel.pillGap, barLayer.x + leftModules.x + audioBlock.x)
                 y: panel.headerHeight + panel.edgeMargin
             }
+
+            CalendarPanel {
+                id: calendarPanel
+                x: drawerBackground.width - width - panel.edgeMargin
+                y: panel.headerHeight + panel.edgeMargin
+                height: panel.drawerHeight - panel.edgeMargin * 2
+            }
         }
 
         Item {
