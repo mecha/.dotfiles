@@ -101,15 +101,6 @@ Scope {
             Region { item: barLayer }
         }
 
-        HyprlandFocusGrab {
-            active: panel.drawerOpen
-            windows: [visualWindow, reserveWindow]
-
-            onCleared: {
-                panel.drawerOpen = false
-            }
-        }
-
         Rectangle {
             id: drawerBackground
             y: panel.drawerSlideY
@@ -131,8 +122,26 @@ Scope {
                 }
             }
 
-            AudioDeviceSwitcher {
+            MouseArea {
+                anchors.fill: parent
+                enabled: audioPanel.anyOpen
+
+                onClicked: {
+                    audioPanel.closeMenus()
+                }
+            }
+
+            HardwareStatsPanel {
+                id: hardwareStatsPanel
                 x: panel.edgeMargin
+                y: panel.headerHeight + panel.edgeMargin
+                width: Math.max(120, audioPanel.x - x - panel.pillGap)
+                height: panel.drawerHeight - panel.edgeMargin * 2
+            }
+
+            AudioPanel {
+                id: audioPanel
+                x: Math.max(panel.edgeMargin + 120 + panel.pillGap, barLayer.x + leftModules.x + audioBlock.x)
                 y: panel.headerHeight + panel.edgeMargin
             }
         }
@@ -175,7 +184,9 @@ Scope {
                     clickCommand: ["ghostty", "-e", "ssh", "homebase"]
                 }
 
-                AudioBlock {}
+                AudioBlock {
+                    id: audioBlock
+                }
 
                 MprisBlock {}
             }
