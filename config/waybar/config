@@ -33,7 +33,7 @@
     "format": "󰢮 {text}",
     "return-type": "json",
     "exec-if": "which radeontop",
-    "exec": "waybar-gpu-usage",
+    "exec": "gpu-usage",
     "on-click": "lact"
   },
   "memory": {

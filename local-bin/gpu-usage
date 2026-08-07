@@ -13,7 +13,7 @@ round_number() {
 }
 
 find_gpu() {
-    local preferred_bus=${WAYBAR_GPU_BUS:-}
+    local preferred_bus=${GPU_USAGE_BUS:-${WAYBAR_GPU_BUS:-}}
     local fallback=""
     local first=""
     local line pci_slot bus record

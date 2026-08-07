@@ -50,7 +50,7 @@ PanelWindow {
         height: 40
         radius: 20
         color: "#95d5b2"
-        opacity: pulseAnimation.opacity
+        opacity: pulseAnimation.opacity || 0
 
         SequentialAnimation on opacity {
             id: pulseAnimation
