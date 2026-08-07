@@ -14,6 +14,7 @@ Scope {
     readonly property int bottomMargin: fullscreenActive ? topMargin : 0
     readonly property int verticalMargin: topMargin + bottomMargin
     readonly property int pillGap: 8
+    readonly property int hardwarePanelWidth: 380
     readonly property int drawerHeight: fullscreenActive ? 200 : 192
     readonly property int headerHeight: effectiveBarShown ? edgeMargin + barHeight : 0
     readonly property int drawerPanelHeight: headerHeight + drawerHeight
@@ -138,13 +139,13 @@ Scope {
                 id: hardwareStatsPanel
                 x: panel.edgeMargin
                 y: panel.headerHeight + panel.topMargin
-                width: Math.max(120, audioPanel.x - x - panel.pillGap)
+                width: panel.hardwarePanelWidth
                 height: panel.drawerHeight - panel.verticalMargin
             }
 
             AudioPanel {
                 id: audioPanel
-                x: Math.max(panel.edgeMargin + 120 + panel.pillGap, barLayer.x + leftModules.x + audioBlock.x)
+                x: hardwareStatsPanel.x + hardwareStatsPanel.width + panel.pillGap
                 y: panel.headerHeight + panel.topMargin
             }
 
