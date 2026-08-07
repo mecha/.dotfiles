@@ -145,6 +145,14 @@ Scope {
                 y: panel.headerHeight + panel.edgeMargin
             }
 
+            NetworkPanel {
+                id: networkPanel
+                x: audioPanel.x
+                y: audioPanel.y + audioPanel.height + panel.pillGap
+                width: audioPanel.width
+                height: panel.headerHeight + panel.drawerHeight - panel.edgeMargin - y
+            }
+
             CalendarPanel {
                 id: calendarPanel
                 x: drawerBackground.width - width - panel.edgeMargin
