@@ -7,14 +7,17 @@ import QtQuick
 Scope {
     id: panel
 
+    readonly property bool fullscreenActive: Hyprland.focusedWorkspace?.hasFullscreen ?? false
     readonly property int barHeight: 24
     readonly property int edgeMargin: 8
+    readonly property int topMargin: 8
+    readonly property int bottomMargin: fullscreenActive ? topMargin : 0
+    readonly property int verticalMargin: topMargin + bottomMargin
     readonly property int pillGap: 8
-    readonly property int drawerHeight: 200
+    readonly property int drawerHeight: fullscreenActive ? 200 : 192
     readonly property int headerHeight: effectiveBarShown ? edgeMargin + barHeight : 0
     readonly property int drawerPanelHeight: headerHeight + drawerHeight
     readonly property int reservedHeight: drawerOpen ? drawerPanelHeight : (effectiveBarShown ? headerHeight : 0)
-    readonly property bool fullscreenActive: Hyprland.focusedWorkspace?.hasFullscreen ?? false
     readonly property bool effectiveBarShown: barShown && !fullscreenActive
     readonly property bool drawerExpanded: drawerOpen || drawerRenderVisible
 
@@ -134,15 +137,15 @@ Scope {
             HardwareStatsPanel {
                 id: hardwareStatsPanel
                 x: panel.edgeMargin
-                y: panel.headerHeight + panel.edgeMargin
+                y: panel.headerHeight + panel.topMargin
                 width: Math.max(120, audioPanel.x - x - panel.pillGap)
-                height: panel.drawerHeight - panel.edgeMargin * 2
+                height: panel.drawerHeight - panel.verticalMargin
             }
 
             AudioPanel {
                 id: audioPanel
                 x: Math.max(panel.edgeMargin + 120 + panel.pillGap, barLayer.x + leftModules.x + audioBlock.x)
-                y: panel.headerHeight + panel.edgeMargin
+                y: panel.headerHeight + panel.topMargin
             }
 
             NetworkPanel {
@@ -150,21 +153,21 @@ Scope {
                 x: audioPanel.x
                 y: audioPanel.y + audioPanel.closedHeight + panel.pillGap
                 width: audioPanel.width
-                height: panel.headerHeight + panel.drawerHeight - panel.edgeMargin - y
+                height: panel.headerHeight + panel.drawerHeight - bottomMargin - y
             }
 
             CalendarPanel {
                 id: calendarPanel
                 x: drawerBackground.width - width - panel.edgeMargin
-                y: panel.headerHeight + panel.edgeMargin
-                height: panel.drawerHeight - panel.edgeMargin * 2
+                y: panel.headerHeight + panel.topMargin
+                height: panel.drawerHeight - panel.verticalMargin
             }
         }
 
         Item {
             id: barLayer
             x: panel.edgeMargin
-            y: panel.edgeMargin
+            y: panel.topMargin
             width: visualWindow.width - panel.edgeMargin * 2
             height: panel.barHeight
             visible: panel.effectiveBarShown
