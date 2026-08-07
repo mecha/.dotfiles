@@ -2,6 +2,7 @@ import Quickshell
 import Quickshell.Services.Pipewire
 import Quickshell.Widgets
 import QtQuick
+import QtQuick.Controls
 
 Item {
     id: root
@@ -13,6 +14,8 @@ Item {
     function closeMenus() {
         outputOpen = false
         inputOpen = false
+        outputMenu.close()
+        inputMenu.close()
     }
 
     readonly property int iconWidth: 22
@@ -41,10 +44,7 @@ Item {
     }
 
     width: iconWidth + iconGap + dropdownWidth
-    height: closedHeight + Math.max(
-        outputOpen ? outputOptionsColumn.height + 6 : 0,
-        inputOpen ? inputOptionsColumn.height + 6 : 0
-    )
+    height: closedHeight
     z: 10
 
     Column {
@@ -56,11 +56,8 @@ Item {
 
             width: parent.width
             height: outputButton.height
-            z: root.outputOpen ? 2 : 1
 
             Text {
-                id: outputIcon
-
                 width: root.iconWidth
                 anchors.top: outputButton.top
                 anchors.topMargin: 4
@@ -78,7 +75,7 @@ Item {
                 width: root.dropdownWidth
                 height: 32
                 radius: 10
-                color: "#232828"
+                color: "#1b2020"
                 border.width: 1
                 border.color: "#3c4747"
 
@@ -112,76 +109,13 @@ Item {
                     cursorShape: Qt.PointingHandCursor
 
                     onClicked: {
+                        root.inputOpen = false
+                        inputMenu.close()
                         root.outputOpen = !root.outputOpen
                         if (root.outputOpen) {
-                            root.inputOpen = false
-                        }
-                    }
-                }
-            }
-
-            ClippingRectangle {
-                id: outputMenu
-
-                anchors.top: outputButton.bottom
-                anchors.topMargin: 4
-                x: outputButton.x
-                width: outputButton.width
-                height: outputOptionsColumn.height + 2
-                radius: 10
-                color: "#232828"
-                border.width: 1
-                border.color: "#3c4747"
-                visible: root.outputOpen
-                clip: true
-                z: 20
-
-                Column {
-                    id: outputOptionsColumn
-
-                    x: 1
-                    y: 1
-                    width: parent.width - 2
-
-                    Repeater {
-                        model: root.outputDevices
-
-                        Rectangle {
-                            id: outputOption
-
-                            required property var modelData
-                            readonly property bool selected: root.currentOutput && modelData.id === root.currentOutput.id
-
-                            width: outputOptionsColumn.width
-                            height: 30
-                            color: outputOptionMouse.containsMouse ? "#2d3838" : (selected ? "#263131" : "transparent")
-
-                            Text {
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                anchors.verticalCenter: parent.verticalCenter
-                                anchors.leftMargin: 12
-                                anchors.rightMargin: 12
-                                color: outputOption.selected ? "#d7fbe8" : "#95d5b2"
-                                elide: Text.ElideRight
-                                font.family: "JetBrainsMono Nerd Font"
-                                font.pixelSize: 13
-                                text: (outputOption.selected ? "✓ " : "  ") + root.deviceLabel(outputOption.modelData, "Unknown output")
-                            }
-
-                            MouseArea {
-                                id: outputOptionMouse
-
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-
-                                onClicked: {
-                                    Pipewire.preferredDefaultAudioSink = outputOption.modelData
-                                    Quickshell.execDetached(["wpctl", "set-default", String(outputOption.modelData.id)])
-                                    root.outputOpen = false
-                                }
-                            }
+                            outputMenu.open()
+                        } else {
+                            outputMenu.close()
                         }
                     }
                 }
@@ -193,11 +127,8 @@ Item {
 
             width: parent.width
             height: inputButton.height
-            z: root.inputOpen ? 2 : 1
 
             Text {
-                id: inputIcon
-
                 width: root.iconWidth
                 anchors.top: inputButton.top
                 anchors.topMargin: 4
@@ -215,7 +146,7 @@ Item {
                 width: root.dropdownWidth
                 height: 32
                 radius: 10
-                color: "#232828"
+                color: "#1b2020"
                 border.width: 1
                 border.color: "#3c4747"
 
@@ -249,75 +180,152 @@ Item {
                     cursorShape: Qt.PointingHandCursor
 
                     onClicked: {
+                        root.outputOpen = false
+                        outputMenu.close()
                         root.inputOpen = !root.inputOpen
                         if (root.inputOpen) {
-                            root.outputOpen = false
+                            inputMenu.open()
+                        } else {
+                            inputMenu.close()
                         }
                     }
                 }
             }
+        }
+    }
 
-            ClippingRectangle {
-                id: inputMenu
+    Popup {
+        id: outputMenu
 
-                anchors.top: inputButton.bottom
-                anchors.topMargin: 4
-                x: inputButton.x
-                width: inputButton.width
-                height: inputOptionsColumn.height + 2
-                radius: 10
-                color: "#232828"
-                border.width: 1
-                border.color: "#3c4747"
-                visible: root.inputOpen
-                clip: true
-                z: 20
+        x: outputButton.x
+        y: outputButton.y + outputButton.height + 4
+        width: outputButton.width
+        height: root.outputDevices.length * 30 + 2
+        padding: 1
+        closePolicy: Popup.CloseOnPressOutside | Popup.CloseOnEscape
 
-                Column {
-                    id: inputOptionsColumn
+        onClosed: root.outputOpen = false
 
-                    x: 1
-                    y: 1
-                    width: parent.width - 2
+        background: null
 
-                    Repeater {
-                        model: root.inputDevices
+        contentItem: ClippingRectangle {
+            radius: 10
+            color: "#1b2020"
+            border.width: 1
+            border.color: "#3c4747"
 
-                        Rectangle {
-                            id: inputOption
+            Column {
+                id: outputOptionsColumn
+                anchors.fill: parent
+                anchors.margins: 1
 
-                            required property var modelData
-                            readonly property bool selected: root.currentInput && modelData.id === root.currentInput.id
+                Repeater {
+                    model: root.outputDevices
 
-                            width: inputOptionsColumn.width
-                            height: 30
-                            color: inputOptionMouse.containsMouse ? "#2d3838" : (selected ? "#263131" : "transparent")
+                    Rectangle {
+                        id: outputOption
 
-                            Text {
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                anchors.verticalCenter: parent.verticalCenter
-                                anchors.leftMargin: 12
-                                anchors.rightMargin: 12
-                                color: inputOption.selected ? "#d7fbe8" : "#95d5b2"
-                                elide: Text.ElideRight
-                                font.family: "JetBrainsMono Nerd Font"
-                                font.pixelSize: 13
-                                text: (inputOption.selected ? "✓ " : "  ") + root.deviceLabel(inputOption.modelData, "Unknown input")
+                        required property var modelData
+                        readonly property bool selected: root.currentOutput && modelData.id === root.currentOutput.id
+
+                        width: outputOptionsColumn.width
+                        height: 30
+                        color: outputOptionMouse.containsMouse ? "#2d3838" : (selected ? "#263131" : "transparent")
+
+                        Text {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.leftMargin: 12
+                            anchors.rightMargin: 12
+                            color: outputOption.selected ? "#d7fbe8" : "#95d5b2"
+                            elide: Text.ElideRight
+                            font.family: "JetBrainsMono Nerd Font"
+                            font.pixelSize: 13
+                            text: (outputOption.selected ? "✓ " : "  ") + root.deviceLabel(outputOption.modelData, "Unknown output")
+                        }
+
+                        MouseArea {
+                            id: outputOptionMouse
+
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+
+                            onClicked: {
+                                Pipewire.preferredDefaultAudioSink = outputOption.modelData
+                                Quickshell.execDetached(["wpctl", "set-default", String(outputOption.modelData.id)])
+                                outputMenu.close()
                             }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-                            MouseArea {
-                                id: inputOptionMouse
+    Popup {
+        id: inputMenu
 
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
+        x: inputButton.x
+        y: inputRow.y + inputButton.y + inputButton.height + 4
+        width: inputButton.width
+        height: root.inputDevices.length * 30 + 2
+        padding: 1
+        closePolicy: Popup.CloseOnPressOutside | Popup.CloseOnEscape
 
-                                onClicked: {
-                                    Pipewire.preferredDefaultAudioSource = inputOption.modelData
-                                    Quickshell.execDetached(["wpctl", "set-default", String(inputOption.modelData.id)])
-                                    root.inputOpen = false
-                                }
+        onClosed: root.inputOpen = false
+
+        background: null
+
+        contentItem: ClippingRectangle {
+            radius: 10
+            color: "#1b2020"
+            border.width: 1
+            border.color: "#3c4747"
+
+            Column {
+                id: inputOptionsColumn
+                anchors.fill: parent
+                anchors.margins: 1
+
+                Repeater {
+                    model: root.inputDevices
+
+                    Rectangle {
+                        id: inputOption
+
+                        required property var modelData
+                        readonly property bool selected: root.currentInput && modelData.id === root.currentInput.id
+
+                        width: inputOptionsColumn.width
+                        height: 30
+                        color: inputOptionMouse.containsMouse ? "#2d3838" : (selected ? "#263131" : "transparent")
+
+                        Text {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.leftMargin: 12
+                            anchors.rightMargin: 12
+                            color: inputOption.selected ? "#d7fbe8" : "#95d5b2"
+                            elide: Text.ElideRight
+                            font.family: "JetBrainsMono Nerd Font"
+                            font.pixelSize: 13
+                            text: (inputOption.selected ? "✓ " : "  ") + root.deviceLabel(inputOption.modelData, "Unknown input")
+                        }
+
+                        MouseArea {
+                            id: inputOptionMouse
+
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+
+                            onClicked: {
+                                Pipewire.preferredDefaultAudioSource = inputOption.modelData
+                                Quickshell.execDetached(["wpctl", "set-default", String(inputOption.modelData.id)])
+                                inputMenu.close()
                             }
                         }
                     }

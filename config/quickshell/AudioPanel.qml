@@ -12,7 +12,7 @@ Item {
     }
 
     width: deviceSwitcher.width + padding * 2
-    height: deviceSwitcher.height + padding * 2
+    height: closedHeight
     z: anyOpen ? 20 : 1
 
     DrawerPanel {
