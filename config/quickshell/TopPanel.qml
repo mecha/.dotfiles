@@ -34,6 +34,35 @@ Scope {
         }
 
         drawerSlideY = drawerOpen ? 0 : -drawerPanelHeight
+        persistDrawerState()
+    }
+
+    function persistDrawerState() {
+        drawerStateWriter.command = ["sh", "-c", "state_dir=\"${XDG_STATE_HOME:-$HOME/.local/state}/quickshell\"; mkdir -p \"$state_dir\"; printf %s \"$1\" > \"$state_dir/top-panel-drawer-open\"", "sh", panel.drawerOpen ? "true" : "false"]
+        drawerStateWriter.running = false
+        drawerStateWriter.running = true
+    }
+
+    function restoreDrawerState(text) {
+        panel.drawerOpen = text.trim() === "true"
+    }
+
+    Component.onCompleted: {
+        drawerStateReader.running = true
+    }
+
+    Process {
+        id: drawerStateReader
+        command: ["sh", "-c", "state_file=\"${XDG_STATE_HOME:-$HOME/.local/state}/quickshell/top-panel-drawer-open\"; [ -r \"$state_file\" ] && cat \"$state_file\" || printf false"]
+
+        stdout: StdioCollector {
+            waitForEnd: true
+            onStreamFinished: panel.restoreDrawerState(text)
+        }
+    }
+
+    Process {
+        id: drawerStateWriter
     }
 
     IpcHandler {
