@@ -26,7 +26,7 @@ Scope {
     property bool drawerOpen: false
     property bool drawerRenderVisible: false
     property real drawerSlideY: -drawerPanelHeight
-    property string drawerBackground: fullscreenActive ? "#232828" : "transparent"
+    property string drawerBackground: "transparent"
 
     onDrawerOpenChanged: {
         if (drawerOpen) {
