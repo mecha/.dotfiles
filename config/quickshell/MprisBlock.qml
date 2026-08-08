@@ -5,9 +5,9 @@ BarBlock {
     id: root
 
     readonly property var player: {
-        const players = Mpris.players.values
-        const playing = players.find(player => player.isPlaying)
-        return playing ?? players[0] ?? null
+        const activePlayers = Mpris.players.values.filter(player => player.playbackState !== MprisPlaybackState.Stopped)
+        const playing = activePlayers.find(player => player.isPlaying)
+        return playing ?? activePlayers[0] ?? null
     }
 
     function truncate(value, maxLength) {
