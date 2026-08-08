@@ -186,6 +186,14 @@ Scope {
                 y: panel.headerHeight + panel.topMargin
             }
 
+            AlphaPanel {
+                id: alphaPanel
+                x: audioPanel.x
+                y: audioPanel.y + audioPanel.closedHeight + panel.pillGap
+                width: audioPanel.width
+                height: panel.headerHeight + panel.drawerHeight - panel.bottomMargin - y
+            }
+
             CalendarPanel {
                 id: calendarPanel
                 x: drawerBackground.width - width - panel.edgeMargin
@@ -197,6 +205,22 @@ Scope {
                 id: codexPanel
                 x: calendarPanel.x - width - panel.pillGap
                 y: panel.headerHeight + panel.topMargin
+            }
+
+            BetaPanel {
+                id: betaPanel
+                x: codexPanel.x
+                y: codexPanel.y + codexPanel.height + panel.pillGap
+                width: codexPanel.width
+                height: panel.headerHeight + panel.drawerHeight - panel.bottomMargin - y
+            }
+
+            Jumbotron {
+                id: jumbotron
+                x: audioPanel.x + audioPanel.width + panel.pillGap
+                y: panel.headerHeight + panel.topMargin
+                width: codexPanel.x - panel.pillGap - x
+                height: panel.drawerHeight - panel.verticalMargin
             }
         }
 
