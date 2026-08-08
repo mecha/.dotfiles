@@ -25,8 +25,8 @@ DrawerPanel {
     property string codexResetsIn: codexUsage?.derived?.resetsInText || "unknown"
     property bool codexOk: codexUsage?.ok ?? false
 
-    width: 425
-    height: 118
+    width: 400
+    height: 96
     padding: 10
 
     function refresh() {
@@ -119,40 +119,33 @@ DrawerPanel {
                 text: root.windowLabel(root.codexPrimaryLimit?.windowDurationMins)
             }
 
-            Text {
-                id: codexUsed
-
-                anchors.left: codexWindow.right
-                anchors.leftMargin: 8
+            Row {
+                anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                width: 62
-                horizontalAlignment: Text.AlignRight
-                color: "#d7fbe8"
-                font.family: "JetBrainsMono Nerd Font"
-                font.pixelSize: 13
-                text: root.codexUsedPercent + "%"
-            }
+                spacing: 8
 
-            Text {
-                id: codexBar
+                Text {
+                    width: 28
+                    horizontalAlignment: Text.AlignRight
+                    color: "#d7fbe8"
+                    font.family: "JetBrainsMono Nerd Font"
+                    font.pixelSize: 13
+                    text: root.codexUsedPercent + "%"
+                }
 
-                anchors.left: codexUsed.right
-                anchors.leftMargin: 8
-                anchors.verticalCenter: parent.verticalCenter
-                color: "#95d5b2"
-                font.family: "JetBrainsMono Nerd Font"
-                font.pixelSize: 13
-                text: root.percentBar(root.codexUsedPercent)
-            }
+                Text {
+                    color: "#95d5b2"
+                    font.family: "JetBrainsMono Nerd Font"
+                    font.pixelSize: 13
+                    text: root.percentBar(root.codexUsedPercent)
+                }
 
-            Text {
-                anchors.left: codexBar.right
-                anchors.leftMargin: 8
-                anchors.verticalCenter: parent.verticalCenter
-                color: "#d7fbe8"
-                font.family: "JetBrainsMono Nerd Font"
-                font.pixelSize: 13
-                text: root.codexLeftPercent + "% left"
+                Text {
+                    color: "#d7fbe8"
+                    font.family: "JetBrainsMono Nerd Font"
+                    font.pixelSize: 13
+                    text: root.codexLeftPercent + "% left"
+                }
             }
         }
 
