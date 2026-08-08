@@ -14,7 +14,7 @@ Scope {
     readonly property int bottomMargin: fullscreenActive ? topMargin : 0
     readonly property int verticalMargin: topMargin + bottomMargin
     readonly property int pillGap: 8
-    readonly property int hardwarePanelWidth: 380
+    readonly property int networkPanelWidth: 380
     readonly property int drawerHeight: fullscreenActive ? 200 : 192
     readonly property int headerHeight: effectiveBarShown ? edgeMargin + barHeight : 0
     readonly property int drawerPanelHeight: headerHeight + drawerHeight
@@ -166,24 +166,24 @@ Scope {
 
             HardwareStatsPanel {
                 id: hardwareStatsPanel
-                x: panel.edgeMargin
+                x: networkPanel.x
                 y: panel.headerHeight + panel.topMargin
-                width: panel.hardwarePanelWidth
-                height: panel.drawerHeight - panel.verticalMargin
+                width: 380
+                height: 94
+            }
+
+            NetworkPanel {
+                id: networkPanel
+                x: panel.edgeMargin
+                y: hardwareStatsPanel.y + hardwareStatsPanel.height + panel.pillGap
+                width: hardwareStatsPanel.width
+                height: 82
             }
 
             AudioPanel {
                 id: audioPanel
                 x: hardwareStatsPanel.x + hardwareStatsPanel.width + panel.pillGap
                 y: panel.headerHeight + panel.topMargin
-            }
-
-            NetworkPanel {
-                id: networkPanel
-                x: audioPanel.x
-                y: audioPanel.y + audioPanel.closedHeight + panel.pillGap
-                width: audioPanel.width
-                height: panel.headerHeight + panel.drawerHeight - bottomMargin - y
             }
 
             CalendarPanel {
