@@ -1,0 +1,184 @@
+#!/usr/bin/env python3
+"""Read Codex account usage/rate-limit information via the local Codex app-server.
+
+Outputs sanitized JSON intended for status widgets. It does not print auth tokens.
+"""
+
+from __future__ import annotations
+
+import json
+import select
+import subprocess
+import sys
+import time
+from typing import Any
+
+TIMEOUT_SECONDS = 20
+
+
+def _json_default(value: Any) -> str:
+    return str(value)
+
+
+def emit(payload: dict[str, Any], status: int = 0) -> None:
+    print(json.dumps(payload, separators=(",", ":"), default=_json_default))
+    raise SystemExit(status)
+
+
+def send(proc: subprocess.Popen[str], message: dict[str, Any]) -> None:
+    assert proc.stdin is not None
+    proc.stdin.write(json.dumps(message, separators=(",", ":")) + "\n")
+    proc.stdin.flush()
+
+
+def read_until(proc: subprocess.Popen[str], target_ids: set[str], timeout: float) -> tuple[dict[str, Any] | None, list[dict[str, Any]], str]:
+    assert proc.stdout is not None
+    assert proc.stderr is not None
+
+    notifications: list[dict[str, Any]] = []
+    stderr_chunks: list[str] = []
+    deadline = time.monotonic() + timeout
+
+    while time.monotonic() < deadline:
+        ready, _, _ = select.select([proc.stdout, proc.stderr], [], [], 0.25)
+
+        for stream in ready:
+            line = stream.readline()
+            if not line:
+                continue
+
+            if stream is proc.stderr:
+                stderr_chunks.append(line.strip())
+                continue
+
+            try:
+                message = json.loads(line)
+            except json.JSONDecodeError:
+                notifications.append({"unparsed": line.strip()})
+                continue
+
+            if str(message.get("id")) in target_ids:
+                return message, notifications, "\n".join(stderr_chunks)
+
+            notifications.append(message)
+
+        if proc.poll() is not None:
+            break
+
+    return None, notifications, "\n".join(stderr_chunks)
+
+
+def seconds_to_text(seconds: int | None) -> str | None:
+    if seconds is None:
+        return None
+
+    seconds = max(0, seconds)
+    days, rem = divmod(seconds, 24 * 60 * 60)
+    hours, rem = divmod(rem, 60 * 60)
+    minutes, _ = divmod(rem, 60)
+
+    parts: list[str] = []
+    if days:
+        parts.append(f"{days}d")
+    if hours or days:
+        parts.append(f"{hours}h")
+    elif minutes:
+        parts.append(f"{minutes}m")
+    else:
+        parts.append("now")
+
+    return " ".join(parts)
+
+
+def main() -> None:
+    try:
+        proc = subprocess.Popen(
+            ["codex", "app-server", "--stdio"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            bufsize=0,
+        )
+    except FileNotFoundError:
+        emit({"ok": False, "error": "codex command not found"}, 127)
+    except Exception as exc:
+        emit({"ok": False, "error": f"failed to start codex app-server: {exc}"}, 1)
+
+    notifications: list[dict[str, Any]] = []
+    stderr_chunks: list[str] = []
+
+    try:
+        send(proc, {
+            "id": "init",
+            "method": "initialize",
+            "params": {
+                "clientInfo": {"name": "quickshell-codex-usage", "version": "0.1.0"},
+                "capabilities": {"experimentalApi": True},
+            },
+        })
+        init, notes, stderr = read_until(proc, {"init"}, 5)
+        notifications.extend(notes)
+        if stderr:
+            stderr_chunks.append(stderr)
+        if init is None or "error" in init:
+            emit({"ok": False, "stage": "initialize", "response": init, "notifications": notifications, "stderr": "\n".join(stderr_chunks)}, 1)
+
+        send(proc, {"id": "rateLimits", "method": "account/rateLimits/read"})
+        rate_limits, notes, stderr = read_until(proc, {"rateLimits"}, TIMEOUT_SECONDS)
+        notifications.extend(notes)
+        if stderr:
+            stderr_chunks.append(stderr)
+
+        send(proc, {"id": "usage", "method": "account/usage/read"})
+        usage, notes, stderr = read_until(proc, {"usage"}, TIMEOUT_SECONDS)
+        notifications.extend(notes)
+        if stderr:
+            stderr_chunks.append(stderr)
+
+        now = int(time.time())
+        rate_result = (rate_limits or {}).get("result") or {}
+        primary_limit = ((rate_result.get("rateLimits") or {}).get("primary") or {})
+        used_percent = primary_limit.get("usedPercent")
+        left_percent = None
+        if isinstance(used_percent, (int, float)):
+            left_percent = max(0, min(100, 100 - int(round(used_percent))))
+
+        resets_at = primary_limit.get("resetsAt")
+        resets_in_seconds = None
+        if isinstance(resets_at, (int, float)):
+            resets_in_seconds = max(0, int(resets_at) - now)
+
+        payload = {
+            "ok": rate_limits is not None and "error" not in (rate_limits or {}),
+            "fetchedAt": now,
+            "derived": {
+                "usedPercent": used_percent,
+                "leftPercent": left_percent,
+                "resetsInSeconds": resets_in_seconds,
+                "resetsInText": seconds_to_text(resets_in_seconds),
+            },
+            "initialize": init.get("result") if init else None,
+            "rateLimits": rate_result,
+            "usage": (usage or {}).get("result"),
+            "errors": {
+                "rateLimits": (rate_limits or {}).get("error"),
+                "usage": (usage or {}).get("error"),
+            },
+            "notifications": notifications,
+        }
+
+        if stderr_chunks:
+            payload["stderr"] = "\n".join(stderr_chunks)
+
+        emit(payload, 0 if payload["ok"] else 1)
+    finally:
+        proc.terminate()
+        try:
+            proc.wait(timeout=1)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+
+
+if __name__ == "__main__":
+    main()

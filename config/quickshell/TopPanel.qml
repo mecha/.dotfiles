@@ -163,6 +163,12 @@ Scope {
                 y: panel.headerHeight + panel.topMargin
                 height: panel.drawerHeight - panel.verticalMargin
             }
+
+            CodexPanel {
+                id: codexPanel
+                x: calendarPanel.x - width - panel.pillGap
+                y: panel.headerHeight + panel.topMargin
+            }
         }
 
         Item {
