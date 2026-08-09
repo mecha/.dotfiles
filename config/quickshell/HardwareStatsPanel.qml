@@ -76,7 +76,7 @@ DrawerPanel {
 
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
-                    width: 80
+                    width: 60
                     color: "#95d5b2"
                     font.family: "JetBrainsMono Nerd Font"
                     font.pixelSize: 13
@@ -84,22 +84,9 @@ DrawerPanel {
                 }
 
                 Text {
-                    id: usedText
-
-                    anchors.left: labelText.right
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 68
-                    horizontalAlignment: Text.AlignRight
-                    color: "#d7fbe8"
-                    font.family: "JetBrainsMono Nerd Font"
-                    font.pixelSize: 13
-                    text: root.sizeText(modelData.used)
-                }
-
-                Text {
                     id: progressText
 
-                    anchors.left: usedText.right
+                    anchors.left: labelText.right
                     anchors.leftMargin: 8
                     anchors.verticalCenter: parent.verticalCenter
                     color: "#95d5b2"
@@ -114,12 +101,12 @@ DrawerPanel {
                     anchors.left: progressText.right
                     anchors.leftMargin: 8
                     anchors.verticalCenter: parent.verticalCenter
-                    width: 68
+                    width: 130
                     horizontalAlignment: Text.AlignRight
                     color: "#d7fbe8"
                     font.family: "JetBrainsMono Nerd Font"
                     font.pixelSize: 13
-                    text: root.sizeText(modelData.total)
+                    text: gib(modelData.used).toFixed(1) + " / " + gib(modelData.total).toFixed(1) + " GiB"
                 }
 
                 Text {

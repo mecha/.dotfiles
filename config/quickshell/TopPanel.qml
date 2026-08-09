@@ -168,7 +168,7 @@ Scope {
                 id: hardwareStatsPanel
                 x: networkPanel.x
                 y: panel.headerHeight + panel.topMargin
-                width: 380
+                width: 352
                 height: 94
             }
 
