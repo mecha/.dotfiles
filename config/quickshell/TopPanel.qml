@@ -184,6 +184,10 @@ Scope {
                 id: audioPanel
                 x: hardwareStatsPanel.x + hardwareStatsPanel.width + panel.pillGap
                 y: panel.headerHeight + panel.topMargin
+
+                onVolumeChanged: {
+                    audioBlock.volume = volume
+                }
             }
 
             AlphaPanel {
