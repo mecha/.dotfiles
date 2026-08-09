@@ -31,6 +31,13 @@ Item {
         return volume < 50 ? "" : ""
     }
 
+    function setVolume(value) {
+        root.volume = Math.max(0, Math.min(100, Math.round(value)))
+        volumeSetRunner.volume = root.volume
+        volumeSetRunner.running = false
+        volumeSetRunner.running = true
+    }
+
     width: deviceSwitcher.width + vpadding * 2
     height: closedHeight
     z: anyOpen ? 20 : 1
@@ -71,12 +78,7 @@ Item {
             value: root.volume
             live: true
 
-            onMoved: {
-                root.volume = Math.round(value)
-                volumeSetRunner.volume = root.volume
-                volumeSetRunner.running = false
-                volumeSetRunner.running = true
-            }
+            onMoved: root.setVolume(value)
 
             background: Rectangle {
                 x: volumeSlider.leftPadding
@@ -105,6 +107,17 @@ Item {
                 color: volumeSlider.pressed ? "#d7fbe8" : "#95d5b2"
                 border.width: 1
                 border.color: "#1b2020"
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.NoButton
+                cursorShape: Qt.PointingHandCursor
+
+                onWheel: wheel => {
+                    root.setVolume(root.volume + (wheel.angleDelta.y > 0 ? 1 : -1))
+                    wheel.accepted = true
+                }
             }
         }
     }
