@@ -34,12 +34,6 @@ DrawerPanel {
         codexRunner.running = true
     }
 
-    function percentBar(value) {
-        const blocks = 24
-        const filled = Math.max(0, Math.min(blocks, Math.round(value / 100 * blocks)))
-        return "[" + "■".repeat(filled) + "-".repeat(blocks - filled) + "]"
-    }
-
     function titleCase(value) {
         if (!value) {
             return "Unknown"
@@ -152,11 +146,10 @@ DrawerPanel {
                     text: root.codexUsedPercent + "%"
                 }
 
-                Text {
-                    color: "#95d5b2"
-                    font.family: "JetBrainsMono Nerd Font"
-                    font.pixelSize: 13
-                    text: root.percentBar(root.codexUsedPercent)
+                TextProgressBar {
+                    value: root.codexUsedPercent
+                    maximum: 100
+                    blocks: 24
                 }
 
                 Text {

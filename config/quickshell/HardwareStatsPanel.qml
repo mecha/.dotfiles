@@ -34,12 +34,6 @@ DrawerPanel {
         return Math.floor(used / total * 100)
     }
 
-    function progressBar(used, total) {
-        const blocks = 8
-        const filled = total ? Math.max(0, Math.min(blocks, Math.round(used / total * blocks))) : 0
-        return "[" + "■".repeat(filled) + "-".repeat(blocks - filled) + "]"
-    }
-
     function parseStats(text) {
         const data = JSON.parse(text)
         const memory = data.find(item => item.type === "Memory")?.result
@@ -83,16 +77,15 @@ DrawerPanel {
                     text: modelData.icon + " " + modelData.label
                 }
 
-                Text {
+                TextProgressBar {
                     id: progressText
 
                     anchors.left: labelText.right
                     anchors.leftMargin: 8
                     anchors.verticalCenter: parent.verticalCenter
-                    color: "#95d5b2"
-                    font.family: "JetBrainsMono Nerd Font"
-                    font.pixelSize: 13
-                    text: root.progressBar(modelData.used, modelData.total)
+                    value: modelData.used
+                    maximum: modelData.total
+                    blocks: 8
                 }
 
                 Text {
