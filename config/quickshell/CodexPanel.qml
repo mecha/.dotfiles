@@ -60,6 +60,25 @@ DrawerPanel {
         return "Limit"
     }
 
+    function paceText() {
+        const usedPercent = Number(root.codexUsedPercent || 0)
+        const windowDurationMins = Number(root.codexPrimaryLimit?.windowDurationMins || 0)
+        const resetsAt = Number(root.codexPrimaryLimit?.resetsAt || 0)
+        const fetchedAt = Number(root.codexUsage?.fetchedAt || Date.now() / 1000)
+
+        if (!windowDurationMins || !resetsAt) {
+            return "Pace: unknown"
+        }
+
+        const windowSeconds = windowDurationMins * 60
+        const elapsedSeconds = Math.max(0, Math.min(windowSeconds, fetchedAt - (resetsAt - windowSeconds)))
+        const expectedPercent = elapsedSeconds / windowSeconds * 100
+        const delta = usedPercent - expectedPercent
+        const direction = delta >= 0 ? "ahead" : "behind"
+
+        return "Pace: " + direction + " (" + Math.abs(delta).toFixed(1) + "%)"
+    }
+
     function parseCodexUsage(text) {
         root.codexUsage = JSON.parse(text)
     }
@@ -152,6 +171,15 @@ DrawerPanel {
         Item {
             width: parent.width
             height: 18
+
+            Text {
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                color: "#6f8f83"
+                font.family: "JetBrainsMono Nerd Font"
+                font.pixelSize: 13
+                text: root.paceText()
+            }
 
             Text {
                 anchors.right: parent.right
