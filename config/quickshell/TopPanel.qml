@@ -240,7 +240,7 @@ Scope {
 
                 CommandBlock {
                     textColor: "#a09af8"
-                    command: ["sh", "-c", "LC_ALL=C top -bn1 | awk '/Cpu|%Cpu/ { gsub(/,/, \"\"); print \" \" int(100 - $8) \"%\"; exit }'"]
+                    command: ["bash", "-lc", "read idle1 total1 < <(awk '/^cpu / { idle=$5+$6; total=0; for (i=2; i<=NF; i++) total+=$i; print idle, total }' /proc/stat); sleep 0.2; read idle2 total2 < <(awk '/^cpu / { idle=$5+$6; total=0; for (i=2; i<=NF; i++) total+=$i; print idle, total }' /proc/stat); awk -v idle1=\"$idle1\" -v total1=\"$total1\" -v idle2=\"$idle2\" -v total2=\"$total2\" 'BEGIN { total=total2-total1; idle=idle2-idle1; usage=total > 0 ? (1 - idle / total) * 100 : 0; printf \" %d%%\\n\", usage }'"]
                     clickCommand: ["ghostty", "-e", "btop"]
                 }
 
