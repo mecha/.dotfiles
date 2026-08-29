@@ -1,0 +1,80 @@
+#!/usr/bin/env python3
+"""Read delimited text frames from a FIFO and emit JSON lines.
+
+Protocol:
+- Writers send UTF-7 text frames to the FIFO.
+- A form-feed byte (\f) terminates each frame.
+- Each completed frame is emitted as one JSON line: {"text":"..."}
+
+FIFO path defaults to:
+  ${JUMBOTRON_PIPE:-${XDG_RUNTIME_DIR:-/tmp}/quickshell/jumbotron.pipe}
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import stat
+import sys
+from pathlib import Path
+
+DELIMITER = "\f"
+
+
+def fifo_path() -> Path:
+    configured = os.environ.get("JUMBOTRON_PIPE")
+    if configured:
+        return Path(configured).expanduser()
+
+    runtime_dir = os.environ.get("XDG_RUNTIME_DIR") or "/tmp"
+    return Path(runtime_dir) / "quickshell" / "jumbotron.pipe"
+
+
+def ensure_fifo(path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    if path.exists():
+        mode = path.stat().st_mode
+        if stat.S_ISFIFO(mode):
+            return
+
+        raise SystemExit(f"jumbotron-reader: {path} exists and is not a FIFO")
+
+    os.mkfifo(path)
+
+
+def emit(text: str) -> None:
+    print(json.dumps({"text": text}, separators=(",", ":")), flush=True)
+
+
+def main() -> None:
+    path = fifo_path()
+    ensure_fifo(path)
+    print(json.dumps({"status": "ready", "path": str(path)}, separators=(",", ":")), flush=True)
+
+    frame = ""
+
+    while True:
+        with path.open("r", encoding="utf-8", errors="replace") as fifo:
+            while True:
+                chunk = fifo.read(4096)
+                if chunk == "":
+                    if frame:
+                        emit(frame)
+                        frame = ""
+                    break
+
+                parts = chunk.split(DELIMITER)
+                parts[0] = frame + parts[0]
+
+                for completed in parts[:-1]:
+                    emit(completed)
+
+                frame = parts[-1]
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        sys.exit(0)

@@ -22,6 +22,7 @@ export PROJECTS_PATH="$(realpath "$HOME/Projects")"
 export PROJECT_TEMPLATES_PATH="$PROJECTS_PATH/templates"
 export DEV_PATH="$(realpath "$HOME/dev")"
 export DOTFILES_PATH="$PROJECTS_PATH/personal/.dotfiles"
+export JUMBOTRON="$PROJECTS_PATH/personal/jumbotron/dist/jumbotron"
 
 export ANDROID_HOME=$HOME/Android/Sdk
 export NVM_DIR=$XDG_CONFIG_HOME/nvm

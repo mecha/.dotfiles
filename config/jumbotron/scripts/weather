@@ -1,0 +1,152 @@
+#! /usr/bin/env bash
+set -euo pipefail
+
+if [[ -z "${JUMBOTRON:-}" || ! -x "${JUMBOTRON:-}" ]]; then
+    echo "JUMBOTRON is not set or not executable" >&2
+    exit 1
+fi
+
+location="${*:-}"
+if [[ -n "$location" ]]; then
+    # wttr.in accepts + as a separator for simple location names.
+    query="${location// /+}"
+else
+    query=""
+fi
+
+url="https://wttr.in/${query}?format=j1"
+
+weather_json=""
+if ! weather_json=$(curl -fsS --max-time 8 "$url"); then
+    "$JUMBOTRON" -o play 0 0 open 250ms \
+        -- clear \
+        -- text 0 0 "WEATHER" \
+        -- hr 0 1 \
+        -- text 0 4 "Could not fetch weather from wttr.in" \
+        -- text 0 6 "Try: weather London"
+    exit 1
+fi
+
+readarray -t fields < <(jq -r '
+  .current_condition[0] as $c |
+  .nearest_area[0] as $a |
+  [
+    ($c.weatherDesc[0].value // "Unknown"),
+    ($c.temp_C // "?"),
+    ($c.FeelsLikeC // "?"),
+    ($c.temp_F // "?"),
+    ($c.FeelsLikeF // "?"),
+    ($c.humidity // "?"),
+    ($c.windspeedKmph // "?"),
+    ($c.windspeedMiles // "?"),
+    ($c.winddir16Point // "?"),
+    ($c.pressure // "?"),
+    ($c.precipMM // "?"),
+    ($c.visibility // "?"),
+    ($c.cloudcover // "?"),
+    ($c.uvIndex // "?"),
+    (($a.areaName[0].value // "") + (if ($a.country[0].value // "") != "" then ", " + $a.country[0].value else "" end))
+  ][]
+' <<< "$weather_json")
+
+condition="${fields[0]:-Unknown}"
+temp_c="${fields[1]:-?}"
+feels_c="${fields[2]:-?}"
+temp_f="${fields[3]:-?}"
+feels_f="${fields[4]:-?}"
+humidity="${fields[5]:-?}"
+wind_kmh="${fields[6]:-?}"
+wind_mph="${fields[7]:-?}"
+wind_dir="${fields[8]:-?}"
+pressure="${fields[9]:-?}"
+precip="${fields[10]:-?}"
+visibility="${fields[11]:-?}"
+cloudcover="${fields[12]:-?}"
+uv_index="${fields[13]:-?}"
+place="${fields[14]:-}"
+[[ -n "$location" ]] && place="$location"
+[[ -z "$place" ]] && place="Current location"
+
+lower="${condition,,}"
+art=(
+"      \\   /      "
+"       .-.        "
+"    ― (   ) ―     "
+"       '-’        "
+"      /   \\      "
+"                 "
+)
+accent="clear skies"
+
+if [[ "$lower" =~ thunder|storm ]]; then
+    art=(
+"      .--.       "
+"   .-(    ).     "
+"  (___.__)__)    "
+"      ⚡ ⚡       "
+"    ⚡   ⚡       "
+"                 "
+    )
+    accent="storm watch"
+elif [[ "$lower" =~ snow|sleet|blizzard ]]; then
+    art=(
+"      .--.       "
+"   .-(    ).     "
+"  (___.__)__)    "
+"    *  *  *      "
+"  *  *  *  *     "
+"                 "
+    )
+    accent="snowfall"
+elif [[ "$lower" =~ rain|drizzle|shower ]]; then
+    art=(
+"      .--.       "
+"   .-(    ).     "
+"  (___.__)__)    "
+"   ‚ʻ‚ʻ‚ʻ‚ʻ     "
+"  ‚ʻ‚ʻ‚ʻ‚ʻ      "
+"                 "
+    )
+    accent="bring a coat"
+elif [[ "$lower" =~ fog|mist|haze|overcast ]]; then
+    art=(
+"   _ - _ - _     "
+" _ - _ - _ -     "
+"   _ - _ - _     "
+" _ - _ - _ -     "
+"                 "
+"                 "
+    )
+    accent="low visibility"
+elif [[ "$lower" =~ cloud ]]; then
+    art=(
+"                 "
+"      .--.       "
+"   .-(    ).     "
+"  (___.__)__)    "
+"                 "
+"                 "
+    )
+    accent="cloud cover"
+elif [[ "$lower" =~ clear|sunny ]]; then
+    accent="clear skies"
+fi
+
+updated="updated $(date '+%H:%M')"
+cmd=("$JUMBOTRON" -o play 0 0 open 250ms -- clear -- text 0 0 "WEATHER :: ${place}" -- text "-${#updated}" 0 "${updated}" -- hr 0 1)
+
+for i in "${!art[@]}"; do
+    cmd+=(-- text 0 "$((2 + i))" "${art[$i]}")
+done
+
+cmd+=(
+    -- text 20 2 "${condition} — ${accent}"
+    -- text 20 4 "Temp       ${temp_c}°C / ${temp_f}°F     feels ${feels_c}°C / ${feels_f}°F"
+    -- text 20 5 "Humidity   ${humidity}%               pressure ${pressure} hPa"
+    -- text 20 6 "Wind       ${wind_dir} ${wind_kmh} km/h / ${wind_mph} mph"
+    -- text 20 7 "Precip     ${precip} mm               cloud ${cloudcover}%"
+    -- text 20 8 "Visibility ${visibility} km              UV ${uv_index}"
+    -- text 0 10 "source: wttr.in"
+)
+
+"${cmd[@]}"

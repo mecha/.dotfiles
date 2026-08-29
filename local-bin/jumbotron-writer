@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+pipe=${JUMBOTRON_PIPE:-${XDG_RUNTIME_DIR:-/tmp}/quickshell/jumbotron.pipe}
+
+mkdir -p "$(dirname "$pipe")"
+
+if [[ ! -p "$pipe" ]]; then
+  mkfifo "$pipe"
+fi
+
+frame=$(cat)
+
+{
+  printf '%s' "$frame"
+  printf '\f'
+} > "$pipe"

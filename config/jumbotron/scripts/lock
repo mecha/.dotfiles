@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+$JUMBOTRON play 0 0 close 300ms -- text 60 5 "  LOCKED  " -- text 60 4 "          " -- text 60 6 "          "
