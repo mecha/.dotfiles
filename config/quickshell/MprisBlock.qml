@@ -4,10 +4,17 @@ import QtQuick
 BarBlock {
     id: root
 
+    property int lastPlaying: 0
+
     readonly property var player: {
         const activePlayers = Mpris.players.values.filter(player => player.playbackState !== MprisPlaybackState.Stopped)
-        const playing = activePlayers.find(player => player.isPlaying)
-        return playing ?? activePlayers[0] ?? null
+        const playing = activePlayers.findIndex(player => player.isPlaying)
+        if (playing >= 0) {
+            lastPlaying = playing
+        } else {
+            return activePlayers[lastPlaying]
+        }
+        return activePlayers[playing] ?? activePlayers[lastPlaying] ?? null;
     }
 
     function truncate(value, maxLength) {
@@ -18,19 +25,11 @@ BarBlock {
         return value.length > maxLength ? value.slice(0, maxLength - 1) + "…" : value
     }
 
-    function playerIcon(player) {
-        if (!player) {
-            return "󰎇"
-        }
-
-        return player.desktopEntry === "firefox" || player.identity.toLowerCase().includes("firefox") ? "󰈹" : "󰎇"
-    }
-
     visible: player !== null && text.length > 0
-    textColor: player && player.isPlaying ? "#232828" : "#48534a"
-    backgroundColor: player && player.isPlaying ? "#95d5b2" : "#84a98c"
-    fontPixelSize: 13
-    text: player ? `${player.isPlaying ? "" : ""}  ${playerIcon(player)} ${truncate(player.trackTitle, 50)}  ${truncate(player.trackArtist, 20)}` : ""
+    textColor: player && player.isPlaying ? "#1c2929" : "#b1f0cd"
+    backgroundColor: player && player.isPlaying ? "#95d5b2" : "#1c2929"
+    fontPixelSize: 14
+    text: player ? `${player.isPlaying ? "" : ""}  ${truncate(player.trackTitle, 50)}  ${truncate(player.trackArtist, 20)}` : ""
 
     MouseArea {
         anchors.fill: parent

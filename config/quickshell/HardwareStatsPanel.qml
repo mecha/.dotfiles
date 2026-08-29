@@ -34,6 +34,12 @@ DrawerPanel {
         return Math.floor(used / total * 100)
     }
 
+    function progressBar(used, total) {
+        const blocks = 8
+        const filled = total ? Math.max(0, Math.min(blocks, Math.round(used / total * blocks))) : 0
+        return "[" + "■".repeat(filled) + "-".repeat(blocks - filled) + "]"
+    }
+
     function parseStats(text) {
         const data = JSON.parse(text)
         const memory = data.find(item => item.type === "Memory")?.result

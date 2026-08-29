@@ -12,10 +12,10 @@ BarBlock {
     }
 
     visible: updates > 0
-    text: ` ${updates}`
     textColor: "#101e18"
-    backgroundColor: "#95d5b2"
-    fontBold: true
+    backgroundColor: "#88c1e9"
+    text: `󰚰 ${updates} updates available`
+    fontPixelSize: 15
 
     Process {
         id: statusRunner

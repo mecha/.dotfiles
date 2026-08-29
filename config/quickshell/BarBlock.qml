@@ -1,19 +1,23 @@
 import QtQuick
+import Quickshell.Widgets
 
-Rectangle {
+ClippingRectangle {
     id: block
 
     property alias text: label.text
-    property color textColor: "#95d5b2"
-    property color backgroundColor: "#232828"
-    property int horizontalPadding: 10
+    property color textColor: "#b1f0cd"
+    property color backgroundColor: "#1c2929"
+    property int horizontalPadding: 12
     property bool fontBold: false
     property int fontPixelSize: 16
 
-    height: 24
+    height: 28
     implicitWidth: label.implicitWidth + horizontalPadding * 2
     radius: 10
     color: backgroundColor
+    opacity: 0.92
+    border.width: 2
+    border.color: "#080c0c"
 
     Text {
         id: label

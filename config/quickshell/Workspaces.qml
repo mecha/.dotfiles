@@ -2,16 +2,15 @@ import Quickshell.Hyprland
 import Quickshell.Widgets
 import QtQuick
 
-ClippingRectangle {
+BarBlock {
     id: root
 
     readonly property int itemHeight: 24
-    readonly property int horizontalPadding: 12
 
     function workspaceIcon(workspace) {
         const windows = workspace.toplevels?.values || []
         if (!windows.length) {
-            return ""
+            return "󰣇"
         }
 
         const window = windows[0]
@@ -27,8 +26,12 @@ ClippingRectangle {
             ipc.initialTitle
         ].filter(value => value).join(" ").toLowerCase()
 
-        if (app.includes("firefox") || app.includes("zen browser") || app.includes("zen")) {
+        if (app.includes("firefox") || app.includes("zen")) {
             return "󰈹"
+        }
+
+        if (app.includes("minecraft") || app.includes("prism")) {
+            return "󰍳"
         }
 
         if (app.includes("ghostty")) {
@@ -56,16 +59,13 @@ ClippingRectangle {
         }
 
         if (app.includes("obsidian")) {
-            return ""
+            return "󰠮"
         }
 
         return "󰣆"
     }
 
-    height: itemHeight
     implicitWidth: row.implicitWidth
-    radius: 10
-    color: "#232828"
 
     Row {
         id: row
@@ -97,7 +97,7 @@ ClippingRectangle {
                     color: workspace.focused ? "#101e18" : "#95d5b2"
                     font.family: "JetBrainsMono Nerd Font"
                     font.bold: workspace.focused
-                    font.pixelSize: 16
+                    font.pixelSize: 17
                 }
 
                 MouseArea {

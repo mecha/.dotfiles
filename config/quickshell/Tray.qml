@@ -3,16 +3,13 @@ import Quickshell.Services.SystemTray
 import Quickshell.Widgets
 import QtQuick
 
-Rectangle {
+BarBlock {
     id: root
 
     readonly property int iconSize: 20
     readonly property int itemSpacing: 6
 
-    height: 24
     implicitWidth: Math.max(row.implicitWidth + 18, 0)
-    radius: 10
-    color: "#232828"
     visible: SystemTray.items.values.some(item => item.status !== Status.Passive)
 
     Row {
