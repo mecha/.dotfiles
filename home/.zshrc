@@ -56,6 +56,8 @@ fi
 
 source "$DOTFILES_PATH/scripts/viridescent.zsh"
 
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=$VIRID_MINT"
+
 plugins=(
     $ZSH/plugins/zsh-completions/zsh-completions.plugin.zsh
     $ZSH/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
