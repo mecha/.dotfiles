@@ -21,8 +21,8 @@ BarBlock {
     }
 
     text: `${volumeIcon()}  ${volume}%`
-    textColor: muted ? "#101e18" : "#95d5b2"
-    backgroundColor: muted ? "#e07870" : "#232828"
+    textColor: muted ? "#101e18" : "#b1f0cd"
+    backgroundColor: muted ? "#e07870" : "#1c2929"
 
     Process {
         id: statusRunner

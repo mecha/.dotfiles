@@ -20,7 +20,7 @@ BarBlock {
 
     text: `${dnd ? "" : ""} ${count}`
     textColor: dnd || count > 0 ? "#101e18" : "#95d5b2"
-    backgroundColor: dnd ? "#e07870" : count > 0 ? "#e3ca65" : "#232828"
+    backgroundColor: dnd ? "#e07870" : count > 0 ? "#e3ca65" : "#1c2929"
 
     Process {
         id: subscriptionRunner

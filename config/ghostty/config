@@ -22,23 +22,24 @@ keybind = ctrl+7=set_font_size:19.5
 keybind = ctrl+8=set_font_size:15.0
 keybind = ctrl+9=set_font_size:13.0
 
-palette =  0=#282b33
-palette =  1=#fe5548
+palette =  0=#1c2929
+palette =  1=#e85362
 palette =  2=#a1d858
-palette =  3=#ffcc56
-palette =  4=#42a1f4
-palette =  5=#df86f9
+palette =  3=#e3ca65
+palette =  4=#409cdc
+palette =  5=#de6bdb
 palette =  6=#4adaf7
-palette =  7=#DFDFDF
-palette =  8=#0f161e
+palette =  7=#ECEFEB
+palette =  8=#42464d
 palette =  9=#f7402c
-palette = 10=#8bc13a
+palette = 10=#a1d858
 palette = 11=#f7bf31
 palette = 12=#2c8ce0
-palette = 13=#dddddd
+palette = 13=#de6bdb
 palette = 14=#30c1e5
 palette = 15=#bbc2cf
 foreground = #e9f5db
-background = #2c3333
+background = #2a3837
+background-opacity = 0.90
 
 custom-shader = shaders/cursor_warp.glsl

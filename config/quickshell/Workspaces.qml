@@ -85,7 +85,7 @@ ClippingRectangle {
                 width: label.implicitWidth + root.horizontalPadding * 2
                 height: root.itemHeight
                 radius: 0
-                color: workspace.focused ? "#95d5b2" : "transparent"
+                color: workspace.focused ? "#b1f0cd" : "transparent"
 
                 Text {
                     id: label
