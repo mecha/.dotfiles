@@ -122,11 +122,11 @@ open_project() {
 
     # if not in tmux, run tmux with new session
     if [ -z "$TMUX" ]; then
-        tmux new-session -A -s "$session_name" -c "$path" -n project "$DEV_PATH/personal/projtop/projtop"
+        tmux new-session -A -s "$session_name" -c "$path"
         run_project_script "$path"
     elif ! tmux has-session -t=$session_name 2> /dev/null; then
         # if session does not exist, create it
-        tmux new-session -ds "$session_name" -c "$path" -n project "$DEV_PATH/personal/projtop/projtop"
+        tmux new-session -ds "$session_name" -c "$path"
         run_project_script "$path"
     fi
 
