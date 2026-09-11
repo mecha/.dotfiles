@@ -7,7 +7,7 @@ export VIRID_WHITE="#ECEFEB"
 export VIRID_LIGHT_GRAY="#bbc2cf"
 export VIRID_DARK_GRAY="#42464d"
 export VIRID_GRAY="#818781"
-export VIRID_DARK="#1c2929"
+export VIRID_DARK="#0a2927"
 export VIRID_SEL="#4e5f3d"
 export VIRID_DIM="#515b4c"
 export VIRID_BRIGHT_MINT="#95d5b2"
@@ -85,7 +85,12 @@ nicepwd() {
     elif [[ $PWD == $HOME ]]; then
         echo "%F{$VIRID_FG}~"
     else
-        echo "%F{$VIRID_MINT}$(dirname $PWD)/%F{$VIRID_FG}$(basename $PWD)"
+        dir="$(dirname $PWD)"
+        if [[ -z "$dir" || "$dir" == "/" ]]; then
+            echo "%F{$VIRID_MINT}/%F{$VIRID_FG}$(basename $PWD)"
+        else
+            echo "%F{$VIRID_MINT}$(dirname $PWD)/%F{$VIRID_FG}$(basename $PWD)"
+        fi
     fi
 }
 
