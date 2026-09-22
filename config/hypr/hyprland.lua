@@ -238,7 +238,7 @@ hl.bind(modKey .. " + CTRL + S", hl.dsp.exec_cmd("hyprshot -zm window --clipboar
 hl.bind("Print", hl.dsp.exec_cmd("grim - | wl-copy"))
 
 -- Voice dictation
-hl.bind("XF86Tools", hl.dsp.exec_cmd("hyprvoice toggle"))
+hl.bind("SHIFT + XF86Tools", hl.dsp.exec_cmd("hyprvoice toggle"))
 
 -- Volume
 hl.bind(
