@@ -102,6 +102,7 @@ setup() {
             "cli")
                 gum style $heading "[CLI TOOLS]"
                 sudo pacman -S --needed \
+                    zoxide \
                     man-db \
                     curl \
                     wget \
