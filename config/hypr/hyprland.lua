@@ -156,7 +156,7 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("hypridle")
 	hl.exec_cmd("hyprpaper")
 
-	hl.exec_cmd('gsettings set org.gnome.desktop.interface gtk-theme "Jasper-Green"')
+	hl.exec_cmd('gsettings set org.gnome.desktop.interface gtk-theme "Jasper-Dark"')
 	hl.exec_cmd('gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"')
 end)
 
