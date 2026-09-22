@@ -27,7 +27,8 @@
       "type": "disk",
       "percent": {
         "type": 3
-      }
+      },
+      "format": "{size-percentage-bar} {size-used} / {size-total} ({size-percentage})"
     },
     "localip",
     "battery",
@@ -51,13 +52,14 @@
     },
     "bar": {
       "width": 8
-    }
+    },
+    "disableLinewrap": true
   },
   "logo": {
     "source": "$XDG_CONFIG_HOME/fastfetch/logo.txt",
     "type": "file",
     "color": {
-      "1": "#95d5b2",
+      "1": "#b1f0cd",
       "2": "#4adaf7"
     },
     "padding": {
