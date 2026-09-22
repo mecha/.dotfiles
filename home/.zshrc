@@ -105,6 +105,7 @@ alias l="eza -g --icons --group-directories-first --color=always --git"
 alias t="eza -T -L 2 --icons --group-directories-first --color=always --git"
 alias tt="eza -T -L 3 -lha --icons --group-directories-first --color=always --git"
 alias n="nvim"
+alias p="project"
 alias f="fzfn"
 alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)'
 alias open='xdg-open'
