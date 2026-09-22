@@ -86,7 +86,7 @@ Item {
                 width: volumeSlider.availableWidth
                 height: 8
                 radius: 4
-                color: "#1b2020"
+                color: "#0b2926"
                 border.width: 1
                 border.color: "#3c4747"
 
@@ -106,7 +106,7 @@ Item {
                 radius: 8
                 color: volumeSlider.pressed ? "#d7fbe8" : "#95d5b2"
                 border.width: 1
-                border.color: "#1b2020"
+                border.color: "#0b2926"
             }
 
             MouseArea {

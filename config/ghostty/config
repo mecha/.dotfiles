@@ -22,7 +22,7 @@ keybind = ctrl+7=set_font_size:19.5
 keybind = ctrl+8=set_font_size:15.0
 keybind = ctrl+9=set_font_size:13.0
 
-palette =  0=#1c2929
+palette =  0=#0a2927
 palette =  1=#e85362
 palette =  2=#a1d858
 palette =  3=#e3ca65
@@ -39,7 +39,7 @@ palette = 13=#de6bdb
 palette = 14=#30c1e5
 palette = 15=#bbc2cf
 foreground = #e9f5db
-background = #2a3837
+background = #1d3836
 background-opacity = 0.90
 
 custom-shader = shaders/cursor_warp.glsl

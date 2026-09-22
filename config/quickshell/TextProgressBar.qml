@@ -7,7 +7,7 @@ Item {
     property real maximum: 100
     property int blocks: 8
     property color color: "#95d5b2"
-    property color backgroundColor: "#3c4747"
+    property color backgroundColor: "#071c1a"
     property string backgroundCharacter: "█"
     readonly property var partialCharacters: ["", "▏", "▎", "▍", "▌", "▋", "▊", "▉"]
 

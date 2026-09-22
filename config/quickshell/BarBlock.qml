@@ -6,7 +6,7 @@ ClippingRectangle {
 
     property alias text: label.text
     property color textColor: "#b1f0cd"
-    property color backgroundColor: "#1c2929"
+    property color backgroundColor: "#1d3836"
     property int horizontalPadding: 12
     property bool fontBold: false
     property int fontPixelSize: 16
@@ -15,7 +15,7 @@ ClippingRectangle {
     implicitWidth: label.implicitWidth + horizontalPadding * 2
     radius: 10
     color: backgroundColor
-    opacity: 0.92
+    opacity: 0.9
     border.width: 2
     border.color: "#080c0c"
 

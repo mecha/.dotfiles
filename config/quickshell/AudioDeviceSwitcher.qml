@@ -75,7 +75,7 @@ Item {
                 width: root.dropdownWidth
                 height: 32
                 radius: 10
-                color: "#1b2020"
+                color: "#0b2926"
                 border.width: 1
                 border.color: "#3c4747"
 
@@ -146,7 +146,7 @@ Item {
                 width: root.dropdownWidth
                 height: 32
                 radius: 10
-                color: "#1b2020"
+                color: "#0b2926"
                 border.width: 1
                 border.color: "#3c4747"
 
@@ -210,7 +210,7 @@ Item {
 
         contentItem: ClippingRectangle {
             radius: 10
-            color: "#1b2020"
+            color: "#0b2926"
             border.width: 1
             border.color: "#3c4747"
 
@@ -280,7 +280,7 @@ Item {
 
         contentItem: ClippingRectangle {
             radius: 10
-            color: "#1b2020"
+            color: "#0b2926"
             border.width: 1
             border.color: "#3c4747"
 
