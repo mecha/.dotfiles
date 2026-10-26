@@ -3,7 +3,14 @@ import QtQuick
 DrawerPanel {
     id: root
 
-    readonly property date today: new Date()
+    property date today: new Date()
+
+    Timer {
+        interval: 60000
+        running: true
+        repeat: true
+        onTriggered: root.today = new Date()
+    }
     readonly property int year: today.getFullYear()
     readonly property int month: today.getMonth()
     readonly property date firstDay: new Date(year, month, 1)
