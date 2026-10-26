@@ -262,7 +262,7 @@ Scope {
                 CommandBlock {
                     textColor: "#d2b487"
                     interval: 60000
-                    command: ["sh", "-c", "ssh homebase \"df --output=pcent / | tail -1 | tr -dc '0-9'\" | awk '{ print \"󰒋 \" $1 \"%\" }'"]
+                    command: ["sh", "-c", "ssh homebase \"df --output=pcent /files | tail -1 | tr -dc '0-9'\" | awk '{ print \"󰒋 \" $1 \"%\" }'"]
                     clickCommand: ["ghostty", "-e", "ssh", "homebase"]
                 }
 
