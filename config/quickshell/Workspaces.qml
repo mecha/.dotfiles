@@ -30,6 +30,10 @@ BarBlock {
             return "󰈹"
         }
 
+        if (app.includes("nvim")) {
+            return ""
+        }
+
         if (app.includes("minecraft") || app.includes("prism")) {
             return "󰍳"
         }
@@ -60,6 +64,10 @@ BarBlock {
 
         if (app.includes("obsidian")) {
             return "󰠮"
+        }
+
+        if (app.includes("obsproject")) {
+            return ""
         }
 
         return "󰣆"
