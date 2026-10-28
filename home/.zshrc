@@ -34,6 +34,7 @@ export PATH="$ANDROID_HOME/emulator:$PATH"
 export PATH="$ANDROID_HOME/platform-tools:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.config/composer/vendor/bin:$PATH"
+export PATH="$HOME/.pi/agent/bin:$PATH"
 
 export HERMES_TUI=1
 
